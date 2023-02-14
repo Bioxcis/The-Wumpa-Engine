@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="crashDanceTitle.png">
+	<!-- Created with Adobe Animate version 19.1.0.349 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="crashDance0000" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0001" x="770" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0002" x="1540" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0003" x="0" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0004" x="770" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0005" x="1540" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0006" x="0" y="1300" width="770" height="650"/>
+	<SubTexture name="crashDance0007" x="770" y="1300" width="770" height="650"/>
+	<SubTexture name="crashDance0008" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0009" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0010" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0011" x="770" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0012" x="1540" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0013" x="0" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0014" x="770" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0015" x="1540" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0016" x="0" y="1300" width="770" height="650"/>
+	<SubTexture name="crashDance0017" x="770" y="1300" width="770" height="650"/>
+	<SubTexture name="crashDance0018" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0019" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0020" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0021" x="770" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0022" x="1540" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0023" x="0" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0024" x="770" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0025" x="1540" y="650" width="770" height="650"/>
+	<SubTexture name="crashDance0026" x="0" y="1300" width="770" height="650"/>
+	<SubTexture name="crashDance0027" x="770" y="1300" width="770" height="650"/>
+	<SubTexture name="crashDance0028" x="0" y="0" width="770" height="650"/>
+	<SubTexture name="crashDance0029" x="0" y="0" width="770" height="650"/>
+</TextureAtlas>

@@ -1,0 +1,43 @@
+{
+	"storyName": "PICO",
+	"hideFreeplay": false,
+	"weekBackground": "philly",
+	"weekBefore": "week2",
+	"startUnlocked": true,
+	"weekCharacters": [
+		"pico",
+		"bf",
+		"gf"
+	],
+	"songs": [
+		[
+			"Pico",
+			"pico",
+			[
+				128,
+				180,
+				40
+			]
+		],
+		[
+			"Philly Nice",
+			"pico",
+			[
+				88,
+				180,
+				0
+			]
+		],
+		[
+			"Blammed",
+			"pico",
+			[
+				28,
+				160,
+				0
+			]
+		]
+	],
+	"hideStoryMode": false,
+	"weekName": "Week 3"
+}
