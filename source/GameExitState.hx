@@ -31,7 +31,7 @@ using StringTools;
 
 class GameExitState extends MusicBeatState
 {
-	var options:Array<String> = ['Sim', 'Não'];
+	var options:Array<String> = ['Sim', 'Nao'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -44,7 +44,7 @@ class GameExitState extends MusicBeatState
                 //trace(menuText.x);
                 //trace(menuText.y);
                 System.exit(0);
-			case 'Não':
+			case 'Nao':
                 FlxG.sound.play(Paths.sound('backMenu'));
 				MusicBeatState.switchState(new TitleState());
 		}
@@ -58,7 +58,7 @@ class GameExitState extends MusicBeatState
 		DiscordClient.changePresence("Game Closing Menu", null);
 		#end
 
-        var bg:FlxBackdrop = new FlxBackdrop(Paths.image('loading'), 0.2, 0, true, true);
+        var bg:FlxBackdrop = new FlxBackdrop(Paths.image('backTitle'), 0.2, 0, true, true);
 		bg.velocity.set(200, 110);
 		bg.alpha = 0.5;
 		bg.updateHitbox();

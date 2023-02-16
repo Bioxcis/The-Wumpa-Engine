@@ -116,7 +116,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
 			{
 				//if (PlayState.SONG.stage == 'tank') 		<--	RENDER ORIGINAL
-				if (PlayState.SONG.stage == 'forest' | 'bonus' | 'temple' | 'sewer') //RENDERIZAR SOM ALEATÓRIO AO INICIO DO GAMEOVER DO WARP 1
+				if (PlayState.SONG.stage == '') //RENDERIZAR SOM ALEATÓRIO AO INICIO DO GAMEOVER DO WARP 1
 				{
 					playingDeathSound = true;
 					coolStartDeath(0.2);

@@ -143,7 +143,7 @@ class NoteOffsetState extends MusicBeatState
 
 		// Note delay stuff
 		
-		beatText = new Alphabet(0, 0, 'Batida ao Ritmo!', true, false, 0.05, 0.6);
+		beatText = new Alphabet(0, 0, 'batida!', true, false, 0.05, 0.6);
 		beatText.x += 260;
 		beatText.alpha = 0;
 		beatText.acceleration.y = 250;
@@ -187,20 +187,18 @@ class NoteOffsetState extends MusicBeatState
 		blackBox.cameras = [camHUD];
 		add(blackBox);
 
+		exitText = new FlxText(0, 8, FlxG.width, "Pressione Esc para sair", 32);//não tinha nenhum aviso aqui antes, agora tem :D
+		exitText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
+		exitText.scrollFactor.set();
+		exitText.cameras = [camHUD];
+		add(exitText);
+
 		changeModeText = new FlxText(0, 4, FlxG.width, "", 32);
 		changeModeText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
 		changeModeText.scrollFactor.set();
 		changeModeText.cameras = [camHUD];
 		add(changeModeText);
 		updateMode();
-
-		exitText = new FlxText(0, 4, FlxG.width, "Pressione Esc para sair", 32);//não tinha nenhum aviso aqui antes, agora tem :D
-		exitText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
-		exitText.scrollFactor.set();
-		exitText.x = 200;
-		exitText.x = -100;
-		exitText.cameras = [camHUD];
-		add(changeModeText);
 
 		Conductor.changeBPM(128.0);
 		FlxG.sound.playMusic(Paths.music('offsetSong'), 1, true);
@@ -468,11 +466,13 @@ class NoteOffsetState extends MusicBeatState
 		rating.visible = onComboMenu;
 		comboNums.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
+		exitText.visible = onComboMenu;
 		
 		timeBarBG.visible = !onComboMenu;
 		timeBar.visible = !onComboMenu;
 		timeTxt.visible = !onComboMenu;
 		beatText.visible = !onComboMenu;
+		exitText.visible = !onComboMenu;
 
 		if(onComboMenu)
 			changeModeText.text = '< Offset do Combo (Pressione Accept para Delay) >';

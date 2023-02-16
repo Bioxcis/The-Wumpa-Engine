@@ -363,6 +363,19 @@ class FreeplayState extends MusicBeatState
 			persistentUpdate = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
+			
+			FlxG.sound.play(Paths.sound('confirmMenu'));//cavalo
+
+			FlxFlicker.flicker(songText, 1, 0.06, false, false, function(flick:FlxFlicker));
+			FlxFlicker.flicker(icon, 1, 0.06, false, false, function(flick:FlxFlicker));
+
+			FlxTween.tween(songText, {x: 2000}, 30, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(twn:FlxTween) {
+				songText.kill();
+			}});
+			FlxTween.tween(icon, {x: 2000}, 30, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(twn:FlxTween) {
+				icon.kill();
+			}});
+
 			/*#if MODS_ALLOWED
 			if(!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop)) && !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop))) {
 			#else

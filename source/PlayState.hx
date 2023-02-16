@@ -475,16 +475,6 @@ class PlayState extends MusicBeatState
 					curStage = 'schoolEvil';
 				case 'ugh' | 'guns' | 'stress':
 					curStage = 'tank';
-				case 'bosques-de-wumpa':
-					curStage = 'forest';
-				case 'bonus':
-					curStage = 'bonus';
-				case 'templo-obscuro':
-					curStage = 'temple';
-				case 'canal-toxico':
-					curStage = 'sewer';
-				default:
-					curStage = 'stage';
 			}
 		}
 		SONG.stage = curStage;
@@ -5590,10 +5580,9 @@ class PlayState extends MusicBeatState
 			var achievementName:String = achievesToCheck[i];
 			if(!Achievements.isAchievementUnlocked(achievementName) && !cpuControlled) {
 				var unlock:Bool = false;
-				var gemColected:Bool = 
 				switch(achievementName)
 				{
-					case 'week1_nomiss' | 'week2_nomiss' | 'week3_nomiss' | 'week4_nomiss' | 'week5_nomiss' | 'week6_nomiss' | 'week7_nomiss':
+					case 'week1_nomiss' | 'week2_nomiss' | 'week3_nomiss' | 'week4_nomiss' | 'week5_nomiss' | 'intro_nomiss'| 'warp1_nomiss' | 'megamix_nomiss' | 'fnf_nomiss' | 'extra_nomiss':
 						if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'HARD' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
 						{
 							var weekName:String = WeekData.getWeekFileName();
@@ -5609,11 +5598,7 @@ class PlayState extends MusicBeatState
 									if(achievementName == 'week4_nomiss') unlock = true;
 								case 'week5':
 									if(achievementName == 'week5_nomiss') unlock = true;
-								case 'week6':
-									if(achievementName == 'week6_nomiss') unlock = true;
-								case 'week7':
-									if(achievementName == 'week7_nomiss') unlock = true;
-								case 'intro':	//Para toda semana completada de forma perfeita
+									case 'intro':	//Para toda semana completada de forma perfeita
 									if(achievementName == 'intro_nomiss') unlock = true;
 								case 'warp1':
 									if(achievementName == 'warp1_nomiss') unlock = true;
@@ -5635,7 +5620,7 @@ class PlayState extends MusicBeatState
 						}
 					case 'roadkill_enthusiast':
 						if(Achievements.henchmenDeath >= 100) {
-							unlock = false;
+							unlock = true;
 						}
 					case 'oversinging':
 						if(boyfriend.holdTimer >= 10 && !usedPractice) {

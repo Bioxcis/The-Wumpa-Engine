@@ -86,7 +86,6 @@ class Main extends Sprite
 
 		#if !mobile
 		fpsVar = new FPS(10, 3, 0xFFFFFF);
-		fpsVar.setFormat(Paths.font("crash.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK); //cavalo, mude isso se der erro!!!
 		addChild(fpsVar);
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;

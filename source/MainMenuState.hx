@@ -32,6 +32,7 @@ class MainMenuState extends MusicBeatState
 {
 	public static var osEngineVersion:String = '1.5.1'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
+	public static var firstStart:Bool = true;
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	private var camGame:FlxCamera;
@@ -40,14 +41,15 @@ class MainMenuState extends MusicBeatState
 	var optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
-		#if MODS_ALLOWED 'mods', #end
 		#if ACHIEVEMENTS_ALLOWED 'awards', #end
-		//'credits', //pra retornar apague as barras no inicio daqui e nas linhas do código lá embaixo '-'
-		//'donate',
-		//'discord', you can go to discord now by pressing ctrl in credits
+		#if MODS_ALLOWED 'mods', #end
 		'options',
 		'exit'
 	];
+
+		//'credits', //pra retornar apague as barras no inicio daqui e nas linhas do código lá embaixo '-'
+		//'donate',
+		//'discord', you can go to discord now by pressing ctrl in credits
 
 	#if MODS_ALLOWED
 	var customOption:String;
@@ -156,7 +158,7 @@ class MainMenuState extends MusicBeatState
 			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
-			//menuItem.screenCenter(X);
+			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
 			var scr:Float = (optionShit.length - 4) * 0.135;
 			if(optionShit.length < 6) scr = 0;
@@ -165,19 +167,55 @@ class MainMenuState extends MusicBeatState
 			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
 			menuItem.updateHitbox();
 			//curoffset = curoffset + 20;
+
+			switch (i)//ANIMAÇÃO DOS ITENS DO MENU E SUAS POSIÇÕES APÓS O TERMINO DA ANIMAÇÃO
+			{
+				case 0: //aventura
+					menuItem.x = 420;
+					menuItem.y = 0;
+				case 1: //modo livre
+					menuItem.x = 460;
+					menuItem.y = 50;
+				case 2: //mods
+					menuItem.x = 500;
+					menuItem.y = 100;
+				case 3: //missões
+					menuItem.x = 465;
+					menuItem.y = 150;
+				case 4: //opções
+					menuItem.x = 476;
+					menuItem.y = 260;
+				case 5: //sair
+					menuItem.x = 550;
+					menuItem.y = 400;
+			}
+
+			if(FlxG.save.data.antialiasing)
+				{
+				 menuItem.antialiasing = true;
+				}
+			   if (firstStart)
+				FlxTween.tween(menuItem,{y: -10 + (i * 120)},0.4 + (i * 0.25) ,{ease: FlxEase.expoInOut, onComplete: function(flxTween:FlxTween) 
+				 { 
+				  changeItem();
+				 }});
+			   else
+				menuItem.y = -20 + (i * 120);
 		}
+
+		firstStart = false; //Fim (Novo)
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width * 1.9, FlxG.height - 44, 0, "OS Engine v" + osEngineVersion + " - By Naughty Cat", 20);
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.73, FlxG.height - 54, 0, "OS Engine v" + osEngineVersion + " - By Naughty Cat", 30);
 		versionShit.scrollFactor.set();
-		versionShit.setFormat("Crash-a-Like", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat("Crash-a-Like", 25, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.9, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.73, FlxG.height - 34, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 30);
 		versionShit.scrollFactor.set();
-		versionShit.setFormat("Crash-a-Like", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat("Crash-a-Like", 25, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-
+		//NOTA: WIDTH = LARGURA, HEIGHT = ALTURA
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
@@ -228,7 +266,7 @@ class MainMenuState extends MusicBeatState
 	// Unlocks "Freaky on a Friday Night" achievement
 	function giveAchievement() {
 		add(new AchievementObject('friday_night_play', camAchievement));
-		FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
+		FlxG.sound.play(Paths.sound('crash/cristal'), 0.7);
 		trace('Giving achievement "friday_night_play"');
 	}
 	#end
@@ -278,7 +316,7 @@ class MainMenuState extends MusicBeatState
 				else
 				{
 					selectedSomethin = true;
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.sound('confirmFall'));
 
 					if(ClientPrefs.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
@@ -295,7 +333,7 @@ class MainMenuState extends MusicBeatState
 								}
 							});
 							*/
-							FlxTween.tween(spr, {x: -500}, 2, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(twn:FlxTween) {
+							FlxTween.tween(spr, {y: 1100}, 2, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(twn:FlxTween) {
 								spr.kill();
 							}});
 						}
@@ -336,16 +374,16 @@ class MainMenuState extends MusicBeatState
 										MusicBeatState.switchState(new StoryMenuState());
 									case 'freeplay':
 										MusicBeatState.switchState(new FreeplayState());
+									case 'awards':
+										MusicBeatState.switchState(new AchievementsMenuState());
 									#if MODS_ALLOWED
 									case 'mods':
 										MusicBeatState.switchState(new ModsMenuState()); 
 									#end
-									case 'awards':
-										MusicBeatState.switchState(new AchievementsMenuState());
 									//case 'credits':
 									//	MusicBeatState.switchState(new CreditsState()); //pra retornar apague as barras no inicio daqui e nas linhas do código lá encima '-'
 									case 'options':
-										MusicBeatState.switchState(new options.OptionsState());//antigo LoadingState.loadAndSwitchState
+										LoadingState.loadAndSwitchState(new options.OptionsState());//antigo LoadingState.loadAndSwitchState
 									case 'exit':
 										MusicBeatState.switchState(new GameExitState());
 								}
@@ -369,6 +407,15 @@ class MainMenuState extends MusicBeatState
 		{
 			//spr.screenCenter(X);
 		});
+	}
+
+	override function beatHit() {
+		super.beatHit();
+		
+		if (curBeat % 4 == 2)
+		{
+			FlxG.camera.zoom = 1.02;
+		}
 	}
 
 	function changeItem(huh:Int = 0)

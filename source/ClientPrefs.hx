@@ -9,7 +9,7 @@ import Controls;
 class ClientPrefs {
 	public static var downScroll:Bool = false;
 	public static var middleScroll:Bool = false;
-	public static var showFPS:Bool = true;
+	public static var showFPS:Bool = false;
 	public static var flashing:Bool = true;
 	public static var autosaveInterval:Int = 5;
 	public static var autosavecharts:Bool = true;
@@ -28,14 +28,14 @@ class ClientPrefs {
 	public static var noteOffset:Int = 0;
 	public static var arrowHSV:Array<Array<Int>> = [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]];
 	public static var imagesPersist:Bool = false;
-	public static var ghostTapping:Bool = true;
+	public static var ghostTapping:Bool = false;
 	public static var timeBarType:String = 'Tempo Restante';
 	public static var iconbops:String = 'Classico';
 	public static var colorblindMode:String = 'Nada';
 	public static var opponentStrums:Bool = false;
 	public static var scoreZoom:Bool = true;
 	public static var noReset:Bool = false;
-	public static var showMsText:Bool = true;
+	public static var showMsText:Bool = false;
 	public static var healthBarAlpha:Float = 1;
 	public static var controllerMode:Bool = false;
 	public static var hitsoundVolume:Float = 0;
@@ -70,7 +70,7 @@ class ClientPrefs {
 		'opponentplay' => false
 	];
 
-	public static var comboOffset:Array<Int> = [21, 171, 121, -121];
+	public static var comboOffset:Array<Int> = [21, -171, 121, -121];
 	public static var ratingOffset:Int = 0;
 	public static var perfectWindow:Int = 15;
 	public static var sickWindow:Int = 45;
