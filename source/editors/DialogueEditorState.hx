@@ -84,28 +84,30 @@ class DialogueEditorState extends MusicBeatState
 		addEditorBox();
 		FlxG.mouse.visible = true;
 
-		var addLineText:FlxText = new FlxText(10, 10, FlxG.width - 20, 'Press O to remove the current dialogue line, Press P to add another line after the current one.', 8);
-		addLineText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		var addLineText:FlxText = new FlxText(10, 10, FlxG.width - 20, 'Press O para remover a linha do dialogo / Press P para adicionr uma linha após a atual.', 8);
+		addLineText.setFormat(Paths.font("crash.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		addLineText.scrollFactor.set();
 		add(addLineText);
 
 		selectedText = new FlxText(10, 32, FlxG.width - 20, '', 8);
-		selectedText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		selectedText.setFormat(Paths.font("crash.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		selectedText.scrollFactor.set();
 		add(selectedText);
 
 		animText = new FlxText(10, 62, FlxG.width - 20, '', 8);
-		animText.setFormat(Paths.font("vcr.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		animText.setFormat(Paths.font("crash.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		animText.scrollFactor.set();
 		add(animText);
 		changeText();
+		
+		FlxG.sound.playMusic(Paths.music('offsetSong'), 1, true);
 		super.create();
 	}
 
 	var UI_box:FlxUITabMenu;
 	function addEditorBox() {
 		var tabs = [
-			{name: 'Dialogue Line', label: 'Dialogue Line'},
+			{name: 'Dialogue Line', label: 'Linha de Dialogo'},
 		];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 210);
@@ -131,7 +133,7 @@ class DialogueEditorState extends MusicBeatState
 
 		speedStepper = new FlxUINumericStepper(10, characterInputText.y + 40, 0.005, 0.05, 0, 0.5, 3);
 
-		angryCheckbox = new FlxUICheckBox(speedStepper.x + 120, speedStepper.y, null, null, "Angry Textbox", 200);
+		angryCheckbox = new FlxUICheckBox(speedStepper.x + 120, speedStepper.y, null, null, "Caixa Grito", 200);
 		angryCheckbox.callback = function()
 		{
 			updateTextBox();
@@ -144,17 +146,17 @@ class DialogueEditorState extends MusicBeatState
 		lineInputText = new FlxUIInputText(10, soundInputText.y + 35, 200, DEFAULT_TEXT, 8);
 		blockPressWhileTypingOn.push(lineInputText);
 
-		var loadButton:FlxButton = new FlxButton(20, lineInputText.y + 25, "Load Dialogue", function() {
+		var loadButton:FlxButton = new FlxButton(20, lineInputText.y + 25, "Carr Dialogo", function() {
 			loadDialogue();
 		});
-		var saveButton:FlxButton = new FlxButton(loadButton.x + 120, loadButton.y, "Save Dialogue", function() {
+		var saveButton:FlxButton = new FlxButton(loadButton.x + 120, loadButton.y, "Salva Dialogo", function() {
 			saveDialogue();
 		});
 
-		tab_group.add(new FlxText(10, speedStepper.y - 18, 0, 'Interval/Speed (ms):'));
-		tab_group.add(new FlxText(10, characterInputText.y - 18, 0, 'Character:'));
-		tab_group.add(new FlxText(10, soundInputText.y - 18, 0, 'Sound file name:'));
-		tab_group.add(new FlxText(10, lineInputText.y - 18, 0, 'Text:'));
+		tab_group.add(new FlxText(10, speedStepper.y - 18, 0, 'Intervalo/Vel. (ms):'));
+		tab_group.add(new FlxText(10, characterInputText.y - 18, 0, 'Personagem:'));
+		tab_group.add(new FlxText(10, soundInputText.y - 18, 0, 'Arquivo de Som:'));
+		tab_group.add(new FlxText(10, lineInputText.y - 18, 0, 'Texto:'));
 		tab_group.add(characterInputText);
 		tab_group.add(angryCheckbox);
 		tab_group.add(speedStepper);
@@ -221,11 +223,11 @@ class DialogueEditorState extends MusicBeatState
 		if(character.animation.curAnim != null && character.jsonFile.animations != null) {
 			animText.text = 'Animation: ' + character.jsonFile.animations[curAnim].anim + ' (' + (curAnim + 1) +' / ' + character.jsonFile.animations.length + ') - Press W or S to scroll';
 		} else {
-			animText.text = 'ERROR! NO ANIMATIONS FOUND';
+			animText.text = 'ERRO! ANIMACOES NAO ENCONTRADAS!';
 		}
 	}
 
-	private static var DEFAULT_TEXT:String = "coolswag";
+	private static var DEFAULT_TEXT:String = "crash.exe";
 	private static var DEFAULT_SPEED:Float = 0.05;
 	private static var DEFAULT_BUBBLETYPE:String = "normal";
 	function reloadText(speed:Float = 0.05) {

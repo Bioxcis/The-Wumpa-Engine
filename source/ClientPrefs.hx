@@ -34,6 +34,7 @@ class ClientPrefs {
 	public static var colorblindMode:String = 'Nada';
 	public static var opponentStrums:Bool = false;
 	public static var scoreZoom:Bool = true;
+	public static var hudSize:Bool = true;
 	public static var noReset:Bool = false;
 	public static var showMsText:Bool = false;
 	public static var healthBarAlpha:Float = 1;
@@ -51,7 +52,7 @@ class ClientPrefs {
 	public static var checkForUpdates:Bool = true;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
-		'scrolltype' => 'multiplicative', 
+		'scrolltype' => 'multiplicativo', 
 		// anyone reading this, amod is multiplicative speed mod, cmod is constant speed mod, and xmod is bpm based speed mod.
 		// an amod example would be chartSpeed * multiplier
 		// cmod would just be constantSpeed = chartSpeed
@@ -133,6 +134,7 @@ class ClientPrefs {
 		FlxG.save.data.ghostTapping = ghostTapping;
 		FlxG.save.data.timeBarType = timeBarType;
 		FlxG.save.data.scoreZoom = scoreZoom;
+		FlxG.save.data.hudSize = hudSize;
 		FlxG.save.data.characterTrail = characterTrail;
 		FlxG.save.data.noReset = noReset;
 		FlxG.save.data.showMsText = showMsText;
@@ -272,6 +274,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.scoreZoom != null) {
 			scoreZoom = FlxG.save.data.scoreZoom;
+		}
+		if(FlxG.save.data.hudSize != null) {
+			hudSize = FlxG.save.data.hudSize;
 		}
 		if(FlxG.save.data.noReset != null) {
 			noReset = FlxG.save.data.noReset;

@@ -47,6 +47,8 @@ class FreeplayState extends MusicBeatState
 	private var iconArray:Array<HealthIcon> = [];
 
 	var bg:FlxSprite;
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
 	var intendedColor:Int;
 	var colorTween:FlxTween;
 
@@ -143,6 +145,24 @@ class FreeplayState extends MusicBeatState
 		}
 		WeekData.setDirectoryFromWeek();
 
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 1320;
+		frontEngine.y = -10;
+		frontEngine.flipX = true;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
+
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
 		scoreText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, RIGHT);
 
@@ -194,12 +214,12 @@ class FreeplayState extends MusicBeatState
 
 		#if PRELOAD_ALL
 		var leText:String = "Press SPACE para previa da musica / Press CTRL para abrir Ajuste Gameplay  / Press RESET para redefinir pontuação e precisão";
-		var size:Int = 20;
+		var size:Int = 24;
 		#else
-		var leText:String = "Pressione CTRL para abrir o menu Ajuste Gameplay / Pressione RESET para redefinir sua pontuação e precisão.";
-		var size:Int = 22;
+		var leText:String = "Press CTRL para abrir Menu Ajuste Gameplay / Press RESET para redefinir Pontuação e Precisão.";
+		var size:Int = 24;
 		#end
-		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
+		var text:FlxText = new FlxText(textBG.x - 6, textBG.y, FlxG.width, leText, size);
 		text.setFormat(Paths.font("crash.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
@@ -282,11 +302,13 @@ class FreeplayState extends MusicBeatState
 			if (upP)
 			{
 				changeSelection(-shiftMult);
+				frontEngine.animation.play('engineSpin', true, false);
 				holdTime = 0;
 			}
 			if (downP)
 			{
 				changeSelection(shiftMult);
+				frontEngine.animation.play('engineSpin', true, false);
 				holdTime = 0;
 			}
 
@@ -305,7 +327,7 @@ class FreeplayState extends MusicBeatState
 
 			if(FlxG.mouse.wheel != 0)
 			{
-				FlxG.sound.play(Paths.sound('scrollMenu'), 0.2);
+				FlxG.sound.play(Paths.sound('scrollMenu'));
 				changeSelection(-shiftMult * FlxG.mouse.wheel, false);
 				changeDiff();
 			}
@@ -363,18 +385,8 @@ class FreeplayState extends MusicBeatState
 			persistentUpdate = false;
 			var songLowercase:String = Paths.formatToSongPath(songs[curSelected].songName);
 			var poop:String = Highscore.formatSong(songLowercase, curDifficulty);
-			
-			FlxG.sound.play(Paths.sound('confirmMenu'));//cavalo
-
-			FlxFlicker.flicker(songText, 1, 0.06, false, false, function(flick:FlxFlicker));
-			FlxFlicker.flicker(icon, 1, 0.06, false, false, function(flick:FlxFlicker));
-
-			FlxTween.tween(songText, {x: 2000}, 30, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(twn:FlxTween) {
-				songText.kill();
-			}});
-			FlxTween.tween(icon, {x: 2000}, 30, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(twn:FlxTween) {
-				icon.kill();
-			}});
+			frontEngine.animation.play('engineSpin', true, false);
+			FlxG.sound.play(Paths.sound('confirmOption'));
 
 			/*#if MODS_ALLOWED
 			if(!sys.FileSystem.exists(Paths.modsJson(songLowercase + '/' + poop)) && !sys.FileSystem.exists(Paths.json(songLowercase + '/' + poop))) {
@@ -395,7 +407,7 @@ class FreeplayState extends MusicBeatState
 			if(colorTween != null) {
 				colorTween.cancel();
 			}
-			
+
 			if (FlxG.keys.pressed.SHIFT){
 				LoadingState.loadAndSwitchState(new ChartingState());
 			}else{
@@ -446,7 +458,7 @@ class FreeplayState extends MusicBeatState
 
 	function changeSelection(change:Int = 0, playSound:Bool = true)
 	{
-		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		if(playSound) FlxG.sound.play(Paths.sound('scrollMenu'));
 
 		curSelected += change;
 
@@ -461,7 +473,7 @@ class FreeplayState extends MusicBeatState
 				colorTween.cancel();
 			}
 			intendedColor = newColor;
-			colorTween = FlxTween.color(bg, 1, bg.color, intendedColor, {
+			colorTween = FlxTween.color(bg, 0.6, bg.color, intendedColor, {
 				onComplete: function(twn:FlxTween) {
 					colorTween = null;
 				}

@@ -26,6 +26,9 @@ class AchievementsMenuState extends MusicBeatState
 	private var achievementArray:Array<AttachedAchievement> = [];
 	private var achievementIndex:Array<Int> = [];
 	private var descText:FlxText;
+	
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
 
 	override function create() {
 		#if desktop
@@ -73,23 +76,45 @@ class AchievementsMenuState extends MusicBeatState
 		add(descText);
 		changeSelection();
 
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 1320;
+		frontEngine.y = -10;
+		frontEngine.flipX = true;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
+
 		super.create();
 	}
 
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
+		var accepted = controls.ACCEPT;
+
 		if (controls.UI_UP_P) {
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(-1);
 		}
 		if (controls.UI_DOWN_P) {
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(1);
 		}
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
-		}
+		}		
 	}
 
 	function changeSelection(change:Int = 0) {
@@ -118,7 +143,7 @@ class AchievementsMenuState extends MusicBeatState
 			}
 		}
 		descText.text = Achievements.achievementsStuff[achievementIndex[curSelected]][1];
-		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 	#end
 }

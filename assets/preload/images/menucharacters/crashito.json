@@ -1,0 +1,11 @@
+{
+	
+	"image": "Menu_Crashito",
+	"position": [
+		120,
+		140
+	],
+	"scale": 0.55,
+	"idle_anim": "M crashito idle",
+	"confirm_anim": "M crashito idle"
+}

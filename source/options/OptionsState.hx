@@ -29,7 +29,7 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Cor Nota', 'Controles', 'Ajustar Delay e Combo', 'Graficos', 'Visual e UI', 'Gameplay', 'Editor de Nota'];
+	var options:Array<String> = ['Cor Nota', 'Controles', 'Gameplay', 'Graficos', 'Visual e UI', 'Editor de Nota', 'Ajustar Delay e Combo'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -55,6 +55,8 @@ class OptionsState extends MusicBeatState
 
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
 
 	override function create() {
 		#if desktop
@@ -62,12 +64,30 @@ class OptionsState extends MusicBeatState
 		#end
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg.color = 0xff5a35ff;
 		bg.updateHitbox();
 
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
+
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 1320;
+		frontEngine.y = -10;
+		frontEngine.flipX = true;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
@@ -76,10 +96,29 @@ class OptionsState extends MusicBeatState
 		{
 			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
 			optionText.screenCenter();
+			optionText.ID = i;
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
-		}
 
+			switch (i)//POSIÇÕES DOS ITENS DO MENU OPÇÕES (espaçamento de texto = 87).
+			{
+				case 0:					
+					optionText.y = 64;
+				case 1:
+					optionText.y = 151;
+				case 2:
+					optionText.y = 238;
+				case 3:
+					optionText.y = 325;
+				case 4:
+					optionText.y = 412;
+				case 5:
+					optionText.y = 499;
+				case 6:
+					optionText.y = 586;
+			}
+		}
+	
 		selectorLeft = new Alphabet(0, 0, '>', true, false);
 		add(selectorLeft);
 		selectorRight = new Alphabet(0, 0, '<', true, false);
@@ -100,9 +139,13 @@ class OptionsState extends MusicBeatState
 		super.update(elapsed);
 
 		if (controls.UI_UP_P) {
+			frontEngine.animation.play('engineSpin', true, false);
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 			changeSelection(-1);
 		}
 		if (controls.UI_DOWN_P) {
+			frontEngine.animation.play('engineSpin', true, false);
+			FlxG.sound.play(Paths.sound('scrollMenu'));
 			changeSelection(1);
 		}
 
@@ -119,6 +162,8 @@ class OptionsState extends MusicBeatState
 
 		if (controls.ACCEPT) {
 			openSelectedSubstate(options[curSelected]);
+			frontEngine.animation.play('engineSpin', true, false);
+			FlxG.sound.play(Paths.sound('confirmOption'));
 		}
 	}
 	
@@ -144,6 +189,6 @@ class OptionsState extends MusicBeatState
 				selectorRight.y = item.y;
 			}
 		}
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		//FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 }

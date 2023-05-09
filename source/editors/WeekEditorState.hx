@@ -106,7 +106,7 @@ class WeekEditorState extends MusicBeatState
 		txtTracklist = new FlxText(FlxG.width * 0.07, tracksSprite.y + 60, 0, "", 32);
 		txtTracklist.alignment = CENTER;
 		txtTracklist.font = Paths.font("crash.ttf");
-		txtTracklist.color = 0xffff7011;
+		txtTracklist.color = 0xffa05e13;
 		add(txtTracklist);
 		add(txtWeekTitle);
 		
@@ -123,8 +123,8 @@ class WeekEditorState extends MusicBeatState
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
 		var tabs = [
-			{name: 'Week', label: 'Week'},
-			{name: 'Other', label: 'Other'},
+			{name: 'Week', label: 'Semana'},
+			{name: 'Other', label: 'Ajustes'},
 		];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 375);
@@ -137,21 +137,21 @@ class WeekEditorState extends MusicBeatState
 		UI_box.selected_tab_id = 'Week';
 		add(UI_box);
 
-		var loadWeekButton:FlxButton = new FlxButton(0, 650, "Load Week", function() {
+		var loadWeekButton:FlxButton = new FlxButton(0, 650, "Carr Semana", function() {
 			loadWeek();
 		});
 		loadWeekButton.screenCenter(X);
 		loadWeekButton.x -= 120;
 		add(loadWeekButton);
 		
-		var freeplayButton:FlxButton = new FlxButton(0, 650, "Freeplay", function() {
+		var freeplayButton:FlxButton = new FlxButton(0, 650, "ModoLivre", function() {
 			MusicBeatState.switchState(new WeekEditorFreeplayState(weekFile));
 			
 		});
 		freeplayButton.screenCenter(X);
 		add(freeplayButton);
 	
-		var saveWeekButton:FlxButton = new FlxButton(0, 650, "Save Week", function() {
+		var saveWeekButton:FlxButton = new FlxButton(0, 650, "Salvar Semana", function() {
 			saveWeek(weekFile);
 		});
 		saveWeekButton.screenCenter(X);
@@ -201,18 +201,18 @@ class WeekEditorState extends MusicBeatState
 		blockPressWhileTypingOn.push(weekFileInputText);
 		reloadWeekThing();
 
-		hideCheckbox = new FlxUICheckBox(10, weekFileInputText.y + 40, null, null, "Hide Week from Story Mode?", 100);
+		hideCheckbox = new FlxUICheckBox(10, weekFileInputText.y + 40, null, null, "Esconder semana no Aventura?", 100);
 		hideCheckbox.callback = function()
 		{
 			weekFile.hideStoryMode = hideCheckbox.checked;
 		};
 
-		tab_group.add(new FlxText(songsInputText.x, songsInputText.y - 18, 0, 'Songs:'));
-		tab_group.add(new FlxText(opponentInputText.x, opponentInputText.y - 18, 0, 'Characters:'));
-		tab_group.add(new FlxText(backgroundInputText.x, backgroundInputText.y - 18, 0, 'Background Asset:'));
-		tab_group.add(new FlxText(displayNameInputText.x, displayNameInputText.y - 18, 0, 'Display Name:'));
-		tab_group.add(new FlxText(weekNameInputText.x, weekNameInputText.y - 18, 0, 'Week Name (for Reset Score Menu):'));
-		tab_group.add(new FlxText(weekFileInputText.x, weekFileInputText.y - 18, 0, 'Week File:'));
+		tab_group.add(new FlxText(songsInputText.x, songsInputText.y - 18, 0, 'Musicas:'));
+		tab_group.add(new FlxText(opponentInputText.x, opponentInputText.y - 18, 0, 'Personagens:'));
+		tab_group.add(new FlxText(backgroundInputText.x, backgroundInputText.y - 18, 0, 'Plano de Fundo:'));
+		tab_group.add(new FlxText(displayNameInputText.x, displayNameInputText.y - 18, 0, 'Nome para exibir:'));
+		tab_group.add(new FlxText(weekNameInputText.x, weekNameInputText.y - 18, 0, 'Nome da Semana (Resetar Ponts):'));
+		tab_group.add(new FlxText(weekFileInputText.x, weekFileInputText.y - 18, 0, 'Arquivo da Semana:'));
 
 		tab_group.add(songsInputText);
 		tab_group.add(opponentInputText);
@@ -236,7 +236,7 @@ class WeekEditorState extends MusicBeatState
 		var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "Other";
 
-		lockedCheckbox = new FlxUICheckBox(10, 30, null, null, "Week starts Locked", 100);
+		lockedCheckbox = new FlxUICheckBox(10, 30, null, null, "Inicia Bloqueado", 100);
 		lockedCheckbox.callback = function()
 		{
 			weekFile.startUnlocked = !lockedCheckbox.checked;
@@ -244,7 +244,7 @@ class WeekEditorState extends MusicBeatState
 			hiddenUntilUnlockCheckbox.alpha = 0.4 + 0.6 * (lockedCheckbox.checked ? 1 : 0);
 		};
 
-		hiddenUntilUnlockCheckbox = new FlxUICheckBox(10, lockedCheckbox.y + 25, null, null, "Hidden until Unlocked", 110);
+		hiddenUntilUnlockCheckbox = new FlxUICheckBox(10, lockedCheckbox.y + 25, null, null, "Esconder quando Bloqueado", 110);
 		hiddenUntilUnlockCheckbox.callback = function()
 		{
 			weekFile.hiddenUntilUnlocked = hiddenUntilUnlockCheckbox.checked;
@@ -257,9 +257,9 @@ class WeekEditorState extends MusicBeatState
 		difficultiesInputText = new FlxUIInputText(10, weekBeforeInputText.y + 60, 200, '', 8);
 		blockPressWhileTypingOn.push(difficultiesInputText);
 		
-		tab_group.add(new FlxText(weekBeforeInputText.x, weekBeforeInputText.y - 28, 0, 'Week File name of the Week you have\nto finish for Unlocking:'));
-		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Difficulties:'));
-		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y + 20, 0, 'Default difficulties are "Easy, Normal, Hard"\nwithout quotes.'));
+		tab_group.add(new FlxText(weekBeforeInputText.x, weekBeforeInputText.y - 28, 0, 'Nome do arquivo da Semana\npara terminar e desbloquear:'));
+		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Dificuldades:'));
+		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y + 20, 0, 'Dificuldades padrao: "facil, normal, dificil, nsano, trial"\nsem aspas.'));
 		tab_group.add(weekBeforeInputText);
 		tab_group.add(difficultiesInputText);
 		tab_group.add(hiddenUntilUnlockCheckbox);
@@ -362,7 +362,7 @@ class WeekEditorState extends MusicBeatState
 		if(isMissing) {
 			weekThing.visible = false;
 			missingFileText.visible = true;
-			missingFileText.text = 'MISSING FILE: images/storymenu/' + assetName + '.png';
+			missingFileText.text = 'FALTANDO ARQUIVO: images/storymenu/' + assetName + '.png';
 		}
 		recalculateStuffPosition();
 
@@ -633,7 +633,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
 		var tabs = [
-			{name: 'Freeplay', label: 'Freeplay'},
+			{name: 'Freeplay', label: 'ModoLivre'},
 		];
 		UI_box = new FlxUITabMenu(null, tabs, true);
 		UI_box.resize(250, 200);
@@ -649,21 +649,21 @@ class WeekEditorFreeplayState extends MusicBeatState
 		blackBlack.alpha = 0.6;
 		add(blackBlack);
 
-		var loadWeekButton:FlxButton = new FlxButton(0, 685, "Load Week", function() {
+		var loadWeekButton:FlxButton = new FlxButton(0, 685, "Carr Semana", function() {
 			WeekEditorState.loadWeek();
 		});
 		loadWeekButton.screenCenter(X);
 		loadWeekButton.x -= 120;
 		add(loadWeekButton);
 		
-		var storyModeButton:FlxButton = new FlxButton(0, 685, "Story Mode", function() {
+		var storyModeButton:FlxButton = new FlxButton(0, 685, "Aventura", function() {
 			MusicBeatState.switchState(new WeekEditorState(weekFile));
 			
 		});
 		storyModeButton.screenCenter(X);
 		add(storyModeButton);
 	
-		var saveWeekButton:FlxButton = new FlxButton(0, 685, "Save Week", function() {
+		var saveWeekButton:FlxButton = new FlxButton(0, 685, "Salvar Semana", function() {
 			WeekEditorState.saveWeek(weekFile);
 		});
 		saveWeekButton.screenCenter(X);
@@ -694,10 +694,10 @@ class WeekEditorFreeplayState extends MusicBeatState
 		bgColorStepperG = new FlxUINumericStepper(80, 40, 20, 255, 0, 255, 0);
 		bgColorStepperB = new FlxUINumericStepper(150, 40, 20, 255, 0, 255, 0);
 
-		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copy Color", function() {
+		var copyColor:FlxButton = new FlxButton(10, bgColorStepperR.y + 25, "Copiar Cor", function() {
 			Clipboard.text = bg.color.red + ',' + bg.color.green + ',' + bg.color.blue;
 		});
-		var pasteColor:FlxButton = new FlxButton(140, copyColor.y, "Paste Color", function() {
+		var pasteColor:FlxButton = new FlxButton(140, copyColor.y, "Colar Cor", function() {
 			if(Clipboard.text != null) {
 				var leColor:Array<Int> = [];
 				var splitted:Array<String> = Clipboard.text.trim().split(',');
@@ -721,15 +721,15 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
 
-		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(10, iconInputText.y + 30, null, null, "Hide Week from Freeplay?", 100);
+		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(10, iconInputText.y + 30, null, null, "Esconder semana no Modo Livre?", 100);
 		hideFreeplayCheckbox.checked = weekFile.hideFreeplay;
 		hideFreeplayCheckbox.callback = function()
 		{
 			weekFile.hideFreeplay = hideFreeplayCheckbox.checked;
 		};
 		
-		tab_group.add(new FlxText(10, bgColorStepperR.y - 18, 0, 'Selected background Color R/G/B:'));
-		tab_group.add(new FlxText(10, iconInputText.y - 18, 0, 'Selected icon:'));
+		tab_group.add(new FlxText(10, bgColorStepperR.y - 18, 0, 'Selecione cor de fundo RGB:'));
+		tab_group.add(new FlxText(10, iconInputText.y - 18, 0, 'Selecione icone:'));
 		tab_group.add(bgColorStepperR);
 		tab_group.add(bgColorStepperG);
 		tab_group.add(bgColorStepperB);

@@ -60,6 +60,8 @@ class MainMenuState extends MusicBeatState
 	var camFollow:FlxObject;
 	var camFollowPos:FlxObject;
 	var debugKeys:Array<FlxKey>;
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
 
 	override function create()
 	{
@@ -129,7 +131,7 @@ class MainMenuState extends MusicBeatState
         magenta.screenCenter();
         magenta.visible = false;
         magenta.antialiasing = ClientPrefs.globalAntialiasing;
-        magenta.color = 0xFFfd719b;
+        magenta.color = 0xff7371fd;
         add(magenta);
 		
 		// magenta.scrollFactor.set();
@@ -141,6 +143,23 @@ class MainMenuState extends MusicBeatState
 		/*if(optionShit.length > 6) {
 			scale = 6 / optionShit.length;
 		}*/
+
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', true, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 230;
+		frontEngine.y = -10;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
 
 		var curoffset:Float = 100;
 		#if MODS_ALLOWED
@@ -168,50 +187,50 @@ class MainMenuState extends MusicBeatState
 			menuItem.updateHitbox();
 			//curoffset = curoffset + 20;
 
-			switch (i)//ANIMAÇÃO DOS ITENS DO MENU E SUAS POSIÇÕES APÓS O TERMINO DA ANIMAÇÃO
+			switch (i)//ANIMAÇÃO DOS ITENS DO MENU E SUAS POSIÇÕES APÓS O TERMINO DA ANIMAÇÃO	//inicio
 			{
 				case 0: //aventura
 					menuItem.x = 420;
-					menuItem.y = 0;
+					menuItem.y = 20;
 				case 1: //modo livre
 					menuItem.x = 460;
-					menuItem.y = 50;
-				case 2: //mods
-					menuItem.x = 500;
-					menuItem.y = 100;
-				case 3: //missões
-					menuItem.x = 465;
 					menuItem.y = 150;
+				case 2: //missões
+					menuItem.x = 467;
+					menuItem.y = 250;
+				case 3: //mods
+					menuItem.x = 508;
+					menuItem.y = 380;
 				case 4: //opções
-					menuItem.x = 476;
-					menuItem.y = 260;
+					menuItem.x = 478;
+					menuItem.y = 490;
 				case 5: //sair
-					menuItem.x = 550;
-					menuItem.y = 400;
+					menuItem.x = 530;
+					menuItem.y = 620;
 			}
 
-			if(FlxG.save.data.antialiasing)
+			/*if(FlxG.save.data.antialiasing)
 				{
 				 menuItem.antialiasing = true;
 				}
-			   if (firstStart)
-				FlxTween.tween(menuItem,{y: -10 + (i * 120)},0.4 + (i * 0.25) ,{ease: FlxEase.expoInOut, onComplete: function(flxTween:FlxTween) 
-				 { 
-				  changeItem();
-				 }});
-			   else
-				menuItem.y = -20 + (i * 120);
+			   	if (firstStart)
+				FlxTween.tween(menuItem,{y: 1 + (i * 120)}, 0.5 + (i * 0.25), {ease: FlxEase.expoInOut, onComplete: function(flxTween:FlxTween) 
+				{ 
+					changeItem();
+				}});
+			   	else
+				menuItem.y = 1 + (i * 120);*/			//Por algum motivo idiota eu não consigo definir a posição y dos itens 'missões' e 'sair' após essa animação. Se VOCÊ consegue arrumar isso, entre em contato comigo
 		}
 
-		firstStart = false; //Fim (Novo)
+		//firstStart = false; //fim
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.73, FlxG.height - 54, 0, "OS Engine v" + osEngineVersion + " - By Naughty Cat", 30);
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 25, 0, "OS Engine v" + osEngineVersion + " - Editado por Bioxcis-dono", 24);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("Crash-a-Like", 25, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.73, FlxG.height - 34, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 30);
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.79, FlxG.height - 25, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 24);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("Crash-a-Like", 25, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
@@ -273,7 +292,6 @@ class MainMenuState extends MusicBeatState
 
 	var selectedSomethin:Bool = false;
 
-
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.8)
@@ -290,12 +308,14 @@ class MainMenuState extends MusicBeatState
 			if (controls.UI_UP_P)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
+				frontEngine.animation.play('engineSpin', true, false);
 				changeItem(-1);
 			}
 
 			if (controls.UI_DOWN_P)
 			{
 				FlxG.sound.play(Paths.sound('scrollMenu'));
+				frontEngine.animation.play('engineSpin', true, false);
 				changeItem(1);
 			}
 
@@ -317,6 +337,7 @@ class MainMenuState extends MusicBeatState
 				{
 					selectedSomethin = true;
 					FlxG.sound.play(Paths.sound('confirmFall'));
+					frontEngine.animation.play('engineSpin', true, false);
 
 					if(ClientPrefs.flashing) FlxFlicker.flicker(magenta, 1.1, 0.15, false);
 
@@ -383,7 +404,7 @@ class MainMenuState extends MusicBeatState
 									//case 'credits':
 									//	MusicBeatState.switchState(new CreditsState()); //pra retornar apague as barras no inicio daqui e nas linhas do código lá encima '-'
 									case 'options':
-										LoadingState.loadAndSwitchState(new options.OptionsState());//antigo LoadingState.loadAndSwitchState
+										LoadingState.loadAndSwitchState(new options.OptionsState());//sem o loading nas opções o jogo trava por não conseguir carregar o state options...
 									case 'exit':
 										MusicBeatState.switchState(new GameExitState());
 								}
@@ -396,6 +417,7 @@ class MainMenuState extends MusicBeatState
 			else if (FlxG.keys.anyJustPressed(debugKeys))
 			{
 				selectedSomethin = true;
+				FlxG.sound.play(Paths.sound('debugSecret'));
 				MusicBeatState.switchState(new MasterEditorMenu());
 			}
 			#end

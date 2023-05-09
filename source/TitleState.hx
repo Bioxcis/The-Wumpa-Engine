@@ -160,9 +160,9 @@ class TitleState extends MusicBeatState
 		Highscore.load();
 
 		// IGNORE THIS!!!
-		//NÃO PRECISA IGNORAR, PRA SABER O QUE É ISSO AQUI É SIMPLES... LOCAL DO BPM DO TITULO E MAPEAMENTO DOS ITENS DO MENU INICIAL ^-^
+		//PRA SABER O QUE É ISSO AQUI É SIMPLES... LOCAL DO BPM DO TITULO E MAPEAMENTO DOS ITENS DO MENU INICIAL °^°
 		titleJSON = Json.parse(Paths.getTextFromFile('images/DanceTitle.json'));
-
+		//DAQUI EM DIANTE IGNORE '^'
 		#if TITLE_SCREEN_EASTER_EGG
 		if (FlxG.save.data.psychDevsEasterEgg == null) FlxG.save.data.psychDevsEasterEgg = ''; //Crash prevention
 		switch(FlxG.save.data.psychDevsEasterEgg.toUpperCase())
@@ -504,7 +504,7 @@ class TitleState extends MusicBeatState
 				
 				if(titleText != null) titleText.animation.play('press');
 
-				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 1);
+				FlxG.camera.flash(ClientPrefs.flashing ? FlxColor.WHITE : 0x4CFFFFFF, 0.6);
 				FlxG.sound.play(Paths.sound('confirmMenu'), 0.7);
 
 				transitioning = true;
@@ -639,24 +639,24 @@ class TitleState extends MusicBeatState
 			switch (sickBeats)
 			{
 				case 1:
-					//FlxG.sound.music.stop(); //SEM FUNÇÃO, NEM JUNTO AO ORIGINAL
+					//FlxG.sound.music.stop();
 					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0); //ORIGINAL
 					//FlxG.sound.music.fadeIn(4, 0, 0.7);
 					//createCoolText(['OS Engine'], 45);
-					FlxG.sound.play(Paths.sound('IntroCrash'), 0.4); //SOM DE INTRO TEMPORARIO -.-
+					FlxG.sound.play(Paths.sound('IntroCrash'), 0.8); //SOM DE INTRO '^'
 					createCoolText(['Multiversal Estudos', 'production'], 45); //PARA VOLTAR AO NORMAL RETIRE ESSE NOVO TRECHO E ATIVE O ORIGINAL ACIMA '-'
 				case 5:
 					deleteCoolText();
 					addMoreText('Sanic Computadores');
-					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0); //MUSICA A PARTIR DAQUI
-					FlxG.sound.music.fadeIn(4, 0, 0.7); //FADE IN DO INICIO DA MUSICA
+					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7); //MUSICA A PARTIR DAQUI
+					//FlxG.sound.music.fadeIn(0.3, 0, 0.6); //FADE IN DO INICIO DA MUSICA
 				case 6:
 					addMoreText('Entretenimentos');
 				case 7:
-					addMoreText('apresenta');
+					addMoreText('Apresenta');
 				case 8:
 					deleteCoolText();
-					createCoolText(['Creditos especiais', 'para'], 45);
+					createCoolText(['Agradecimentos', 'especiais'], 45);
 				case 9:
 					addMoreText('Airumu!', 45);
 				case 10:
@@ -680,7 +680,7 @@ class TitleState extends MusicBeatState
 				//	addMoreText('Friday');
 				// credTextShit.text += '\nNight';
 				case 16:
-					addMoreText('Wumpa'); // credTextShit.text += '\nFunkin';
+					addMoreText('Night'); // credTextShit.text += '\nFunkin';
 					addMoreText('Funkin');
 				case 17:
 					skipIntro();
@@ -748,11 +748,12 @@ class TitleState extends MusicBeatState
 				}
 				playJingle = false;
 			}
-			else //Default! Edit this one!!
+			else //Default! Edite isso aqui apenas!!
 			{
 				remove(ngSpr);
 				remove(credGroup);
-				FlxG.camera.flash(FlxColor.WHITE, 4);
+				//FlxG.sound.play(Paths.sound('tish'));
+				FlxG.camera.flash(FlxColor.WHITE, 2);
 
 				var easteregg:String = FlxG.save.data.psychDevsEasterEgg;
 				if (easteregg == null) easteregg = '';

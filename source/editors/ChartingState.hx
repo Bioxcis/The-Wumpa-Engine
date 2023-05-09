@@ -76,9 +76,9 @@ class ChartingState extends MusicBeatState
 	var redos = [];
 	var eventStuff:Array<Dynamic> =
 	[
-		['', "Nenhuma coisa. Sim, isso mesmo."],
-		['Hey!', "Toca a animacao \"Hey!\" de Bopeebo,\nValor 1: BF = Apenas o BF, GF = Apenas a GF,\nOutro = Ambos.\nValor 2: Duração da animacao personalizada,\ndeixe em branco para 0,6s"],
-		['Set GF Speed', "Define a velocidade (vel) do ritmo da GF,\nValor 1: 1 = Vel Normal ,\n2 = 1/2 da Vel, 4 = 1/4 da vel etc.\nUsado em Fresh durante as partes de beatbox.\n \nAviso: o valor deve ser inteiro!"],
+		['', "Nada. Sim, não faz nada."],
+		['Hey!', "Toca a animação \"Hey!\" como em Bopeebo,\nValor 1: bf = Apenas BF, gf = Apenas a GF,\nNada/Vazio = Ambos BF e GF.\nValor 2: Duração da animação personalizada,\ndeixe em branco para 0,6s"],
+		['Set GF Speed', "Define a velocidade do ritmo da GF,\nValor 1: 1 = Velocidade Normal,\n2 = 1/2 da Velocidade, 4 = 1/4 da velocidade.\nUsado em Fresh durante as partes de Beatbox.\n\nAviso: o valor deve ser inteiro! Para tornar normal, deve ter valor 1,\nnão adianta nulo ou vazio"],
 		['Philly Glow', "Exclusivo da Semana 3 original\nValor 1: 0/1/2 = OFF/ON/Redefinir Gradiente\n \nO modder original nao colou isso nas outras semanas originais."],
 		['Add Camera Zoom', "Usado em MILF naquela parte mais complicada\nValor 1: adiciona zoom na camera (padrao: 0,015)\nValor 2: adiciona zoom na IU (padrao: 0,03)\nDeixe os valores em branco se voce deseja usar Padrao."],
 		['BG Freaks Expression', "Deve ser usado apenas no Cenario \"School\"!"],
@@ -355,25 +355,25 @@ class ChartingState extends MusicBeatState
 		UI_box.scrollFactor.set();
 
 		text =
-		"W / S ou Rolagem do Mouse        - Alterar local da musica para frente ou para tras
-		\nA / D                           - Ir para a seção anterior/seguinte
-		\nEsquerda / Direita              - Alterar Snap
-		\nCima / Baixo                    - Alterar local da musica para frente ou para tras com o Snap
-		\nShift                           - Segure Shift para mover 4x mais rapido
-		\nControl                         - Segure Control e clique em uma seta para seleciona-lo
-		\nZ / X                           - Aumentar/diminuir o zoom
-		\nSegure o botao direito do mouse - Colocar/Retirar notas arrastando o mouse
-		\nEsc                             - Teste suas notas dentro do Editor de Notas
-		\nEnter                           - Reproduzir notas em Jogo
-		\nSegure C com Rolagem do Mouse   - Diminuir/Aumentar a duracao da nota
-		\nQ / E                           - Diminuir/Aumentar a duracao da nota
-		\nEspaço                          - Parar/Tocar musica";
+		"W / S ou Rolar Mouse 	- Alterar Posição da música
+		\nA / D 				- Ir para o Trecho anterior/seguinte
+		\nEsquerda / Direita 	- Alterar Distância
+		\nCima / Baixo 			- Alterar Posição da música
+		\nShift 				- Segure Shift para mover 4x mais rápido
+		\nControl 				- Control com clique para selecionar um item
+		\nZ / X 				- Aumentar/diminuir o Zoom
+		\nBotão direito mouse 	- Colocar/Retirar notas arrastando o mouse
+		\nEsc 					- Testar suas notas dentro do Editor de Notas
+		\nEnter 				- Reproduzir notas em Jogo/Voltar para partida
+		\nC e Rolar Mouse 		- Diminuir/Aumentar a duração da nota
+		\nQ / E 				- Diminuir/Aumentar a duração da nota
+		\nSpace 				- Parar/Tocar musica";
 
 		var tipTextArray:Array<String> = text.split('\n');
 		for (i in 0...tipTextArray.length) {
-			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 16);
+			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 12);
 			tipText.y += i * 12;
-			tipText.setFormat(Paths.font("crash.ttf"), 14, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+			tipText.setFormat(Paths.font("crash.ttf"), 20, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 			//tipText.borderSize = 2;
 			tipText.scrollFactor.set();
 			add(tipText);
@@ -426,10 +426,10 @@ class ChartingState extends MusicBeatState
 	var stageDropDown:FlxUIDropDownMenuCustom;
 	function addSongUI():Void
 	{
-		UI_songTitle = new FlxUIInputText(10, 10, 70, _song.song, 8);
+		UI_songTitle = new FlxUIInputText(10, 10, 85, _song.song, 8);
 		blockPressWhileTypingOn.push(UI_songTitle);
 
-		var check_voices = new FlxUICheckBox(10, 25, null, null, "Tem trilha\nde voz", 100);
+		var check_voices = new FlxUICheckBox(10, 30, null, null, "Tem trilha\nde voz", 100);
 		check_voices.checked = _song.needsVoices;
 		// _song.needsVoices = check_voices.checked;
 		check_voices.callback = function()
@@ -438,7 +438,7 @@ class ChartingState extends MusicBeatState
 			//trace('CHECKED!');
 		};
 
-		var saveButton:FlxButton = new FlxButton(110, 8, "Salvar", function()
+		var saveButton:FlxButton = new FlxButton(105, 8, "Salvar Notas", function()
 		{
 			saveLevel();
 		});
@@ -479,7 +479,7 @@ class ChartingState extends MusicBeatState
 			}
 		});
 
-		var saveEvents:FlxButton = new FlxButton(110, reloadSongJson.y, 'Salvar Eventos', function ()
+		var saveEvents:FlxButton = new FlxButton(105, reloadSongJson.y, 'Salvar Eventos', function ()
 			{
 				saveEvents();
 			});
@@ -495,25 +495,25 @@ class ChartingState extends MusicBeatState
 		{
 			_song.disableDebugButtons = check_disableDebug.checked;
 		};
-		var check_swapNote = new FlxUICheckBox(loadAutosaveBtn.x + 90, loadAutosaveBtn.y, null, null, "Trocar Posicao das Linhas", 100);
+		var check_swapNote = new FlxUICheckBox(loadAutosaveBtn.x + 90, loadAutosaveBtn.y, null, null, "Trocar Posicao\ndas Linhas", 100);
 		check_swapNote.checked = _song.swapStrumLines;
 		check_swapNote.callback = function()
 		{
 			_song.swapStrumLines = check_swapNote.checked;
 		};
-		var check_Trails = new FlxUICheckBox(check_swapNote.x, check_swapNote.y+30, null, null, "Trilha no Oponente", 100);
+		var check_Trails = new FlxUICheckBox(check_swapNote.x, check_swapNote.y+30, null, null, "Trilha no\nOponente", 100);
 		check_Trails.checked = _song.characterTrails;
 		check_Trails.callback = function()
 		{
 			_song.characterTrails = check_Trails.checked;
 		};
-		var check_bfTrails = new FlxUICheckBox(check_Trails.x, check_Trails.y+30, null, null, "Trilha no BF", 100);
+		var check_bfTrails = new FlxUICheckBox(check_Trails.x, check_Trails.y+30, null, null, "Trilha no\nBoyfriend", 100);
 		check_bfTrails.checked = _song.bfTrails;
 		check_bfTrails.callback = function()
 		{
 			_song.bfTrails = check_bfTrails.checked;
 		};
-		var check_cameraMove = new FlxUICheckBox(80, 110, null, null, "Mover Camera Batida das Notas", 100);
+		var check_cameraMove = new FlxUICheckBox(80, 105, null, null, "Mover Camera Batida das Notas", 100);
 		check_cameraMove.checked = _song.cameraMoveOnNotes;
 		check_cameraMove.callback = function()
 		{
@@ -889,7 +889,7 @@ class ChartingState extends MusicBeatState
 		});
 
 		var stepperCopy:FlxUINumericStepper = null;
-		var copyLastButton:FlxButton = new FlxButton(10, swapSection.y + 30, "Copiar ultima trilha", function()
+		var copyLastButton:FlxButton = new FlxButton(10, swapSection.y + 30, "Copiar Ultimo Trecho", function()
 		{
 			var value:Int = Std.int(stepperCopy.value);
 			if(value == 0) return;
@@ -2742,7 +2742,7 @@ class ChartingState extends MusicBeatState
 				if(note.eventLength > 1) text = note.eventLength + ' Eventos:\n' + note.eventName;
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 400, text, 12);
-				daText.setFormat(Paths.font("crash.ttf"), 12, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+				daText.setFormat(Paths.font("crash.ttf"), 18, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 				daText.xAdd = -410;
 				daText.borderSize = 1;
 				if(note.eventLength > 1) daText.yAdd += 8;

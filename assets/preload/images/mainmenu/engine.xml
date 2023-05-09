@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="engine.png">
+	<!-- Created with Adobe Animate version 19.1.0.349 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="engineSpin0000" x="0" y="0" width="258" height="258"/>
+	<SubTexture name="engineSpin0001" x="258" y="0" width="258" height="258"/>
+	<SubTexture name="engineSpin0002" x="516" y="0" width="258" height="258"/>
+	<SubTexture name="engineSpin0003" x="0" y="258" width="258" height="258"/>
+	<SubTexture name="engineSpin0004" x="258" y="258" width="258" height="258"/>
+	<SubTexture name="engineSpin0005" x="516" y="258" width="258" height="258"/>
+	<SubTexture name="engineSpin0006" x="0" y="516" width="258" height="258"/>
+	<SubTexture name="engineSpin0007" x="258" y="516" width="258" height="258"/>
+	<SubTexture name="engineSpin0008" x="516" y="516" width="258" height="258"/>
+	<SubTexture name="engineSpin0009" x="0" y="774" width="258" height="258"/>
+	<SubTexture name="engineSpin0010" x="258" y="774" width="258" height="258"/>
+	<SubTexture name="engineSpin0011" x="516" y="774" width="258" height="258"/>
+	<SubTexture name="engineSpin0012" x="0" y="1032" width="258" height="258"/>
+	<SubTexture name="engineSpin0013" x="258" y="1032" width="258" height="258"/>
+	<SubTexture name="engineSpin0014" x="516" y="1032" width="258" height="258"/>
+</TextureAtlas>

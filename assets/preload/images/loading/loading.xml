@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="loading.png">
+	<!-- Created with Adobe Animate version 19.1.0.349 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="loading0000" x="0" y="0" width="1389" height="1447"/>
+	<SubTexture name="loading0001" x="1389" y="0" width="1389" height="1447"/>
+	<SubTexture name="loading0002" x="2778" y="0" width="1389" height="1447"/>
+	<SubTexture name="loading0003" x="4167" y="0" width="1389" height="1447"/>
+	<SubTexture name="loading0004" x="5556" y="0" width="1389" height="1447"/>
+	<SubTexture name="loading0005" x="0" y="1447" width="1389" height="1447"/>
+	<SubTexture name="loading0006" x="1389" y="1447" width="1389" height="1447"/>
+	<SubTexture name="loading0007" x="2778" y="1447" width="1389" height="1447"/>
+	<SubTexture name="loading0008" x="4167" y="1447" width="1389" height="1447"/>
+	<SubTexture name="loading0009" x="5556" y="1447" width="1389" height="1447"/>
+	<SubTexture name="loading0010" x="0" y="2894" width="1389" height="1447"/>
+	<SubTexture name="loading0011" x="1389" y="2894" width="1389" height="1447"/>
+	<SubTexture name="loading0012" x="2778" y="2894" width="1389" height="1447"/>
+	<SubTexture name="loading0013" x="4167" y="2894" width="1389" height="1447"/>
+	<SubTexture name="loading0014" x="5556" y="2894" width="1389" height="1447"/>
+	<SubTexture name="loading0015" x="0" y="4341" width="1389" height="1447"/>
+	<SubTexture name="loading0016" x="1389" y="4341" width="1389" height="1447"/>
+	<SubTexture name="loading0017" x="2778" y="4341" width="1389" height="1447"/>
+	<SubTexture name="loading0018" x="4167" y="4341" width="1389" height="1447"/>
+	<SubTexture name="loading0019" x="5556" y="4341" width="1389" height="1447"/>
+	<SubTexture name="loading0020" x="0" y="5788" width="1389" height="1447"/>
+	<SubTexture name="loading0021" x="1389" y="5788" width="1389" height="1447"/>
+	<SubTexture name="loading0022" x="2778" y="5788" width="1389" height="1447"/>
+</TextureAtlas>

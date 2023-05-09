@@ -36,6 +36,9 @@ class MasterEditorMenu extends MusicBeatState
 	private var curDirectory = 0;
 	private var directoryTxt:FlxText;
 
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
+
 	override function create()
 	{
 		FlxG.camera.bgColor = FlxColor.BLACK;
@@ -46,7 +49,7 @@ class MasterEditorMenu extends MusicBeatState
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
-		bg.color = 0xFF353535;
+		bg.color = 0xFF234135;
 		add(bg);
 
 		grpTexts = new FlxTypedGroup<Alphabet>();
@@ -59,6 +62,23 @@ class MasterEditorMenu extends MusicBeatState
 			leText.targetY = i;
 			grpTexts.add(leText);
 		}
+
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', true, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 230;
+		frontEngine.y = -10;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
 		
 		#if MODS_ALLOWED
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 42).makeGraphic(FlxG.width, 42, 0xFF000000);
@@ -89,25 +109,30 @@ class MasterEditorMenu extends MusicBeatState
 	{
 		if (controls.UI_UP_P)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(-1);
 		}
 		if (controls.UI_DOWN_P)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(1);
 		}
 		#if MODS_ALLOWED
 		if(controls.UI_LEFT_P)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			changeDirectory(-1);
 		}
 		if(controls.UI_RIGHT_P)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			changeDirectory(1);
 		}
 		#end
 
 		if (controls.BACK)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
@@ -124,12 +149,14 @@ class MasterEditorMenu extends MusicBeatState
 					LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
 				case 'Editor Dialogo':
 					LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
-				//case 'Editor Notas'://felt it would be cool maybe				//isso não é legal se o jogo não salva direito a edição e perde todo o trabalho das notas ao sair
+				//case 'Editor Notas'://felt it would be cool maybe				//isso não é legal se o jogo não salva direito a edição e perde todo o trabalho das notas ao sair, não pretendo arrumar essa engine.
 					//LoadingState.loadAndSwitchState(new ChartingState(), false);
 				//case 'Editor Estagios (ALPHA)': // i'll finish it somedays... maybe....
 					//LoadingState.loadAndSwitchState(new StageEditorState(), false);
 			}
 			FlxG.sound.music.volume = 0;
+			frontEngine.animation.play('engineSpin', true, false);
+			FlxG.sound.play(Paths.sound('confirmOption'));
 			#if PRELOAD_ALL
 			FreeplayState.destroyFreeplayVocals();
 			#end

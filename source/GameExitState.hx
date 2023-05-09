@@ -53,6 +53,9 @@ class GameExitState extends MusicBeatState
 	var selectorLeft:Alphabet;
 	var selectorRight:Alphabet;
 
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
+
 	override function create() {
 		#if desktop
 		DiscordClient.changePresence("Game Closing Menu", null);
@@ -60,7 +63,7 @@ class GameExitState extends MusicBeatState
 
         var bg:FlxBackdrop = new FlxBackdrop(Paths.image('backTitle'), 0.2, 0, true, true);
 		bg.velocity.set(200, 110);
-		bg.alpha = 0.5;
+		//bg.alpha = 0.5;
 		bg.updateHitbox();
 
 		bg.screenCenter();
@@ -91,6 +94,24 @@ class GameExitState extends MusicBeatState
 
 		changeSelection();
 
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 1320;
+		frontEngine.y = -10;
+		frontEngine.flipX = true;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
+
 		super.create();
 	}
 
@@ -98,13 +119,16 @@ class GameExitState extends MusicBeatState
 		super.update(elapsed);
 
 		if (controls.UI_UP_P) {
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(-1);
 		}
 		if (controls.UI_DOWN_P) {
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(1);
 		}
 
 		if (controls.BACK) {
+			frontEngine.animation.play('engineSpin', true, false);
 			FlxG.sound.play(Paths.sound('backMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}

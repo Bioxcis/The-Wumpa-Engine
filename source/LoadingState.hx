@@ -5,6 +5,8 @@ import lime.app.Future;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.FlxSprite;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.util.FlxTimer;
 import flixel.math.FlxMath;
@@ -31,6 +33,7 @@ class LoadingState extends MusicBeatState
 	var directory:String;
 	var callbacks:MultiCallback;
 	var targetShit:Float = 0;
+	var alphaTween:FlxTween;
 
 	function new(target:FlxState, stopMusic:Bool, directory:String)
 	{
@@ -40,25 +43,70 @@ class LoadingState extends MusicBeatState
 		this.directory = directory;
 	}
 
-	var funkay:FlxSprite;
+	//var funkay:FlxSprite;
 	var loadBar:FlxSprite;
+	var loadingCrashito:FlxSprite;
+	var loadText:FlxSprite;
+	public var onFinish:Void->Void = null;
+
 	override function create()
 	{
-		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xffff7011);
+		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xff000000); //Laranja '0xffff7011'
 		add(bg);
-		funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE));//PARA ALEATORIO, PÔR ENTRE O NOME E O .PNG = '+FlxG.ramdom.int(1,5)+'
+		/*funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE)); //PARA ALEATORIO, PÔR ENTRE O NOME E O .PNG = '+FlxG.ramdom.int(1,5)+'
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
 		funkay.antialiasing = ClientPrefs.globalAntialiasing;
 		add(funkay);
 		funkay.scrollFactor.set();
-		funkay.screenCenter();
+		funkay.screenCenter();*/
 
-		loadBar = new FlxSprite(0, FlxG.height - 20).makeGraphic(FlxG.width, 10, 0xff66ff00);
+		loadingCrashito = new FlxSprite().loadGraphic(Paths.image('loading/loading'), true);
+		loadingCrashito.frames = Paths.getSparrowAtlas('loading/loading');
+		loadingCrashito.animation.addByPrefix('loading', 'loading', 15, true);
+		loadingCrashito.animation.play('loading', true, false);
+        loadingCrashito.scrollFactor.set(0, 0);
+		loadingCrashito.setGraphicSize(Std.int(loadingCrashito.width * 0.6));
+        loadingCrashito.screenCenter();  
+		loadingCrashito.alpha = 0.6;
+		loadingCrashito.antialiasing = ClientPrefs.globalAntialiasing;
+		add(loadingCrashito);
+
+		loadText = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/loading/carregando.png', IMAGE)); //PARA ALEATORIO, PÔR ENTRE O NOME E O .PNG = '+FlxG.ramdom.int(1,5)+'
+		loadText.setGraphicSize(0, FlxG.height);
+		loadText.updateHitbox();
+		loadText.antialiasing = ClientPrefs.globalAntialiasing;
+		loadText.scrollFactor.set();
+		loadText.screenCenter();
+		loadText.alpha = 0;
+		add(loadText);
+
+		loadBar = new FlxSprite(0, FlxG.height - 1000).makeGraphic(FlxG.width + 10, 15, 0xff23a7ff);
 		loadBar.screenCenter(X);
 		loadBar.antialiasing = ClientPrefs.globalAntialiasing;
 		add(loadBar);
-		
+
+		alphaTween = FlxTween.tween(loadText, {alpha: 1}, 0.4, {onComplete: function (twn:FlxTween) {
+			alphaTween = FlxTween.tween(loadText, {alpha: 0}, 0.3, {
+				startDelay: 0.3,
+				onComplete: function (twn:FlxTween) {
+					alphaTween = FlxTween.tween(loadText, {alpha: 1}, 0.3, {
+						startDelay: 0.3,
+						onComplete: function (twn:FlxTween) {
+							alphaTween = FlxTween.tween(loadText, {alpha: 0}, 0.3, {
+								startDelay: 0.3,
+								onComplete: function(twn:FlxTween) {
+									alphaTween = null;
+									remove(loadText);
+									if(onFinish != null) onFinish();
+								}
+							});
+						}
+					});
+				}
+			});
+		}});
+
 		initSongsManifest().onComplete
 		(
 			function (lib)
@@ -81,7 +129,7 @@ class LoadingState extends MusicBeatState
 			}
 		);
 	}
-	
+
 	function checkLoadSong(path:String)
 	{
 		if (!Assets.cache.hasSound(path))
@@ -111,7 +159,7 @@ class LoadingState extends MusicBeatState
 	}
 	
 	override function update(elapsed:Float)
-	{
+	{	
 		super.update(elapsed);
 		/*funkay.setGraphicSize(Std.int(0.88 * FlxG.width + 0.9 * (funkay.width - 0.88 * FlxG.width)));
 		funkay.updateHitbox();
@@ -123,7 +171,7 @@ class LoadingState extends MusicBeatState
 
 		if(callbacks != null) {
 			targetShit = FlxMath.remapToRange(callbacks.numRemaining / callbacks.length, 1, 0, 0, 1);
-			loadBar.scale.x += 0.5 * (targetShit - loadBar.scale.x);
+			loadBar.scale.x += 0.8 * (targetShit - loadBar.scale.x);
 		}
 	}
 	
@@ -190,6 +238,10 @@ class LoadingState extends MusicBeatState
 	
 	override function destroy()
 	{
+		if(alphaTween != null) {
+			alphaTween.cancel();
+		}
+
 		super.destroy();
 		
 		callbacks = null;

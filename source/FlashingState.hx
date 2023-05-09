@@ -24,13 +24,14 @@ class FlashingState extends MusicBeatState
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
-			"Hey, watch out!\n
-			This Mod contains some flashing lights!\n
-			Press ENTER to disable them now or go to Options Menu.\n
-			Press ESCAPE to ignore this message.\n
-			You've been warned!",
+			"Ei, veja esse aviso!\n
+			Esse modo contem luzes piscantes!\n
+			Press ENTER para desativar ou veja isso nos Ajustes.\n
+			Press ESCAPE para ignorar essa mensagem.\n
+			Voce foi avisado!\n
+			Divirta-se!!!",
 			32);
-		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
+		warnText.setFormat("Crash-a-Like", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
 	}

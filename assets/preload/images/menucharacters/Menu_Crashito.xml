@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Menu_Crashito.png">
+	<!-- Created with Adobe Animate version 19.1.0.349 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="M crashito idle0000" x="0" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0001" x="0" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0002" x="438" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0003" x="438" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0004" x="876" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0005" x="876" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0006" x="1314" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0007" x="1314" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0008" x="1752" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0009" x="1752" y="0" width="438" height="637"/>
+	<SubTexture name="M crashito idle0010" x="0" y="637" width="438" height="637"/>
+	<SubTexture name="M crashito idle0011" x="0" y="637" width="438" height="637"/>
+	<SubTexture name="M crashito idle0012" x="0" y="0" width="438" height="637"/>
+</TextureAtlas>

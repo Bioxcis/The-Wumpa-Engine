@@ -33,7 +33,7 @@ class Main extends Sprite
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var framerate:Int = 60; // How many frames per second the game should run at.
 	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
-	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
+	var startFullscreen:Bool = true; // Whether to start the game in fullscreen on desktop targets
 	public static var fpsVar:FPS;
 
 	// You can pretty much ignore everything from here on - your code should go in your states.
@@ -133,7 +133,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + "\nPlease report this error to the GitHub page: https://github.com/notweuz/FNF-OSEngine\n\n> Crash Handler written by: sqirra-rng";
+		errMsg += "\nErro nao detectado: " + e.error + "\nPor favor, reporte este erro para o criador do mod Crash Bandicoot Night Funkin\n\n> Gerenciador de falhas escrito por: sqirra-rng";
 
 		if (!FileSystem.exists("./crash/"))
 			FileSystem.createDirectory("./crash/");
@@ -141,9 +141,9 @@ class Main extends Sprite
 		File.saveContent(path, errMsg + "\n");
 
 		Sys.println(errMsg);
-		Sys.println("Crash dump saved in " + Path.normalize(path));
+		Sys.println("Despejo de falha salvo em " + Path.normalize(path));
 
-		Application.current.window.alert(errMsg, "Error!");
+		Application.current.window.alert(errMsg, "Erro!");
 		DiscordClient.shutdown();
 		Sys.exit(1);
 	}

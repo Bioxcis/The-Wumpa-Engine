@@ -42,6 +42,8 @@ class NoteOffsetState extends MusicBeatState
 	var changeModeText:FlxText;
 	var exitText:FlxText;
 
+	var backEngine:FlxSprite;
+
 	override public function create()
 	{
 		// Cameras
@@ -143,7 +145,7 @@ class NoteOffsetState extends MusicBeatState
 
 		// Note delay stuff
 		
-		beatText = new Alphabet(0, 0, 'batida!', true, false, 0.05, 0.6);
+		beatText = new Alphabet(0, 0, 'Batida!', true, false, 0.05, 0.6);
 		beatText.x += 260;
 		beatText.alpha = 0;
 		beatText.acceleration.y = 250;
@@ -181,17 +183,30 @@ class NoteOffsetState extends MusicBeatState
 
 		///////////////////////
 
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+		backEngine.cameras = [camHUD];
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
 		var blackBox:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, 40, FlxColor.BLACK);
 		blackBox.scrollFactor.set();
 		blackBox.alpha = 0.6;
 		blackBox.cameras = [camHUD];
 		add(blackBox);
 
-		exitText = new FlxText(0, 8, FlxG.width, "Pressione Esc para sair", 32);//não tinha nenhum aviso aqui antes, agora tem :D
+		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
+		textBG.alpha = 0.6;
+		textBG.cameras = [camHUD];
+		add(textBG);
+
+		exitText = new FlxText(0, textBG.y - 2, FlxG.width, "", 32);//não tinha nenhum aviso aqui antes, agora tem :D
 		exitText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
 		exitText.scrollFactor.set();
 		exitText.cameras = [camHUD];
-		add(exitText);
+		add(exitText); 
 
 		changeModeText = new FlxText(0, 4, FlxG.width, "", 32);
 		changeModeText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
@@ -427,7 +442,7 @@ class NoteOffsetState extends MusicBeatState
 	{
 		for (i in 0...4)
 		{
-			var text:FlxText = new FlxText(10, 48 + (i * 30), 0, '', 24);
+			var text:FlxText = new FlxText(70, 70 + (i * 30), 0, '', 24);
 			text.setFormat(Paths.font("crash.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			text.scrollFactor.set();
 			text.borderSize = 2;
@@ -447,7 +462,7 @@ class NoteOffsetState extends MusicBeatState
 		{
 			switch(i)
 			{
-				case 0: dumbTexts.members[i].text = 'Compensacao Offset:';
+				case 0: dumbTexts.members[i].text = 'Compensacao Offset:'; 
 				case 1: dumbTexts.members[i].text = '[' + ClientPrefs.comboOffset[0] + ', ' + ClientPrefs.comboOffset[1] + ']';
 				case 2: dumbTexts.members[i].text = 'Numero Offset:';
 				case 3: dumbTexts.members[i].text = '[' + ClientPrefs.comboOffset[2] + ', ' + ClientPrefs.comboOffset[3] + ']';
@@ -466,20 +481,23 @@ class NoteOffsetState extends MusicBeatState
 		rating.visible = onComboMenu;
 		comboNums.visible = onComboMenu;
 		dumbTexts.visible = onComboMenu;
-		exitText.visible = onComboMenu;
 		
 		timeBarBG.visible = !onComboMenu;
 		timeBar.visible = !onComboMenu;
 		timeTxt.visible = !onComboMenu;
 		beatText.visible = !onComboMenu;
-		exitText.visible = !onComboMenu;
 
 		if(onComboMenu)
+		{
 			changeModeText.text = '< Offset do Combo (Pressione Accept para Delay) >';
+			exitText.text = 'Pressione Esc ou Back para voltar';
+		}
 		else
 			changeModeText.text = '< Delay da Nota/Acerto (Pressione Accept para Combo) >';
+			exitText.text = 'Pressione Esc ou Back para voltar';
 
 		changeModeText.text = changeModeText.text.toUpperCase();
+		exitText.text = exitText.text.toUpperCase();
 		FlxG.mouse.visible = onComboMenu;
 	}
 }

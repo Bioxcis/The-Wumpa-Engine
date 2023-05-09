@@ -41,13 +41,16 @@ class NotesSubState extends MusicBeatSubstate
 
 	var blackBG:FlxSprite;
 	var hsbText:Alphabet;
+	
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
 
 	var posX = 230;
 	public function new() {
 		super();
 		
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg.color = 0xff5a35ff;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
@@ -61,7 +64,7 @@ class NotesSubState extends MusicBeatSubstate
 		grpNumbers = new FlxTypedGroup<Alphabet>();
 		add(grpNumbers);
 
-		var resetText:FlxText = new FlxText(12, FlxG.height - 40, "Pressione CONTROL para resetar a seta selecionada.", 80);
+		var resetText:FlxText = new FlxText(12, FlxG.height - 30, "Pressione CONTROL para resetar a seta selecionada.", 80);
 		resetText.setFormat("Crash-a-Like", 24, FlxColor.WHITE, CENTER); //VCR OSD Mono
 		add(resetText);
 
@@ -93,6 +96,23 @@ class NotesSubState extends MusicBeatSubstate
 		hsbText.x = posX + 240;
 		add(hsbText);
 
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 230;
+		frontEngine.y = -10;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
+
 		changeSelection();
 	}
 
@@ -102,13 +122,16 @@ class NotesSubState extends MusicBeatSubstate
 			if(holdTime < 0.5) {
 				if(controls.UI_LEFT_P) {
 					updateValue(-1);
+					frontEngine.animation.play('engineSpin', true, false);
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 				} else if(controls.UI_RIGHT_P) {
 					updateValue(1);
+					frontEngine.animation.play('engineSpin', true, false);
 					FlxG.sound.play(Paths.sound('scrollMenu'));
 				} else if(controls.RESET) {
 					resetValue(curSelected, typeSelected);
 					FlxG.sound.play(Paths.sound('scrollMenu'));
+					frontEngine.animation.play('engineSpin', true, false);
 				}
 				if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 					holdTime = 0;
@@ -127,24 +150,29 @@ class NotesSubState extends MusicBeatSubstate
 				}
 				if(controls.UI_LEFT_R || controls.UI_RIGHT_R) {
 					FlxG.sound.play(Paths.sound('scrollMenu'));
+					frontEngine.animation.play('engineSpin', true, false);
 					holdTime = 0;
 				}
 			}
 		} else {
 			if (controls.UI_UP_P) {
 				changeSelection(-1);
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.UI_DOWN_P) {
 				changeSelection(1);
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.UI_LEFT_P) {
 				changeType(-1);
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.UI_RIGHT_P) {
 				changeType(1);
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if(controls.RESET || FlxG.keys.justPressed.CONTROL) {
@@ -152,10 +180,12 @@ class NotesSubState extends MusicBeatSubstate
 					resetValue(curSelected, i);
 				}
 				FlxG.camera.flash(FlxColor.BLACK, 1);
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('scrollMenu'));
 			}
 			if (controls.ACCEPT && nextAccept <= 0) {
-				FlxG.sound.play(Paths.sound('scrollMenu'));
+				FlxG.sound.play(Paths.sound('confirmOption'));
+				frontEngine.animation.play('engineSpin', true, false);
 				changingNote = true;
 				holdTime = 0;
 				for (i in 0...grpNumbers.length) {
@@ -185,6 +215,7 @@ class NotesSubState extends MusicBeatSubstate
 			}
 			changingNote = false;
 			FlxG.sound.play(Paths.sound('cancelMenu'));
+			frontEngine.animation.play('engineSpin', true, false);
 		}
  
 		if(nextAccept > 0) {

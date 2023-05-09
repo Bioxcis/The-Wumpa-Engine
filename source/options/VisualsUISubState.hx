@@ -132,6 +132,13 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Novo Tamanho Hud',
+			"Se marcado, o tamanho da HUD do jogo será alterada\npara o novo modelo!",
+			'hudSize',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Transparencia Barra de Vida',
 			'Quao transparente deve ser a barra de vida e os icones.',
 			'healthBarAlpha',
@@ -154,16 +161,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangeFPSCounter;
 		#end
 
-		var option:Option = new Option('Plano de Fundo Tematico do Menu Principal',
+		/*var option:Option = new Option('Plano de Fundo Tematico do Menu Principal',
 			'Se marcado, a cor de fundo do menu principal depende da hora do dia.',
 			'themedmainmenubg',
 			'bool',
 			false);
 		option.defaultValue = false;
 		addOption(option);
-		
 
-		/*
 		var option:Option = new Option('Auto Title Skip',
 			'If checked, automatically skips the title state.',
 			'autotitleskip',
@@ -185,7 +190,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			"Que musica prefere que toque ao pausar?",
 			'pauseMusic',
 			'string',
-			'Tea Time',
+			'Crash Time',
 			['Nada', 'Breakfast', 'Tea Time', 'Crash Time']);
 		addOption(option);
 		option.onChange = onChangePauseMusic;

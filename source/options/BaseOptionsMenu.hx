@@ -44,6 +44,9 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	public var title:String;
 	public var rpcTitle:String;
 
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
+
 	public function new()
 	{
 		super();
@@ -56,7 +59,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		#end
 		
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg.color = 0xff2d50c2;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
@@ -70,6 +73,23 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		checkboxGroup = new FlxTypedGroup<CheckboxThingie>();
 		add(checkboxGroup);
+
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 230;
+		frontEngine.y = -10;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
 
 		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
 		descBox.alpha = 0.6;
@@ -137,15 +157,18 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	{
 		if (controls.UI_UP_P)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(-1);
 		}
 		if (controls.UI_DOWN_P)
 		{
+			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(1);
 		}
 
 		if (controls.BACK) {
 			close();
+			frontEngine.animation.play('engineSpin', true, false);
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 		}
 
@@ -161,7 +184,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			{
 				if(controls.ACCEPT)
 				{
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.sound('confirmOption'));
+					frontEngine.animation.play('engineSpin', true, false);
 					curOption.setValue((curOption.getValue() == true) ? false : true);
 					curOption.change();
 					reloadCheckboxes();
@@ -254,6 +278,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 					}
 					leOption.change();
 				}
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				reloadCheckboxes();
 			}
@@ -280,6 +305,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	function clearHold()
 	{
 		if(holdTime > 0.5) {
+			frontEngine.animation.play('engineSpin', true, false);
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
 		holdTime = 0;
@@ -324,6 +350,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			boyfriend.visible = optionsArray[curSelected].showBoyfriend;
 		}
 		curOption = optionsArray[curSelected]; //shorter lol
+		frontEngine.animation.play('engineSpin', true, false);
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 

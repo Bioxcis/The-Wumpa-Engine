@@ -68,11 +68,14 @@ class ControlsSubState extends MusicBeatSubstate {
 	var rebindingKey:Bool = false;
 	var nextAccept:Int = 5;
 
+	var backEngine:FlxSprite;
+	var frontEngine:FlxSprite;
+
 	public function new() {
 		super();
 
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xFFea71fd;
+		bg.color = 0xffbf35ff;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
@@ -109,6 +112,24 @@ class ControlsSubState extends MusicBeatSubstate {
 				if(curSelected < 0) curSelected = i;
 			}
 		}
+
+		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+        backEngine.scrollFactor.set(0, 0);
+        backEngine.setGraphicSize(Std.int(backEngine.width * 1));
+        backEngine.screenCenter();
+        backEngine.antialiasing = ClientPrefs.globalAntialiasing;
+        add(backEngine);
+
+		frontEngine = new FlxSprite();
+		frontEngine.frames = Paths.getSparrowAtlas('mainmenu/engine');
+		frontEngine.animation.addByPrefix('engineSpin', 'engineSpin', 24, false);
+		frontEngine.animation.play('engineSpin', false, false);
+        frontEngine.scrollFactor.set(0, 0);
+		frontEngine.x = FlxG.width - 230;
+		frontEngine.y = -10;
+		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
+		add(frontEngine);
+
 		changeSelection();
 	}
 
@@ -117,18 +138,22 @@ class ControlsSubState extends MusicBeatSubstate {
 	override function update(elapsed:Float) {
 		if(!rebindingKey) {
 			if (controls.UI_UP_P) {
+				frontEngine.animation.play('engineSpin', true, false);
 				changeSelection(-1);
 			}
 			if (controls.UI_DOWN_P) {
+				frontEngine.animation.play('engineSpin', true, false);
 				changeSelection(1);
 			}
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+				frontEngine.animation.play('engineSpin', true, false);
 				changeAlt();
 			}
 
 			if (controls.BACK) {
 				ClientPrefs.reloadControls();
 				close();
+				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 			}
 
@@ -138,6 +163,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					reloadKeys();
 					changeSelection();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
+					frontEngine.animation.play('engineSpin', true, false);
 				} else if(!unselectableCheck(curSelected)) {
 					bindingTime = 0;
 					rebindingKey = true;
@@ -147,6 +173,7 @@ class ControlsSubState extends MusicBeatSubstate {
 						grpInputs[getInputTextNum()].alpha = 0;
 					}
 					FlxG.sound.play(Paths.sound('scrollMenu'));
+					frontEngine.animation.play('engineSpin', true, false);
 				}
 			}
 		} else {
@@ -163,6 +190,7 @@ class ControlsSubState extends MusicBeatSubstate {
 
 				reloadKeys();
 				FlxG.sound.play(Paths.sound('confirmMenu'));
+				frontEngine.animation.play('engineSpin', true, false);
 				rebindingKey = false;
 			}
 
@@ -174,6 +202,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					grpInputs[curSelected].alpha = 1;
 				}
 				FlxG.sound.play(Paths.sound('scrollMenu'));
+				frontEngine.animation.play('engineSpin', true, false);
 				rebindingKey = false;
 				bindingTime = 0;
 			}

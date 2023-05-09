@@ -62,18 +62,18 @@ class MenuCharacterEditorState extends MusicBeatState
 			grpWeekCharacters.add(weekCharacterThing);
 		}
 
-		add(new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51));
+		add(new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFF51b5f9));
 		add(grpWeekCharacters);
 
 		txtOffsets = new FlxText(20, 10, 0, "[0, 0]", 32);
-		txtOffsets.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
+		txtOffsets.setFormat("Crash-a-Like", 32, FlxColor.WHITE, CENTER);
 		txtOffsets.alpha = 0.7;
 		add(txtOffsets);
 
 		var tipText:FlxText = new FlxText(0, 540, FlxG.width,
-			"Arrow Keys - Change Offset (Hold shift for 10x speed)
-			\nSpace - Play \"Start Press\" animation (Boyfriend Character Type)", 16);
-		tipText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER);
+			"Setas - Mudam o Offset (aperte shift para 10x rápido)
+			\nSpace - Toca a animação \"Start Press\" (para tipos de personagem Boyfriend)", 16);
+		tipText.setFormat(Paths.font("crash.ttf"), 16, FlxColor.WHITE, CENTER);
 		tipText.scrollFactor.set();
 		add(tipText);
 
@@ -89,7 +89,7 @@ class MenuCharacterEditorState extends MusicBeatState
 	var blockPressWhileTypingOn:Array<FlxUIInputText> = [];
 	function addEditorBox() {
 		var tabs = [
-			{name: 'Character Type', label: 'Character Type'},
+			{name: 'Character Type', label: 'Tipo de Personagem'},
 		];
 		UI_typebox = new FlxUITabMenu(null, tabs, true);
 		UI_typebox.resize(120, 180);
@@ -100,7 +100,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		add(UI_typebox);
 
 		var tabs = [
-			{name: 'Character', label: 'Character'},
+			{name: 'Character', label: 'Personagem'},
 		];
 		UI_mainbox = new FlxUITabMenu(null, tabs, true);
 		UI_mainbox.resize(240, 180);
@@ -110,14 +110,14 @@ class MenuCharacterEditorState extends MusicBeatState
 		addCharacterUI();
 		add(UI_mainbox);
 
-		var loadButton:FlxButton = new FlxButton(0, 480, "Load Character", function() {
+		var loadButton:FlxButton = new FlxButton(0, 480, "Carr Persona", function() {
 			loadCharacter();
 		});
 		loadButton.screenCenter(X);
 		loadButton.x -= 60;
 		add(loadButton);
 	
-		var saveButton:FlxButton = new FlxButton(0, 480, "Save Character", function() {
+		var saveButton:FlxButton = new FlxButton(0, 480, "Salvar Persona", function() {
 			saveCharacter();
 		});
 		saveButton.screenCenter(X);
@@ -133,7 +133,7 @@ class MenuCharacterEditorState extends MusicBeatState
 		var tab_group = new FlxUI(null, UI_typebox);
 		tab_group.name = "Character Type";
 
-		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Opponent", 100);
+		opponentCheckbox = new FlxUICheckBox(10, 20, null, null, "Oponente", 100);
 		opponentCheckbox.callback = function()
 		{
 			curTypeSelected = 0;
@@ -184,16 +184,16 @@ class MenuCharacterEditorState extends MusicBeatState
 			characterFile.flipX = flipXCheckbox.checked;
 		};
 
-		var reloadImageButton:FlxButton = new FlxButton(140, confirmInputText.y + 30, "Reload Char", function() {
+		var reloadImageButton:FlxButton = new FlxButton(140, confirmInputText.y + 30, "Recarr Pers.", function() {
 			reloadSelectedCharacter();
 		});
 		
 		scaleStepper = new FlxUINumericStepper(140, imageInputText.y, 0.05, 1, 0.1, 30, 2);
 
-		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Start Press animation on the .XML:');
-		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Image file name:'));
-		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Idle animation on the .XML:'));
-		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Scale:'));
+		confirmDescText = new FlxText(10, confirmInputText.y - 18, 0, 'Animacao Start Press no .XML:');
+		tab_group.add(new FlxText(10, imageInputText.y - 18, 0, 'Imagem do arqiuvi:'));
+		tab_group.add(new FlxText(10, idleInputText.y - 18, 0, 'Animacao Idle no .XML:'));
+		tab_group.add(new FlxText(scaleStepper.x, scaleStepper.y - 18, 0, 'Escala:'));
 		tab_group.add(flipXCheckbox);
 		tab_group.add(reloadImageButton);
 		tab_group.add(confirmDescText);
