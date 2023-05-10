@@ -1,5 +1,5 @@
-![](https://media.discordapp.net/attachments/969211146412363828/980124443164672000/23336ff517a80f27.png?width=1101&height=701)
-# Friday Night Funkin' - OS Engine - Modded Psych Engine 
+![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/e1c6112556b24ace7b4e19703043f34ef6e7c338/art/CBNF_Logo.png)
+# Crash Bandicoot Night Funkin' - Wumpa Engine - Modded OS Engine 
 ![](https://img.shields.io/github/issues/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/forks/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/stars/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/license/notweuz/FNF-OSEngine) ![GitHub all releases](https://img.shields.io/github/downloads/notweuz/FNF-OSEngine/total) ![GitHub repo size](https://img.shields.io/github/repo-size/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/contributors/notweuz/FNF-OSEngine) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/notweuz/FNF-OSEngine/latest/total)
 
 ## Installation:
