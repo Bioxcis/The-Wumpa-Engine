@@ -1,114 +1,91 @@
 ![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/e1c6112556b24ace7b4e19703043f34ef6e7c338/art/CBNF_Logo.png)
 # Crash Bandicoot Night Funkin' - Wumpa Engine - Modded OS Engine 
-![](https://img.shields.io/github/issues/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/forks/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/stars/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/license/notweuz/FNF-OSEngine) ![GitHub all releases](https://img.shields.io/github/downloads/notweuz/FNF-OSEngine/total) ![GitHub repo size](https://img.shields.io/github/repo-size/notweuz/FNF-OSEngine) ![](https://img.shields.io/github/contributors/notweuz/FNF-OSEngine) ![GitHub release (latest by date)](https://img.shields.io/github/downloads/notweuz/FNF-OSEngine/latest/total)
 
-## Installation:
+## Compilação:
 You must have [the most up-to-date version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
+Necessário ter [a versão mais atualizada do Haxe](https://haxe.org/download/), não use versões anteriores.
 
 Follow a Friday Night Funkin' source code compilation tutorial, after this you will need to install LuaJIT.
+Siga um tutorial de compilação do código-fonte do Friday Night Funkin', de preferencia o descrito [aqui](https://github.com/notweuz/FNF-OSEngine).
 
-To install LuaJIT do this: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit` on a Command prompt/PowerShell
+## Creditos do Wumpa Engine:
+* [Bioxcis](https://github.com/Bioxcis) - Codificação, Tradução, Artes e design
 
-...Or if you don't want your mod to be able to run .lua scripts, delete the "LUA_ALLOWED" line on Project.xml
+## Creditos do OS Engine:
+* [weuz_](https://github.com/notweuz) - Codificação
+* [nelifs](https://github.com/nelifs) - Codificação e Design
+* [Cooljer](https://github.com/cooljer) - Artes
 
-If you get an error about StatePointer when using Lua, run `haxelib remove linc_luajit` into Command Prompt/PowerShell, then re-install linc_luajit.
+### Agradecimentos Especiais do OS Engine
+* [jonnycat](https://github.com/McJonnycat) - Correção de bugs na Engine <3.
+* [Kade Engine](https://gamebanana.com/mods/44291) - Skin das Notas Circulares
 
-If you want video support on your mod, simply do `haxelib install hxCodec` on a Command prompt/PowerShell
-
-## OS Engine Credits:
-* [weuz_](https://github.com/notweuz) - Coding
-* [nelifs](https://github.com/nelifs) - Coding and Design
-* [Cooljer](https://github.com/cooljer) - Arts
-
-### OS Engine Special Thanks
-* [jonnycat](https://github.com/McJonnycat) - Fixing bugs in Engine <3.
-* [Kade Engine](https://gamebanana.com/mods/44291) - Circle Note Skin
-
-## Psych Engine Credits:
+## Creditos do Psych Engine:
 * Shadow Mario - Programmer
 * RiverOaken - Artist
 * Yoshubs - Assistant Programmer
 
-### Psych Engine Special Thanks
-* bbpanzu - Ex-Programmer
-* shubs - New Input System
-* SqirraRNG - Crash Handler and Base code for Chart Editor's Waveform
-* KadeDev - Fixed some cool stuff on Chart Editor and other PRs
-* iFlicky - Composer of Psync and Tea Time, also made the Dialogue Sounds
+### Agradecimentos Especiais do Psych Engine
+* bbpanzu - Ex-Programador
+* shubs - Novo Sistema de Input
+* SqirraRNG - Gerenciador de falhas e código base para a Waveform do Editor de Gráficos
+* KadeDev - Corrigido alguns itens do Chart Editor e outros
+* iFlicky - Compositor de Psync e Tea Time, responsável pelos sons originais dos Diálogos
 * PolybiusProxy - .MP4 Video Loader Library (hxCodec)
-* Keoiki - Note Splash Animations
-* Smokey - Sprite Atlas Support
-* Nebula the Zorua - LUA JIT Fork and some Lua reworks & VCR Shader code
+* Keoiki - Animações de Splash das Notas
+* Smokey - Suporte a Sprite Atlas
+* Nebula the Zorua - LUA JIT Fork e alguns retrabalhos de Lua e código VCR Shader
 _____________________________________
 
-# Features
+# Descrição
 
-## Psych Engine Features
+## Sobre a Wumpa Engine
 
-OS Engine is a fork of Psych Engine, so you can use almost every feature from Psych Engine in OS Engine!
+Wumpa Engine é uma leve modificação da OS Engine, então você pode usar quase todos os recursos da Psych Engine aqui!
+Não compatível com Scripts Lua mais atuais por enquanto (versão 0.5.2 Psych/v1.5.1 OS).
 
-## OS Engine Features
+## Caracteristicas
 
-### Psych Engine mods compability
-Yes, almost every mod for Psych Engine runs on OS Engine.
+### Design dos menus
+O Design e as animações dos menus do jogo foram editados e adicionados com características semelhantes aos jogos da franquia Crash Bandicoot.
 
-### Note Skins
-OS Engine adds a note skins system! There's only Default and Circle skins by default.
+### Tradução
+Wumpa Engine está disponível em Português (pt-br), traduzindo todos os menus e editores do jogo base. 
 
-![](https://media.discordapp.net/attachments/969211146412363828/969211181728399420/unknown.png)
+For the english version click here!!!
 
-### Showcase Mode
-This feature hides HUD and enables botplay. So you can showcase any mod without any problems.
+![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/aad2dcdba91e0cf3523d9448a91b391f77406be4/art/CBNF_Menus.png)
 
-![](https://media.discordapp.net/attachments/969211146412363828/969211657307951104/unknown.png)
-
-### Hide Score Text
-This feature hides score text under health bar. Idk why you need to use it.
-
-![](https://media.discordapp.net/attachments/969211146412363828/969211797993299979/unknown.png)
-
-### Perfect!! Judgement
-Adds Perfect!! Judgement. It's better than sick. Btw you can disable it in settings if you want.
-
-![](https://media.discordapp.net/attachments/969211146412363828/969213039230455838/unknown.png)
-![](https://media.discordapp.net/attachments/969211146412363828/969212313410351134/unknown.png?width=1440&height=190)
-
-### Lane Underlay
-You can set lane underlay transparency under arrows by using that functions.
+### Novo Tamanho de HUD do jogo
+Altera o zoom da HUD do jogo em uma escala um pouco menor para encaixar e adaptar melhor os ícones/contadores flutuantes das partidas.
+Isso é funcional por meio dos Scripts em Lua!!! Não altera em nada o andamento do jogo no caso de ausência do Script.
 
 ![](https://media.discordapp.net/attachments/969211146412363828/969212761605296198/unknown.png?width=465&height=676)
-![](https://media.discordapp.net/attachments/969211146412363828/969212421887635546/unknown.png?width=1440&height=326)
 
-### Custom Settings in Chart Editor.
-There's multiple new functions in chart editor. Like player/opponent trail, camera move and etc.
+### Novas músicas disponíveis
+Novas músicas para o Menu Principal e para o Pause do jogo na temática de Crash Bandicoot.
+Adaptação da música do menu Ajuste Delay de Nota e Combo Offset.
 
-![](https://media.discordapp.net/attachments/969211146412363828/969213936924774430/unknown.png)
+### Conquistas
+Leve Modificação no sistema de Conquistas e adição de novas Conquistas do Mod vistas no menu Missões.
 
-### Literally Useless Exit Game State
-Now you can press ESC at title state. And game will ask you do you want to close game or no
+# Novas Mecânicas de Jogo
+*Aviso: Diversas funcionalidades especiais do mod estão disponíveis apenas com o uso dos Scripts Lua*
 
-![](https://media.discordapp.net/attachments/969211146412363828/969214715702177812/unknown.png?width=1202&height=676)
+## Notas Especiais
 
-### Bit Changed Main Menu State
+### Caixas
+São 8 novas notas na forma de caixas que oferecem um desafio a mais ao jogo, possibilitando a coleta de certos itens do jogo.
+Um item clássico e marcante que não pode faltar em um jogo do Crash.
 
-![](https://media.discordapp.net/attachments/969211146412363828/969214974369099807/unknown.png)
+### Wumpas
+Uma nota especial e deliciosa que auxilia na saúde do jogador e necessária para obter itens especiais em determinado estilo de nível.
+A comida favorita do nosso querido marsupial laranja.
 
-### Winning icons 
-Instead of 2 icons, there'll be three icons (losing, normal, winning). And yes, you can use double icons (without winning).
-
-![](https://github.com/weuz-github/FNF-OSEngine/blob/main/assets/preload/images/icons/icon-bf.png?raw=true)
-
-*thanks Cooljer for remaking original fnf icons*
-
-### Shaders
-Returned shaders from old psych engine versions. Now you can make your bambi mods.
-
-### Custom Title State
-Bit changed Title State. Now it looks way more better.
-
-![](https://media.discordapp.net/attachments/969211146412363828/969215626126196797/unknown.png?width=1202&height=676)
-
-### Striped Health Bar
-Cassette Girl vibes?
+## Eventos
+Novos eventos disponíveis para uso.
+* O evento 'Set CamZoom' é uma adaptação do evento de zoom original do jogo, porém dividido entre Game e HUD.
+* O evento 'Text Event' permite você criar um texto com a fonte geral do jogo.
+* O evento 'Dadbattle Spotlight' simula o efeito de holofotes visto em Dadbattle.
 
 ![](https://media.discordapp.net/attachments/969211146412363828/969218236950397038/unknown.png)
