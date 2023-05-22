@@ -74,6 +74,22 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		checkboxGroup = new FlxTypedGroup<CheckboxThingie>();
 		add(checkboxGroup);
 
+		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		descBox.alpha = 0.6;
+		add(descBox);
+
+		var titleText:Alphabet = new Alphabet(0, 0, title, true, false, 0, 0.6);
+		titleText.x += 60;
+		titleText.y += 40;
+		titleText.alpha = 0.4;
+		add(titleText);
+
+		descText = new FlxText(50, 600, 1180, "", 32);
+		descText.setFormat(Paths.font("nsane.ttf"), 28, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		descText.scrollFactor.set();
+		descText.borderSize = 1.9;
+		add(descText);
+
 		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
         backEngine.scrollFactor.set(0, 0);
         backEngine.setGraphicSize(Std.int(backEngine.width * 1));
@@ -90,22 +106,6 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		frontEngine.y = -10;
 		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
 		add(frontEngine);
-
-		descBox = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
-		descBox.alpha = 0.6;
-		add(descBox);
-
-		var titleText:Alphabet = new Alphabet(0, 0, title, true, false, 0, 0.6);
-		titleText.x += 60;
-		titleText.y += 40;
-		titleText.alpha = 0.4;
-		add(titleText);
-
-		descText = new FlxText(50, 600, 1180, "", 32);
-		descText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		descText.scrollFactor.set();
-		descText.borderSize = 2.4;
-		add(descText);
 
 		for (i in 0...optionsArray.length)
 		{
@@ -321,7 +321,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 
 		descText.text = optionsArray[curSelected].description;
 		descText.screenCenter(Y);
-		descText.y += 270;
+		descText.y += 300;
 
 		var bullShit:Int = 0;
 
@@ -341,8 +341,8 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			}
 		}
 
-		descBox.setPosition(descText.x - 10, descText.y - 10);
-		descBox.setGraphicSize(Std.int(descText.width + 20), Std.int(descText.height + 25));
+		descBox.setPosition(descText.x - 60, descText.y - 10);
+		descBox.setGraphicSize(Std.int(descText.width + 320), Std.int(descText.height + 2125));
 		descBox.updateHitbox();
 
 		if(boyfriend != null)

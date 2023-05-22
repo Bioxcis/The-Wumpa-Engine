@@ -144,7 +144,7 @@ class PlayState extends MusicBeatState
 
 	public var songSpeedTween:FlxTween;
 	public var songSpeed(default, set):Float = 1;
-	public var songSpeedType:String = "multiplicative";
+	public var songSpeedType:String = "multiplicativo";
 	public var noteKillOffset:Float = 350;
 
 	public var boyfriendGroup:FlxSpriteGroup;
@@ -315,6 +315,9 @@ class PlayState extends MusicBeatState
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
 	var songLength:Float = 0;
+
+	//Restart With no Countdown (set on Lua)
+	public static var restartSkipCountdown:Bool = false;
 
 	public var boyfriendCameraOffset:Array<Float> = null;
 	public var opponentCameraOffset:Array<Float> = null;
@@ -3873,7 +3876,7 @@ class PlayState extends MusicBeatState
 				killHenchmen();
 
 			case 'Add Camera Zoom':
-				if(ClientPrefs.camZooms && FlxG.camera.zoom < 1.35) {
+				if(ClientPrefs.camZooms && FlxG.camera.zoom < 1.35 && !ClientPrefs.hudSize) {
 					var camZoom:Float = Std.parseFloat(value1);
 					var hudZoom:Float = Std.parseFloat(value2);
 					if(Math.isNaN(camZoom)) camZoom = 0.015;
@@ -4206,6 +4209,7 @@ class PlayState extends MusicBeatState
 		updateTime = false;
 
 		deathCounter = 0;
+		restartSkipCountdown = false;
 		seenCutscene = false;
 
 		#if ACHIEVEMENTS_ALLOWED
@@ -4622,11 +4626,7 @@ class PlayState extends MusicBeatState
 						callOnHScripts('noteMissPress', [key]);
 					}
 				}
-
-				// I dunno what you need this for but here you go
-				//									- Shubs
-
-				// Shubs, this is for the "Just the Two of Us" achievement lol
+				// this is for the "Just the Two of Us" achievement lol
 				//									- Shadow Mario
 				keysPressed[key] = true;
 				//more accurate hit time for the ratings? part 2 (Now that the calculations are done, go back to the time it was before for not causing a note stutter)
@@ -5644,27 +5644,27 @@ class PlayState extends MusicBeatState
 							}
 						}
 					case 'ur_bad':
-						if(ratingPercent < 0.2 && !practiceMode) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && ratingPercent < 0.2 && !practiceMode) {
 							unlock = true;
 						}
 					case 'ur_good':
-						if(ratingPercent >= 1 && !usedPractice) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && ratingPercent >= 1 && !usedPractice) {
 							unlock = true;
 						}
 					case 'roadkill_enthusiast':
-						if(Achievements.henchmenDeath >= 100) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && Achievements.henchmenDeath >= 100) {
 							unlock = true;
 						}
 					case 'oversinging':
-						if(boyfriend.holdTimer >= 10 && !usedPractice) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && boyfriend.holdTimer >= 10 && !usedPractice) {
 							unlock = true;
 						}
 					case 'hype':
-						if(!boyfriendIdled && !usedPractice) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && !boyfriendIdled && !usedPractice) {
 							unlock = true;
 						}
 					case 'two_keys':
-						if(!usedPractice) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && !usedPractice) {
 							var howManyPresses:Int = 0;
 							for (j in 0...keysPressed.length) {
 								if(keysPressed[j]) howManyPresses++;
@@ -5675,7 +5675,7 @@ class PlayState extends MusicBeatState
 							}
 						}
 					case 'toastie':
-						if(/*ClientPrefs.framerate <= 60 &&*/ ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing && !ClientPrefs.imagesPersist) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing && !ClientPrefs.imagesPersist) {
 							unlock = true;
 						}
 					case 'debugger':

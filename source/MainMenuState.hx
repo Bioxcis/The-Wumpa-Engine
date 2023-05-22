@@ -62,6 +62,8 @@ class MainMenuState extends MusicBeatState
 	var debugKeys:Array<FlxKey>;
 	var backEngine:FlxSprite;
 	var frontEngine:FlxSprite;
+	var version1Box:FlxSprite;
+	var version2Box:FlxSprite;
 
 	override function create()
 	{
@@ -226,13 +228,29 @@ class MainMenuState extends MusicBeatState
 
 		FlxG.camera.follow(camFollowPos, null, 1);
 
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 25, 0, "OS Engine v" + osEngineVersion + " - Editado por Bioxcis-dono", 24);
+		version1Box = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		version1Box.alpha = 0.5;
+		version1Box.scrollFactor.set();
+		version1Box.setPosition(-60, 695);
+		version1Box.setGraphicSize(400, 50);
+		version1Box.updateHitbox();
+		add(version1Box);
+
+		version2Box = new FlxSprite().makeGraphic(1, 1, FlxColor.BLACK);
+		version2Box.alpha = 0.5;
+		version2Box.scrollFactor.set();
+		version2Box.setPosition(1040, 695);
+		version2Box.setGraphicSize(400, 50);
+		version2Box.updateHitbox();
+		add(version2Box);
+
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 21, 0, "Wumpa Engine v" + osEngineVersion + " - por Bioxcis-dono", 24);
 		versionShit.scrollFactor.set();
-		versionShit.setFormat("Crash-a-Like", 25, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.79, FlxG.height - 25, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 24);
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.82, FlxG.height - 21, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 24);
 		versionShit.scrollFactor.set();
-		versionShit.setFormat("Crash-a-Like", 25, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		versionShit.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
 		//NOTA: WIDTH = LARGURA, HEIGHT = ALTURA
 		// NG.core.calls.event.logEvent('swag').send();

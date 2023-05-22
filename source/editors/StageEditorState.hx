@@ -110,7 +110,7 @@ class StageEditorState extends MusicBeatState
         ];
 
         betaTXT = new FlxText(12, FlxG.height - 24, 0, "ALPHA", 20);
-		betaTXT.setFormat(Paths.font("crash.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		betaTXT.setFormat(Paths.font("nsane.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		betaTXT.scrollFactor.set();
 		betaTXT.borderSize = 1;
 		betaTXT.cameras = [camMenu];

@@ -249,12 +249,14 @@ class PauseSubState extends MusicBeatSubstate
 				case "Reiniciar fase":
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							PlayState.restartSkipCountdown = false;
 							restartSong();
 						}
 					});
 				case "Deixar Editor de Notas":
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							PlayState.restartSkipCountdown = false;
 							restartSong();
 						}
 					});
@@ -263,6 +265,7 @@ class PauseSubState extends MusicBeatSubstate
 					if(curTime < Conductor.songPosition)
 					{
 						PlayState.startOnTime = curTime;
+						PlayState.restartSkipCountdown = false;
 						restartSong(true);
 					}
 					else
@@ -292,6 +295,7 @@ class PauseSubState extends MusicBeatSubstate
 						function (twn:FlxTween) {
 							wasinsongbeforethenwenttooptions = true;
 							PlayState.deathCounter = 0;
+							PlayState.restartSkipCountdown = false;
 							PlayState.seenCutscene = false;
 							MusicBeatState.switchState(new options.OptionsState());
 							FlxG.sound.playMusic(Paths.music('freakyMenu'));
@@ -308,6 +312,7 @@ class PauseSubState extends MusicBeatSubstate
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
 							PlayState.deathCounter = 0;
+							PlayState.restartSkipCountdown = false;
 							PlayState.seenCutscene = false;
 		
 							WeekData.loadTheFirstEnabledMod();

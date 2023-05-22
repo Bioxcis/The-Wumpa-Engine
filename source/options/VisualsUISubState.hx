@@ -36,7 +36,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		rpcTitle = 'Menu Ajustes de Visual & UI'; //for Discord Rich Presence
 
 		var option:Option = new Option('Splash da Nota',
-			"Se desmarcado, acertar as notas \"Sick!\" nao vai mostrar splashes.",
+			"Se desmarcado, ao acertar as notas \"Sick!\" não vai mais mostrar splashes.",
 			'noteSplashes',
 			'bool',
 			true);
@@ -50,21 +50,21 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option("Modo Exibicao",
-			'Se marcado, oculta todo o HUD e ativa o botplay.',
+			'Se marcado, oculta todo o HUD e ativa o Botplay.',
 			'showcaseMode',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option('Esconder Marca dagua',
-			'Se marcado, oculta a marca dagua no canto inferior esquerdo\ndurante a reproducao da musica.',
+			'Se marcado, oculta a marca d\'água no canto inferior esquerdo\ndurante a reprodução da música.',
 			'hideWatermark',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option('Trilha no Personagem',
-			'Se ativo, gerava o efeito de trilha do Espirito de Thorns...\n!Disponivel apenas no Modo de Edicao de Notas!',
+			'Se ativado, gerava o efeito de trilha do Espirito de Thorns...\n!Disponivel apenas no Modo de Edição de Notas!',
 		/*	'characterTrail',				shit lol. i made better finally*/
 			'bool',
 			false);
@@ -72,14 +72,14 @@ class VisualsUISubState extends BaseOptionsMenu
 		
 
 		var option:Option = new Option('Esconder Ponts',
-			'Se marcada, vai ocultar o texto ponts, a precisao e os erros\n abaixo da barra de saude na musica.',
+			'Se marcada, vai ocultar o texto de ponts, a precisão e os erros\n abaixo da barra de saúde na música.',
 			'hideScoreText',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option('Bop do Icone',
-			'Classico igual ao icone do FNF original, OS igual ao icone do OS Engine.',
+			'Clássico igual ao icone do FNF original, OS igual ao icone do OS Engine.',
 			'iconbops',
 			'string',
 			'OS',
@@ -94,8 +94,8 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Classico', 'Novo']);
 		addOption(option);
 		*/
-		var option:Option = new Option('Filtro daltonico',
-			'Definir um filtro daltonico (torna o jogo mais jogavel para pessoas daltonicas).',
+		var option:Option = new Option('Filtro Daltonico',
+			'Definir um filtro daltônico (torna o jogo mais acessível para pessoas daltônicas).',
 			'colorblindMode',
 			'string',
 			'Nada', 
@@ -112,21 +112,21 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Luzes Piscantes',
-			"Desmarque esta opcao se voce for sensivel a luzes piscantes!",
+			"Desmarque esta opçãoo se voce for sensivel a luzes piscantes!",
 			'flashing',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Zoom da Camera',
-			"Se desmarcada, a camera nao vai dar zoom nos hits da batida.",
+			"Se desmarcada, a camera não vai dar zoom nos hits da batida.",
 			'camZooms',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Zoom no Texto Ponts no hit',
-			"Se desmarcado, desativa o zoom do Texto de Ponts\nsempre que voce toca uma nota.",
+			"Se desmarcado, desativa o zoom do Texto de Ponts\nsempre que você toca uma nota.",
 			'scoreZoom',
 			'bool',
 			true);
@@ -139,8 +139,15 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Ativar Shaders',
+			"Se marcado, as shaders estarão ativadas!\nDesative essa opção caso seu computador rejeite as shaders.",
+			'shadersActive',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Transparencia Barra de Vida',
-			'Quao transparente deve ser a barra de vida e os icones.',
+			'Quão transparente deve ser a barra de vida e os ícones.',
 			'healthBarAlpha',
 			'percent',
 			1);
@@ -179,7 +186,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		*/
 
 		var option:Option = new Option('Skin de Nota',
-			"Qual aparencia quer para suas notas?",
+			"Qual aparencia você quer para suas notas?",
 			'noteSkinSettings',
 			'string',
 			'Classico',
@@ -187,7 +194,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		
 		var option:Option = new Option('Musica do Pause:',
-			"Que musica prefere que toque ao pausar?",
+			"Que música você prefere que toque ao pausar?",
 			'pauseMusic',
 			'string',
 			'Crash Time',
@@ -196,8 +203,8 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangePauseMusic;
 		
 		#if CHECK_FOR_UPDATES
-		var option:Option = new Option('Check for Updates',
-			'On Release builds, turn this on to check for updates when you start the game.',
+		var option:Option = new Option('Checar Updates',
+			'Para versões em desenvolvimento, ative para checar por atualizações ao iniciar o jogo.',
 			'checkForUpdates',
 			'bool',
 			true);

@@ -31,7 +31,7 @@ class FlashingState extends MusicBeatState
 			Voce foi avisado!\n
 			Divirta-se!!!",
 			32);
-		warnText.setFormat("Crash-a-Like", 32, FlxColor.WHITE, CENTER);
+		warnText.setFormat("CCZoinks Regular", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
 	}

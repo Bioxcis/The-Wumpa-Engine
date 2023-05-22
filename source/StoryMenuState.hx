@@ -236,14 +236,18 @@ class StoryMenuState extends MusicBeatState
 			}
 
 			if (controls.UI_RIGHT)
+			{
 				FlxG.sound.play(Paths.sound('tuff'));
-				rightArrow.animation.play('press')
+				rightArrow.animation.play('press');
+			}
 			else
 				rightArrow.animation.play('idle');
 
 			if (controls.UI_LEFT)
+			{
 				FlxG.sound.play(Paths.sound('tuff'));
 				leftArrow.animation.play('press');
+			}
 			else
 				leftArrow.animation.play('idle');
 

@@ -35,6 +35,7 @@ class ClientPrefs {
 	public static var opponentStrums:Bool = false;
 	public static var scoreZoom:Bool = true;
 	public static var hudSize:Bool = true;
+	public static var shadersActive:Bool = true;
 	public static var noReset:Bool = false;
 	public static var showMsText:Bool = false;
 	public static var healthBarAlpha:Float = 1;
@@ -135,6 +136,7 @@ class ClientPrefs {
 		FlxG.save.data.timeBarType = timeBarType;
 		FlxG.save.data.scoreZoom = scoreZoom;
 		FlxG.save.data.hudSize = hudSize;
+		FlxG.save.data.shadersActive = shadersActive;
 		FlxG.save.data.characterTrail = characterTrail;
 		FlxG.save.data.noReset = noReset;
 		FlxG.save.data.showMsText = showMsText;
@@ -277,6 +279,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.hudSize != null) {
 			hudSize = FlxG.save.data.hudSize;
+		}
+		if(FlxG.save.data.shadersActive != null) {
+			shadersActive = FlxG.save.data.shadersActive;
 		}
 		if(FlxG.save.data.noReset != null) {
 			noReset = FlxG.save.data.noReset;

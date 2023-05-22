@@ -84,7 +84,7 @@ class ChartingState extends MusicBeatState
 		['BG Freaks Expression', "Deve ser usado apenas no Cenario \"School\"!"],
 		['Play Animation', "Reproduz uma animacao em um Personagem,\numa vez que a animacao conclui,\na animacao muda para Idle\n\nValor 1: Animacao a ser reproduzida.\nValor 2: Personagem alvo (Dad, ​​BF, GF)" ],
 		['Camera Follow Pos', "Valor 1: X\nValor 2: Y\n\nA camera nao vai mudar o ponto de acompanhamento\ndepois de usar isso, para voltar\nao normal, deixe ambos os valores em branco."],
-		['Alt Idle Animation', "Define um sufixo especificado apos o nome da animacao inativa.\nVocê pode usar isso para acionar 'idle-alt' se definir o\nValor 2 como -alt\n\nValor 1: Personagem alvo (Dad, BF ou GF)\nValor 2: Novo sufixo (Deixe em branco para desabilitar)"],
+		['Alt Idle Animation', "Define um sufixo especificado após o nome da animação inativa.\nVocê pode usar isso para acionar 'idle-alt' se definir o\nValor 2 como -alt\n\nValor 1: Personagem alvo (Dad, BF ou GF)\nValor 2: Novo sufixo (Deixe em branco para desabilitar)"],
 		['Screen Shake', "Valor 1: Movimento da Camera\nValue 2: Movimento da HUD\n\nCada valor funciona como o seguinte exemplo: \"1, 0.05\".\nO primeiro numero (1) fica como duracao e\no segundo número (0,05) como a intensidade."],
 		['Change Character', "Valor 1: Personagem a ser substituido (Dad, BF, GF)\nValor 2: Nome do novo personagem"],
 		['Change Scroll Speed', "Valor 1: Multiplicador de velocidade de rolagem (1 para padrão)\nValor 2: Tempo que leva para mudar completamente, em segundos."],
@@ -355,25 +355,24 @@ class ChartingState extends MusicBeatState
 		UI_box.scrollFactor.set();
 
 		text =
-		"W / S ou Rolar Mouse 	- Alterar Posição da música
-		\nA / D 				- Ir para o Trecho anterior/seguinte
-		\nEsquerda / Direita 	- Alterar Distância
-		\nCima / Baixo 			- Alterar Posição da música
-		\nShift 				- Segure Shift para mover 4x mais rápido
-		\nControl 				- Control com clique para selecionar um item
-		\nZ / X 				- Aumentar/diminuir o Zoom
-		\nBotão direito mouse 	- Colocar/Retirar notas arrastando o mouse
-		\nEsc 					- Testar suas notas dentro do Editor de Notas
-		\nEnter 				- Reproduzir notas em Jogo/Voltar para partida
-		\nC e Rolar Mouse 		- Diminuir/Aumentar a duração da nota
-		\nQ / E 				- Diminuir/Aumentar a duração da nota
-		\nSpace 				- Parar/Tocar musica";
+		"W / S ou Rolar Mouse   - Alterar Posição da música
+		\nA / D                          - Ir para o Trecho anterior/seguinte
+		\nEsquerda / Direita      - Alterar Distância
+		\nCima / Baixo              - Alterar Posição da música
+		\nShift                          - Segure Shift para mover 4x mais rápido
+		\nCtrl                          - Ctrl com clique para selecionar um item
+		\nZ / X                         - Aumentar/diminuir o Zoom
+		\nBotão direito mouse   - Colocar/Retirar notas arrastando o mouse
+		\nEsc                            - Testar suas notas dentro do Editor de Notas
+		\nEnter                         - Reproduzir notas em Jogo/Voltar para partida
+		\nQ / E                        - Diminuir/Aumentar a duração da nota
+		\nSpace                      - Parar/Tocar musica";
 
 		var tipTextArray:Array<String> = text.split('\n');
 		for (i in 0...tipTextArray.length) {
 			var tipText:FlxText = new FlxText(UI_box.x, UI_box.y + UI_box.height + 8, 0, tipTextArray[i], 12);
 			tipText.y += i * 12;
-			tipText.setFormat(Paths.font("crash.ttf"), 20, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
+			tipText.setFormat(Paths.font("nsane.ttf"), 16, FlxColor.WHITE, LEFT/*, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK*/);
 			//tipText.borderSize = 2;
 			tipText.scrollFactor.set();
 			add(tipText);
@@ -2717,7 +2716,7 @@ class ChartingState extends MusicBeatState
 				if(typeInt == null) theType = '?';
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 100, theType, 24);
-				daText.setFormat(Paths.font("crash.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+				daText.setFormat(Paths.font("nsane.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 				daText.xAdd = -32;
 				daText.yAdd = 6;
 				daText.borderSize = 1;
@@ -2742,7 +2741,7 @@ class ChartingState extends MusicBeatState
 				if(note.eventLength > 1) text = note.eventLength + ' Eventos:\n' + note.eventName;
 
 				var daText:AttachedFlxText = new AttachedFlxText(0, 0, 400, text, 12);
-				daText.setFormat(Paths.font("crash.ttf"), 18, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+				daText.setFormat(Paths.font("nsane.ttf"), 15, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 				daText.xAdd = -410;
 				daText.borderSize = 1;
 				if(note.eventLength > 1) daText.yAdd += 8;

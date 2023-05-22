@@ -84,6 +84,10 @@ class TitleState extends MusicBeatState
 
 	var titleJSON:TitleData;
 
+	var introCrash:FlxSound;
+	var soundFinished = false;
+	var musicStarted = false;
+	
 	public static var updateVersion:String = '';
 
 	override public function create():Void
@@ -569,7 +573,7 @@ class TitleState extends MusicBeatState
 			#end
 		}
 
-		if (initialized && pressedEnter && !skippedIntro)
+		if (initialized && pressedEnter && !skippedIntro && okay)
 		{
 			skipIntro();
 		}
@@ -578,6 +582,15 @@ class TitleState extends MusicBeatState
 		{
 			if(controls.UI_LEFT) swagShader.hue -= elapsed * 0.1;
 			if(controls.UI_RIGHT) swagShader.hue += elapsed * 0.1;
+		}
+
+		if (soundFinished && !musicStarted) {
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
+			musicStarted = true;
+		}
+
+		if (introCrash != null && !introCrash.active) {
+			soundFinished = true;
 		}
 
 		super.update(elapsed);
@@ -640,16 +653,20 @@ class TitleState extends MusicBeatState
 			{
 				case 1:
 					//FlxG.sound.music.stop();
-					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0); //ORIGINAL
+					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0); 	//ORIGINAL
 					//FlxG.sound.music.fadeIn(4, 0, 0.7);
 					//createCoolText(['OS Engine'], 45);
-					FlxG.sound.play(Paths.sound('IntroCrash'), 0.8); //SOM DE INTRO '^'
-					createCoolText(['Multiversal Estudos', 'production'], 45); //PARA VOLTAR AO NORMAL RETIRE ESSE NOVO TRECHO E ATIVE O ORIGINAL ACIMA '-'
+					introCrash = FlxG.sound.play(Paths.sound('IntroCrash'), 0.8); 	//SOM DE INTRO
+					soundFinished = false;
+					addMoreText('Multiversal Estudos'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
+				case 3:
+					addMoreText('Production');
 				case 5:
 					deleteCoolText();
 					addMoreText('Sanic Computadores');
-					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7); //MUSICA A PARTIR DAQUI
-					//FlxG.sound.music.fadeIn(0.3, 0, 0.6); //FADE IN DO INICIO DA MUSICA
+					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7); 	//MUSICA A PARTIR DAQUI
+					//FlxG.sound.music.fadeIn(0.3, 0, 0.6);
+					okay = true;
 				case 6:
 					addMoreText('Entretenimentos');
 				case 7:
@@ -689,6 +706,7 @@ class TitleState extends MusicBeatState
 	}
 
 	var skippedIntro:Bool = false;
+	var okay:Bool = false;
 	var increaseVolume:Bool = false;
 	function skipIntro():Void
 	{

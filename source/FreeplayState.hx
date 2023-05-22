@@ -213,14 +213,14 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press SPACE para previa da musica / Press CTRL para abrir Ajuste Gameplay  / Press RESET para redefinir pontuação e precisão";
-		var size:Int = 24;
+		var leText:String = "Press SPACE para prévia da música               Press CTRL para abrir os Ajustes de Gameplay           Press RESET para redefinir pontuação e precisão  ";
+		var size:Int = 22;
 		#else
 		var leText:String = "Press CTRL para abrir Menu Ajuste Gameplay / Press RESET para redefinir Pontuação e Precisão.";
-		var size:Int = 24;
+		var size:Int = 22;
 		#end
 		var text:FlxText = new FlxText(textBG.x - 6, textBG.y, FlxG.width, leText, size);
-		text.setFormat(Paths.font("crash.ttf"), size, FlxColor.WHITE, RIGHT);
+		text.setFormat(Paths.font("nsane.ttf"), size, FlxColor.WHITE, RIGHT);
 		text.scrollFactor.set();
 		add(text);
 		super.create();

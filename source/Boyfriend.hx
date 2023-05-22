@@ -10,6 +10,7 @@ using StringTools;
 class Boyfriend extends Character
 {
 	public var startedDeath:Bool = false;
+	public var deathIntroFinish:Bool = false;
 
 	public function new(x:Float, y:Float, ?char:String = 'bf')
 	{
@@ -27,13 +28,25 @@ class Boyfriend extends Character
 			else
 				holdTimer = 0;
 
+		/*
 			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
 			{
+				playAnim('idle', true, false, 10);
+			}	
+		*/
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode && PlayState.instance.health <= 0.6) {
+				if (animation.exists('idle-two')) {
+					playAnim('idle-two', true, false, 10);
+				} else {
+					playAnim('idle', true, false, 10);
+				}
+			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
 				playAnim('idle', true, false, 10);
 			}
 
 			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && startedDeath)
 			{
+				deathIntroFinish = true;	
 				playAnim('deathLoop');
 			}
 		}

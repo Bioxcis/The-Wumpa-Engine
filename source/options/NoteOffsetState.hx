@@ -153,7 +153,7 @@ class NoteOffsetState extends MusicBeatState
 		add(beatText);
 		
 		timeTxt = new FlxText(0, 600, FlxG.width, "", 32);
-		timeTxt.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("nsane.ttf"), 28, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
 		timeTxt.visible = false;
@@ -203,13 +203,13 @@ class NoteOffsetState extends MusicBeatState
 		add(textBG);
 
 		exitText = new FlxText(0, textBG.y - 2, FlxG.width, "", 32);//não tinha nenhum aviso aqui antes, agora tem :D
-		exitText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
+		exitText.setFormat(Paths.font("nsane.ttf"), 28, FlxColor.WHITE, CENTER);
 		exitText.scrollFactor.set();
 		exitText.cameras = [camHUD];
 		add(exitText); 
 
 		changeModeText = new FlxText(0, 4, FlxG.width, "", 32);
-		changeModeText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
+		changeModeText.setFormat(Paths.font("nsane.ttf"), 28, FlxColor.WHITE, CENTER);
 		changeModeText.scrollFactor.set();
 		changeModeText.cameras = [camHUD];
 		add(changeModeText);
@@ -443,7 +443,7 @@ class NoteOffsetState extends MusicBeatState
 		for (i in 0...4)
 		{
 			var text:FlxText = new FlxText(70, 70 + (i * 30), 0, '', 24);
-			text.setFormat(Paths.font("crash.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			text.setFormat(Paths.font("nsane.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			text.scrollFactor.set();
 			text.borderSize = 2;
 			dumbTexts.add(text);

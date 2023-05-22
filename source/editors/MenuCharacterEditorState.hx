@@ -66,14 +66,14 @@ class MenuCharacterEditorState extends MusicBeatState
 		add(grpWeekCharacters);
 
 		txtOffsets = new FlxText(20, 10, 0, "[0, 0]", 32);
-		txtOffsets.setFormat("Crash-a-Like", 32, FlxColor.WHITE, CENTER);
+		txtOffsets.setFormat("CCZoinks Regular", 28, FlxColor.WHITE, CENTER);
 		txtOffsets.alpha = 0.7;
 		add(txtOffsets);
 
 		var tipText:FlxText = new FlxText(0, 540, FlxG.width,
 			"Setas - Mudam o Offset (aperte shift para 10x rápido)
 			\nSpace - Toca a animação \"Start Press\" (para tipos de personagem Boyfriend)", 16);
-		tipText.setFormat(Paths.font("crash.ttf"), 16, FlxColor.WHITE, CENTER);
+		tipText.setFormat(Paths.font("nsane.ttf"), 16, FlxColor.WHITE, CENTER);
 		tipText.scrollFactor.set();
 		add(tipText);
 

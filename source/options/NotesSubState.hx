@@ -65,7 +65,7 @@ class NotesSubState extends MusicBeatSubstate
 		add(grpNumbers);
 
 		var resetText:FlxText = new FlxText(12, FlxG.height - 30, "Pressione CONTROL para resetar a seta selecionada.", 80);
-		resetText.setFormat("Crash-a-Like", 24, FlxColor.WHITE, CENTER); //VCR OSD Mono
+		resetText.setFormat("CCZoinks Regular", 24, FlxColor.WHITE, CENTER); //VCR OSD Mono
 		add(resetText);
 
 		for (i in 0...ClientPrefs.arrowHSV.length) {
