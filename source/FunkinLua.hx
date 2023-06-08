@@ -189,6 +189,7 @@ class FunkinLua {
 		set('scoreZoom', ClientPrefs.scoreZoom);
 		set('hudSize', ClientPrefs.hudSize);
 		set('shadersActive', ClientPrefs.shadersActive);
+		set('showStatus', ClientPrefs.showStatus);
 		set('cameraZoomOnBeat', ClientPrefs.camZooms);
 		set('flashingLights', ClientPrefs.flashing);
 		set('noteOffset', ClientPrefs.noteOffset);

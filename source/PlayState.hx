@@ -2516,8 +2516,8 @@ class PlayState extends MusicBeatState
 			if(scoreTxtTween != null) {
 				scoreTxtTween.cancel();
 			}
-			scoreTxt.scale.x = 1.03;
-			scoreTxt.scale.y = 1.03;
+			scoreTxt.scale.x = 1.05;
+			scoreTxt.scale.y = 1.05;
 			scoreTxtTween = FlxTween.tween(scoreTxt.scale, {x: 1, y: 1}, 0.2, {
 				onComplete: function(twn:FlxTween) {
 					scoreTxtTween = null;
@@ -5360,7 +5360,7 @@ class PlayState extends MusicBeatState
 
 		dancingLeft = !dancingLeft;
 
-		if (ClientPrefs.iconbops == "Classico") {
+		if (ClientPrefs.iconbops == "OS") {
 			if (dancingLeft){
 				iconP1.angle = 8; iconP2.angle = 8; // maybe i should do it with tweens, but i'm lazy // i'll make it in -1.0.0, i promise
 			} else { 

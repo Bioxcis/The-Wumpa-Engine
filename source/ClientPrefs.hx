@@ -36,6 +36,7 @@ class ClientPrefs {
 	public static var scoreZoom:Bool = true;
 	public static var hudSize:Bool = true;
 	public static var shadersActive:Bool = true;
+	public static var showStatus:Bool = false;
 	public static var noReset:Bool = false;
 	public static var showMsText:Bool = false;
 	public static var healthBarAlpha:Float = 1;
@@ -72,7 +73,7 @@ class ClientPrefs {
 		'opponentplay' => false
 	];
 
-	public static var comboOffset:Array<Int> = [21, -171, 121, -121];
+	public static var comboOffset:Array<Int> = [220, -100, 340, -70];
 	public static var ratingOffset:Int = 0;
 	public static var perfectWindow:Int = 15;
 	public static var sickWindow:Int = 45;
@@ -137,6 +138,7 @@ class ClientPrefs {
 		FlxG.save.data.scoreZoom = scoreZoom;
 		FlxG.save.data.hudSize = hudSize;
 		FlxG.save.data.shadersActive = shadersActive;
+		FlxG.save.data.showStatus = showStatus;
 		FlxG.save.data.characterTrail = characterTrail;
 		FlxG.save.data.noReset = noReset;
 		FlxG.save.data.showMsText = showMsText;
@@ -282,6 +284,9 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.shadersActive != null) {
 			shadersActive = FlxG.save.data.shadersActive;
+		}
+		if(FlxG.save.data.showStatus != null) {
+			showStatus = FlxG.save.data.showStatus;
 		}
 		if(FlxG.save.data.noReset != null) {
 			noReset = FlxG.save.data.noReset;

@@ -31,21 +31,21 @@ using StringTools;
 
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
-	public function new()//Não ignore as Observações, se não manjar de inglês tente evitar cagar o jogo.
+	public function new()
 	{
 		title = 'Graficos';
 		rpcTitle = 'Menu Ajustes de Graficos'; //for Discord Rich Presence
 
 		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
 		var option:Option = new Option('Baixa Qualidade', //Name
-			'Se marcada, desativa alguns detalhes do plano de fundo,\ndiminui o tempo de carregamento e melhora o desempenho.', //Description
+			'Se marcada, desativa alguns detalhes dos cenários,\ndiminui o tempo de carregamento e melhora o desempenho.', //Description
 			'lowQuality', //Save data variable name
 			'bool', //Variable type
 			false); //Default value
 		addOption(option);
 
 		var option:Option = new Option('Anti-Aliasing',
-			'Se desmarcado, desativa o anti-aliasing, aumenta o desempenho\na custo de visuais mais nitidos.',
+			'Se marcado, ativa o anti-aliasing, criando visuais mais nitidos\na custo de desempenho da máquina.',
 			'globalAntialiasing',
 			'bool',
 			true);
@@ -55,7 +55,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 
 		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
 		var option:Option = new Option('FPS',
-			"Define o FPS, comum para todo gamer, neh?",
+			"Define o FPS para o seu jogo.",
 			'framerate',
 			'int',
 			60);

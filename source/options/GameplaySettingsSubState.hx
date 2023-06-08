@@ -35,50 +35,49 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		rpcTitle = 'Menu Ajustes de Jogo'; //for Discord Rich Presence
 
 		var option:Option = new Option('Modo Controle',
-			'Marque isto se quiser jogar com um controle em vez de teclado.',
+			'Marque isto se for jogar com um controle em vez de teclado.',
 			'controllerMode',
 			'bool',
 			false);
 		addOption(option);
 
-		//I'd suggest using "Downscroll" as an example for making your own option since it is the simplest here
-		var option:Option = new Option('Scroll Abaixo', //Name
-			'Se marcado, as notas vem de cima em vez de vir de baixo.', //Description
-			'downScroll', //Save data variable name
-			'bool', //Variable type
-			false); //Default value
-		addOption(option);
-
-		var option:Option = new Option('Exibir MS Offset ao acertar',
-			'Se marcado, um deslocamento (em ms) vai aparecer perto das notas',
-			'showMsText',
+		var option:Option = new Option('Rolagem Abaixo',
+			'Se marcado, as notas vem de cima para baixo.',
+			'downScroll',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Scroll Centralizado',
-			'Se marcada, suas notas serao centralizadas.',
+		var option:Option = new Option('Rolagem Centralizada',
+			'Se marcado, suas notas serão centralizadas.',
 			'middleScroll',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Ocultar Notas do Oponente',
-			'Se marcado, oculta as flechas do oponente ao jogar.',
+		var option:Option = new Option('Exibir MS ao acertar',
+			'Se marcado, a janela de acerto (em ms) vai aparecer perto das notas',
+			'showMsText',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option('Ocultar Notas Oponente',
+			'Se marcado, oculta as notas do oponente nas partidas.',
 			'opponentStrums',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option('Ghost Tapping',
-			"Se marcado, voce nao errara ao pressionar teclas\nenquanto nao houver notas que possam ser tocadas.",
+			'Se marcado, voce não vai errar ao pressionar qualquer tecla\nenquanto não houver notas que possam ser acertadas.',
 			'ghostTapping',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Remove Perfect! do Julgamento',
-			'Se marcada, remove o julgamento Perfect!',
+		var option:Option = new Option('Remove Nsano!!! do Julgamento',
+			'Se marcado, remove o julgamento Nsano!!!',
 			'removePerfects',
 			'bool',
 			false);
@@ -94,14 +93,14 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		*/
 
 		var option:Option = new Option('Desativar Tecla Resete',
-			"Se marcado, ao pressionar Redefinir nao vai acontecer nada.",
+			'Se marcado, ao pressionar a tecla Redefinir não acontecerá nada.',
 			'noReset',
 			'bool',
 			false);
 		addOption(option);
 
 		var option:Option = new Option('Volume do Tick de Nota',
-			'As notas farao \"Tick!\" quando acertadas."',
+			'Cada nota acertada vai fazer um \"Tick!\" quando acertada.',
 			'hitsoundVolume',
 			'percent',
 			0);
@@ -113,7 +112,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Visibilidade Notas Longas',
+		var option:Option = new Option('Visibilidade das Notas Longas',
 			'As linhas das notas longas serao mostradas com a visibilidade selecionada',
 			'holdNoteVisibility',
 			'percent',
@@ -151,7 +150,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		
 
 		var option:Option = new Option('Rating Offset',
-			'Altera o quao cedo/tarde voce tem que acertar para um "Sick!"\nValores mais altos significam ter que acertar mais tarde.',
+			'Altera o quão cedo/tarde você tem que acertar para um "Whoa!"\nValores mais altos significam ter que acertar mais tarde.',
 			'ratingOffset',
 			'int',
 			0);
@@ -161,8 +160,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 30;
 		addOption(option);
 
-		var option:Option = new Option('Janela de Acerto do Perfect!',
-			'Altera a quantidade de tempo que voce tem\npara acertar um "Perfect!" em milissegundos.',
+		var option:Option = new Option('Tempo Acerto do nsano!!!',
+			'Altera a quantidade de tempo que você tem\npara acertar um \"Nsano!!!\" em milissegundos.',
 			'perfectWindow',
 			'int',
 			10);
@@ -172,8 +171,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 10;
 		addOption(option);
 
-		var option:Option = new Option('Janela de Acerto do Sick!',
-			'Altera a quantidade de tempo que voce tem\npara acertar um "Sick!" em milissegundos.',
+		var option:Option = new Option('Tempo Acerto do whoa!!',
+			'Altera a quantidade de tempo que você tem\npara acertar um \"Whoa!!\" em milissegundos.',
 			'sickWindow',
 			'int',
 			45);
@@ -183,8 +182,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 45;
 		addOption(option);
 
-		var option:Option = new Option('Janela de Acerto do Good!',
-			'Altera a quantidade de tempo que voce tem\npara acertar um "Good!" em milissegundos.',
+		var option:Option = new Option('Tempo Acerto do boa!',
+			'Altera a quantidade de tempo que você tem\npara acertar um "Boa!" em milissegundos.',
 			'goodWindow',
 			'int',
 			90);
@@ -194,8 +193,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 90;
 		addOption(option);
 
-		var option:Option = new Option('Janela de Acerto do Bad!',
-			'Altera a quantidade de tempo que voce tem\npara acertar um "Bad!" em milissegundos.',
+		var option:Option = new Option('Tempo Acerto do ruim',
+			'Altera a quantidade de tempo que você tem\npara acertar um "Ruim" em milissegundos.',
 			'badWindow',
 			'int',
 			135);
