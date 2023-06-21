@@ -1612,7 +1612,7 @@ class FunkinLua {
 				return true;
 			}
 			return false;
-		});
+		});		
 		Lua_helper.add_callback(lua, "addOffset", function(obj:String, anim:String, x:Float, y:Float) {
 			if(PlayState.instance.modchartSprites.exists(obj)) {
 				PlayState.instance.modchartSprites.get(obj).animOffsets.set(anim, [x, y]);
