@@ -653,12 +653,14 @@ class TitleState extends MusicBeatState
 			{
 				case 1:
 					//FlxG.sound.music.stop();
-					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0); 	//ORIGINAL
+					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0); 			//ORIGINAL
 					//FlxG.sound.music.fadeIn(4, 0, 0.7);
 					//createCoolText(['OS Engine'], 45);
 					introCrash = FlxG.sound.play(Paths.sound('IntroCrash'), 0.8); 	//SOM DE INTRO
 					soundFinished = false;
-					addMoreText('Multiversal Estudos'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
+					addMoreText('Multiversal'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
+				case 2:
+					addMoreText('Estudos');
 				case 3:
 					addMoreText('Production');
 				case 5:
