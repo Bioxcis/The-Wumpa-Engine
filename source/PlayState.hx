@@ -81,15 +81,15 @@ using StringTools;
 class PlayState extends MusicBeatState
 {
 	//Lua achieve shit
-	public static var forst:Int = 0;
-	public static var bons:Int = 0;
-	public static var templ:Int = 0;
-	public static var sewr:Int = 0;
+	public static var forst:Bool = false;
+	public static var bons:Bool = false;
+	public static var templ:Bool = false;
+	public static var sewr:Bool = false;
 
-	public static var forstMiss:Int = 0;
-	public static var bonsMiss:Int = 0;
-	public static var templMiss:Int = 0;
-	public static var sewrMiss:Int = 0;
+	public static var forstMiss:Bool = false;
+	public static var bonsMiss:Bool = false;
+	public static var templMiss:Bool = false;
+	public static var sewrMiss:Bool = false;
 	//End Lua Achieve shit
 	
 	public static var STRUM_X = 42;
@@ -5683,35 +5683,35 @@ class PlayState extends MusicBeatState
 							unlock = true;
 						}
 					case 'flora': //Para todo Cristal Ganho!
-						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && !usedPractice && forst == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && !usedPractice && forst) {
 							unlock = true;
 						}
 					case 'bonus':
-						if(Paths.formatToSongPath(SONG.song) == 'bonus' && !usedPractice && bons == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'bonus' && !usedPractice && bons) {
 							unlock = true;
 						}
 					case 'templo':
-						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && !usedPractice && templ == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && !usedPractice && templ) {
 							unlock = true;
 						}
 					case 'toxico':
-						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && !usedPractice && sewr == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && !usedPractice && sewr) {
 							unlock = true;
 						}
 					case 'music1': //Para Musicas Insanamente Perfeitas!
-						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && forstMiss == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && forstMiss) {
 							unlock = true;
 						}
 					case 'music2':
-						if(Paths.formatToSongPath(SONG.song) == 'bonus' && bonsMiss == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'bonus' && bonsMiss) {
 							unlock = true;
 						}
 					case 'music3':
-						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && templMiss == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && templMiss) {
 							unlock = true;
 						}
 					case 'music4':
-						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && sewrMiss == 1) {
+						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && sewrMiss) {
 							unlock = true;
 						}
 				}
