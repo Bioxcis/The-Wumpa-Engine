@@ -52,6 +52,9 @@ class ClientPrefs {
 	public static var removePerfects:Bool = false;
 	public static var characterTrail:Bool = false;
 	public static var checkForUpdates:Bool = true;
+	public static var tntrules:Bool = false;
+	public static var nitrorules:Bool = false;
+	public static var trialrules:Bool = false;
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicativo', 
@@ -152,6 +155,9 @@ class ClientPrefs {
 		FlxG.save.data.themedmainmenubg = themedmainmenubg;
 		FlxG.save.data.autotitleskip = autotitleskip;
 		FlxG.save.data.iconbops = iconbops;
+		FlxG.save.data.tntrules = tntrules;
+		FlxG.save.data.nitrorules = nitrorules;
+		FlxG.save.data.trialrules = trialrules;
 
 		FlxG.save.data.ratingOffset = ratingOffset;
 		FlxG.save.data.showcaseMode = showcaseMode;
@@ -299,6 +305,15 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.comboOffset != null) {
 			comboOffset = FlxG.save.data.comboOffset;
+		}
+		if(FlxG.save.data.tntrules != null) {
+			tntrules = FlxG.save.data.tntrules;
+		}
+		if(FlxG.save.data.nitrorules != null) {
+			nitrorules = FlxG.save.data.nitrorules;
+		}
+		if(FlxG.save.data.trialrules != null) {
+			trialrules = FlxG.save.data.trialrules;
 		}
 		
 		if(FlxG.save.data.ratingOffset != null) {
