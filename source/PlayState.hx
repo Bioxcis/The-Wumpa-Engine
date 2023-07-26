@@ -98,16 +98,16 @@ class PlayState extends MusicBeatState
 	public static var cameramovingoffsetbf = 20; // idk why i made literally same variable
 
 	public static var ratingStuff:Array<Dynamic> = [
-		['QUE?!', 0.2], //From 0% to 19%
-		['PÉSSIMO!', 0.4], //From 20% to 39%
-		['RUIM', 0.5], //From 40% to 49%
-		['MEH', 0.6], //From 50% to 59%
-		['EH NEH', 0.69], //From 60% to 68%
-		['BOA', 0.7], //69%
-		['YEAH!', 0.8], //From 70% to 79%
-		['WHOA!', 0.9], //From 80% to 89%
-		['NSANO!', 1], //From 90% to 99%
-		['NSANO!', 1] //The value on this one isn't used actually, since Perfect is always "1"
+		['QUE?!', 0.2], 	//From 0% to 19%
+		['PÉSSIMO!', 0.4], 	//From 20% to 39%
+		['RUIM', 0.5], 		//From 40% to 49%
+		['MEH', 0.6], 		//From 50% to 59%
+		['BOA', 0.69], 		//From 60% to 68%
+		['BOA', 0.7], 		//69%
+		['YEAH!', 0.8], 	//From 70% to 79%
+		['WHOA!', 0.9], 	//From 80% to 89%
+		['NSANO!', 1], 		//From 90% to 99%
+		['NSANO!', 1] 		//The value on this one isn't used actually, since Perfect is always "1"
 	];
 	public static var animatedShaders:Map<String, DynamicShaderHandler> = new Map<String, DynamicShaderHandler>();
 	public var modchartTweens:Map<String, FlxTween> = new Map<String, FlxTween>();
@@ -162,6 +162,7 @@ class PlayState extends MusicBeatState
 	public var spawnTime:Float = 2000;
 
 	public var vocals:FlxSound;
+	public var vocalGeneralVol:Float = 1;
 
 	public var dad:Character = null;
 	public var gf:Character = null;
@@ -173,7 +174,7 @@ class PlayState extends MusicBeatState
 
 	private var strumLine:FlxSprite;
 
-	//Handles the new epic mega sexy cam code that i've done
+	//cam code
 	public var camFollow:FlxPoint;
 	public var camFollowPos:FlxObject;
 	private static var prevCamFollow:FlxPoint;
@@ -234,6 +235,7 @@ class PlayState extends MusicBeatState
 	public var camGame:FlxCamera;
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
+	public var bubble:Int = 0;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
@@ -4390,7 +4392,7 @@ class PlayState extends MusicBeatState
 		//trace(noteDiff, ' ' + Math.abs(note.strumTime - Conductor.songPosition));
 
 		// boyfriend.playAnim('hey');
-		vocals.volume = 1;
+		vocals.volume = vocalGeneralVol;
 
 		var placement:String = Std.string(combo);
 
@@ -4932,7 +4934,7 @@ class PlayState extends MusicBeatState
 		}
 
 		if (SONG.needsVoices)
-			vocals.volume = 1;
+			vocals.volume = vocalGeneralVol;
 
 		var time:Float = 0.15;
 		if(note.isSustainNote && !note.animation.curAnim.name.endsWith('end')) {
@@ -5065,9 +5067,9 @@ class PlayState extends MusicBeatState
 				}
 			}
 			note.wasGoodHit = true;
-			vocals.volume = 1;
+			vocals.volume = vocalGeneralVol;
 
-			var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
+			var isSus:Bool = note.isSustainNote;
 			var leData:Int = Math.round(Math.abs(note.noteData));
 			var leType:String = note.noteType;
 			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
