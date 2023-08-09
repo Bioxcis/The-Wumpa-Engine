@@ -20,7 +20,7 @@ class PauseSubState extends MusicBeatSubstate
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
 
 	var menuItems:Array<String> = [];
-	var menuItemsOG:Array<String> = ['Continuar', 'Reiniciar fase', 'Trocar Dificuldade', 'Config Gameplay', 'Ajustes', 'Sair'];
+	var menuItemsOG:Array<String> = ['Continuar', 'Reiniciar fase', /*'Trocar Dificuldade', 'Config Gameplay',*/'Ajustes', 'Sair'];
 	var difficultyChoices = [];
 	var curSelected:Int = 0;
 
@@ -39,7 +39,7 @@ class PauseSubState extends MusicBeatSubstate
 	public function new(x:Float, y:Float)
 	{
 		super();
-		if(CoolUtil.difficulties.length < 2) menuItemsOG.remove('Trocar Dificuldade'); //No need to change difficulty if there is only one!
+		//if(CoolUtil.difficulties.length < 4) menuItemsOG.remove('Trocar Dificuldade'); //No need to change difficulty if there is only one!
 
 		if(PlayState.chartingMode)
 		{
