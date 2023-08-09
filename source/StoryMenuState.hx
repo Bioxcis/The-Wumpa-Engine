@@ -237,7 +237,7 @@ class StoryMenuState extends MusicBeatState
 
 			if (controls.UI_RIGHT)
 			{
-				FlxG.sound.play(Paths.sound('tuff'));
+				//FlxG.sound.play(Paths.sound('tuff'));
 				rightArrow.animation.play('press');
 			}
 			else
@@ -245,18 +245,27 @@ class StoryMenuState extends MusicBeatState
 
 			if (controls.UI_LEFT)
 			{
-				FlxG.sound.play(Paths.sound('tuff'));
+				//FlxG.sound.play(Paths.sound('tuff'));
 				leftArrow.animation.play('press');
 			}
 			else
 				leftArrow.animation.play('idle');
 
 			if (controls.UI_RIGHT_P)
+			{
+				FlxG.sound.play(Paths.sound('tuff'));
 				changeDifficulty(1);
+			}
 			else if (controls.UI_LEFT_P)
+			{
+				FlxG.sound.play(Paths.sound('tuff'));
 				changeDifficulty(-1);
+			}
 			else if (upP || downP)
+			{
+				FlxG.sound.play(Paths.sound('tuff'));
 				changeDifficulty();
+			}
 
 			if(FlxG.keys.justPressed.CONTROL)
 			{
