@@ -658,11 +658,14 @@ class TitleState extends MusicBeatState
 					//createCoolText(['OS Engine'], 45);
 					introCrash = FlxG.sound.play(Paths.sound('IntroCrash'), 0.8); 	//SOM DE INTRO
 					soundFinished = false;
-					addMoreText('Multiversal'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
+					addMoreText('um mod especial de'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
 				case 2:
-					addMoreText('Estudos');
+					addMoreText('Friday Night Funkin');
+					addMoreText('e');
 				case 3:
-					addMoreText('Production');
+					addMoreText('Crash Bandicoot');
+				case 4:
+					addMoreText('Apresenta');
 				case 5:
 					deleteCoolText();
 					addMoreText('Sanic Computadores');
@@ -675,16 +678,18 @@ class TitleState extends MusicBeatState
 					addMoreText('Apresenta');
 				case 8:
 					deleteCoolText();
-					createCoolText(['Agradecimentos', 'especiais'], 45);
+					createCoolText(['Agradecimentos', 'especiais para'], 45);
 				case 9:
 					addMoreText('Airumu!', 45);
 				case 10:
 					deleteCoolText();
-					createCoolText(['OS Engine por'], 45);
+					createCoolText(['OS Engine original'], 45);
 				case 11:
-					addMoreText('Weus_',45);
-					addMoreText('Nelifs',45);
-					addMoreText('Cooljer',45);
+					addMoreText('',45);
+					addMoreText('Wumpa Engine atual', 45);
+					//addMoreText('Weus_',45);
+					//addMoreText('Nelifs',45);
+					//addMoreText('Cooljer',45);
 				case 12:
 					deleteCoolText();
 					createCoolText([curWacky[0]]);
@@ -708,7 +713,7 @@ class TitleState extends MusicBeatState
 	}
 
 	var skippedIntro:Bool = false;
-	var okay:Bool = false;
+	var okay:Bool = true;
 	var increaseVolume:Bool = false;
 	function skipIntro():Void
 	{
