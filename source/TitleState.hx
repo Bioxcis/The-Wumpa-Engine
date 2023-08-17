@@ -287,9 +287,9 @@ class TitleState extends MusicBeatState
 		logoBl.frames = Paths.getSparrowAtlas('logoBumpin');
 
 		logoBl.antialiasing = ClientPrefs.globalAntialiasing;
-		logoBl.animation.addByPrefix('bump', 'logo bumpin', 24, false);
+		logoBl.animation.addByPrefix('bump', 'logo bumpin', 32, true);
 		logoBl.animation.play('bump');
-		logoBl.setGraphicSize(Std.int(logoBl.width * 0.8));
+		logoBl.setGraphicSize(Std.int(logoBl.width * 0.7));
 		FlxTween.tween(logoBl, {y: logoBl.y + 40}, 0.6, {ease: FlxEase.quadInOut, type: PINGPONG, startDelay: 0.1});
 		logoBl.updateHitbox();
 		// logoBl.screenCenter();
@@ -636,8 +636,8 @@ class TitleState extends MusicBeatState
 	{
 		super.beatHit();
 
-		if(logoBl != null)
-			logoBl.animation.play('bump', true);
+		//if(logoBl != null)
+		//	logoBl.animation.play('bump', true);
 
 		if(gfDance != null) {
 			danceLeft = !danceLeft;
@@ -658,24 +658,21 @@ class TitleState extends MusicBeatState
 					//createCoolText(['OS Engine'], 45);
 					introCrash = FlxG.sound.play(Paths.sound('IntroCrash'), 0.8); 	//SOM DE INTRO
 					soundFinished = false;
-					addMoreText('um mod especial de'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
+					addMoreText('Sanic Computadores'); 							//PARA VOLTAR AO NORMAL: RETIRAR ESSE TRECHO E ATIVAR O ORIGINAL ACIMA
 				case 2:
-					addMoreText('Friday Night Funkin');
-					addMoreText('e');
+					addMoreText('Entretenimentos');
 				case 3:
-					addMoreText('Crash Bandicoot');
-				case 4:
 					addMoreText('Apresenta');
 				case 5:
 					deleteCoolText();
-					addMoreText('Sanic Computadores');
+					addMoreText('Um mod criado');
 					//FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7); 	//MUSICA A PARTIR DAQUI
 					//FlxG.sound.music.fadeIn(0.3, 0, 0.6);
 					okay = true;
 				case 6:
-					addMoreText('Entretenimentos');
+					addMoreText('e desenvolvido por');
 				case 7:
-					addMoreText('Apresenta');
+					addMoreText('Bioxcis-dono');
 				case 8:
 					deleteCoolText();
 					createCoolText(['Agradecimentos', 'especiais para'], 45);

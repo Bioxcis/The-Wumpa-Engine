@@ -10,7 +10,6 @@ using StringTools;
 class Boyfriend extends Character
 {
 	public var startedDeath:Bool = false;
-	public var deathIntroFinish:Bool = false;
 
 	public function new(x:Float, y:Float, ?char:String = 'bf')
 	{
@@ -46,7 +45,6 @@ class Boyfriend extends Character
 
 			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && startedDeath)
 			{
-				deathIntroFinish = true;	
 				playAnim('deathLoop');
 			}
 		}
