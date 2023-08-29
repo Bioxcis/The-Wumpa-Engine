@@ -13,11 +13,14 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
 import flixel.FlxCamera;
+import flixel.util.FlxTimer;
 import flixel.util.FlxStringUtil;
 
 class PauseSubState extends MusicBeatSubstate
 {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
+
+	var timer = new FlxTimer();
 
 	var menuItems:Array<String> = [];
 	var menuItemsOG:Array<String> = ['Continuar', 'Reiniciar fase', /*'Trocar Dificuldade', 'Config Gameplay',*/'Ajustes', 'Sair'];
@@ -235,6 +238,7 @@ class PauseSubState extends MusicBeatSubstate
 				case "Continuar":
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							timer.manager.active = true;
 							close();
 						}
 					});
@@ -250,6 +254,7 @@ class PauseSubState extends MusicBeatSubstate
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
 							PlayState.restartSkipCountdown = false;
+							timer.manager.active = true;
 							restartSong();
 						}
 					});
@@ -257,6 +262,7 @@ class PauseSubState extends MusicBeatSubstate
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
 							PlayState.restartSkipCountdown = false;
+							timer.manager.active = true;
 							restartSong();
 						}
 					});
@@ -266,6 +272,7 @@ class PauseSubState extends MusicBeatSubstate
 					{
 						PlayState.startOnTime = curTime;
 						PlayState.restartSkipCountdown = false;
+						timer.manager.active = true;
 						restartSong(true);
 					}
 					else
@@ -275,11 +282,13 @@ class PauseSubState extends MusicBeatSubstate
 							PlayState.instance.clearNotesBefore(curTime);
 							PlayState.instance.setSongTime(curTime);
 						}
+						timer.manager.active = true;
 						close();
 					}
 				case "Terminar Musica":
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							timer.manager.active = true;
 							close();
 							PlayState.instance.finishSong(true);
 						}
@@ -293,6 +302,7 @@ class PauseSubState extends MusicBeatSubstate
 				case 'Ajustes':
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							timer.manager.active = true;
 							wasinsongbeforethenwenttooptions = true;
 							PlayState.deathCounter = 0;
 							PlayState.restartSkipCountdown = false;
@@ -304,6 +314,7 @@ class PauseSubState extends MusicBeatSubstate
 				case 'Config Gameplay':
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							timer.manager.active = true;
 							close();
 							PlayState.instance.openChangersMenu();
 						}
@@ -311,6 +322,7 @@ class PauseSubState extends MusicBeatSubstate
 				case "Sair":
 					FlxTween.tween(backEngine.scale, {x: 1.3, y: 1.3}, 0.1, {ease: FlxEase.quadInOut, onComplete:
 						function (twn:FlxTween) {
+							timer.manager.active = true;
 							PlayState.deathCounter = 0;
 							PlayState.restartSkipCountdown = false;
 							PlayState.seenCutscene = false;

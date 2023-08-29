@@ -237,6 +237,8 @@ class PlayState extends MusicBeatState
 	public var cameraSpeed:Float = 1;
 	public var bubble:Int = 0;
 
+	var timerPlay = new FlxTimer();
+
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
 
@@ -3595,6 +3597,7 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
+		timerPlay.manager.active = false;
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		//}
 
