@@ -25,6 +25,10 @@ class GameOverSubstate extends MusicBeatSubstate
 	public static var loopSoundName:String = 'gameOver';
 	public static var endSoundName:String = 'gameOverEnd';
 
+	public static var endDeathIntro:Bool = false;
+	public static var curDeathX:Float = 0;
+	public static var curDeathY:Float = 0;
+
 	public static var instance:GameOverSubstate;
 
 	public static function resetVariables() {
@@ -37,6 +41,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	override function create()
 	{
 		instance = this;
+		endDeathIntro = false;
 		PlayState.instance.callOnLuas('onGameOverStart', []);
 
 		super.create();
@@ -54,6 +59,8 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
+		curDeathX = x;
+		curDeathY = y;
 
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
@@ -133,6 +140,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				}
 				else
 				{
+					endDeathIntro = true;
 					coolStartDeath();
 				}
 				boyfriend.startedDeath = true;
@@ -165,6 +173,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		if (!isEnding)
 		{
 			isEnding = true;
+			endDeathIntro = false;
 			boyfriend.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
 			FlxG.sound.play(Paths.music(endSoundName));
