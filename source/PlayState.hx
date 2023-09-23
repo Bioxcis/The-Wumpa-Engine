@@ -236,6 +236,7 @@ class PlayState extends MusicBeatState
 	public var camOther:FlxCamera;
 	public var cameraSpeed:Float = 1;
 	public var bubble:Int = 0;
+	public var isNoHIT:Bool = false;
 
 	var timerPlay = new FlxTimer();
 
@@ -532,7 +533,7 @@ class PlayState extends MusicBeatState
 			cameraSpeed = stageData.camera_speed;
 
 		boyfriendCameraOffset = stageData.camera_boyfriend;
-		if(boyfriendCameraOffset == null) //Fucks sake should have done it since the start :rolling_eyes:
+		if(boyfriendCameraOffset == null)
 			boyfriendCameraOffset = [0, 0];
 
 		opponentCameraOffset = stageData.camera_opponent;
@@ -3402,7 +3403,7 @@ class PlayState extends MusicBeatState
 				var dunceNote:Note = unspawnNotes[0];
 				notes.insert(0, dunceNote);
 				dunceNote.spawned=true;
-				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
+				callOnLuas('onSpawnNote', [notes.members.indexOf(dunceNote), dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote, dunceNote.strumTime]);
 
 				var index:Int = unspawnNotes.indexOf(dunceNote);
 				unspawnNotes.splice(index, 1);
@@ -4589,7 +4590,20 @@ class PlayState extends MusicBeatState
 				var sortedNotesList:Array<Note> = [];
 				notes.forEachAlive(function(daNote:Note)
 				{
-					if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote && !daNote.blockHit)
+					if (daNote.canBeHit && !isNoHIT && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote && !daNote.blockHit)
+					{
+						if(daNote.noteData == key)
+						{
+							sortedNotesList.push(daNote);
+							//notesDatas.push(daNote.noteData);
+						}
+						if (SONG.disableAntiMash) {
+							canMiss = false;
+						} else {			// best code ever
+							canMiss = true;
+						}
+					} 
+					else if (daNote.canBeHit && daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.isSustainNote && !daNote.blockHit && daNote.noteType == 'enforceCrate')
 					{
 						if(daNote.noteData == key)
 						{
@@ -4728,9 +4742,13 @@ class PlayState extends MusicBeatState
 			{
 				// hold note functions
 				if (daNote.isSustainNote && controlHoldArray[daNote.noteData] && daNote.canBeHit
-				&& daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit) {
+				&& daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit && !isNoHIT) {
 					goodNoteHit(daNote);
-				}
+				} else if (daNote.isSustainNote && controlHoldArray[daNote.noteData] && daNote.canBeHit
+				&& daNote.mustPress && !daNote.tooLate && !daNote.wasGoodHit && !daNote.blockHit
+				&& daNote.noteType == 'enforceCrate') {
+					goodNoteHit(daNote);
+				} 
 			});
 
 			if (controlHoldArray.contains(true) && !endingSong) {
@@ -4769,7 +4787,7 @@ class PlayState extends MusicBeatState
 		if (daNote.isSustainNote) {
 			if (daNote.parent != null) {
 				if (!daNote.parent.shouldbehidden) {
-					songMisses++;
+					if(!endingSong) songMisses++;
 					totalPlayed++;
 					if(!practiceMode) songScore -= 5;
 				}
