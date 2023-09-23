@@ -262,7 +262,7 @@ class GreyscaleShader extends FlxShader{
 class GrainEffect extends Effect {
 	
 	public var shader:Grain;
-	public function new (grainsize, lumamount,lockAlpha){
+	public function new (grainsize, lumamount, lockAlpha){
 		shader = new Grain();
 		shader.data.lumamount.value = [lumamount];
 		shader.data.grainsize.value = [grainsize];
@@ -282,8 +282,9 @@ class GrainEffect extends Effect {
 
 class Grain extends FlxShader
 {
-	public function new(){super('
-		////pragma header
+	public function new()
+	{
+		super('#pragma header
 
 		/*
 		Film Grain post-process shader v1.1
@@ -427,10 +428,10 @@ class Grain extends FlxShader
 			vec4 texColor = texture2D(bitmap, openfl_TextureCoordv);
 				if (lockAlpha) bitch = texColor.a;
 			gl_FragColor =  vec4(col,bitch);
-		}');//
+		}');
+	}
 	
 	
-}
 }
 
 class VCRDistortionEffect extends Effect
@@ -1154,5 +1155,4 @@ class Effect {
 	public function setValue(shader:FlxShader, variable:String, value:Float){
 		Reflect.setProperty(Reflect.getProperty(shader, 'variable'), 'value', [value]);
 	}
-	
 }

@@ -252,7 +252,6 @@ class MainMenuState extends MusicBeatState
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
-		//NOTA: WIDTH = LARGURA, HEIGHT = ALTURA
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
