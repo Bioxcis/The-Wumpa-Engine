@@ -1584,9 +1584,6 @@ class FunkinLua {
 			PlayState.instance.camFollow.y = targetY;
 			PlayState.instance.setCameraForced(true);
 		});
-		Lua_helper.add_callback(lua, "returnCameraFocus", function() {
-			PlayState.instance.setCameraForced(false);
-		});
 		Lua_helper.add_callback(lua, "cameraShake", function(camera:String, intensity:Float, duration:Float) {
 			cameraFromString(camera).shake(intensity, duration);
 		});

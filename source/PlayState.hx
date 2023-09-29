@@ -5472,8 +5472,8 @@ class PlayState extends MusicBeatState
 		callOnHScripts('beatHit', [curBeat]);
 	}
 
-	public function setCameraForced(value:Bool):Void {
-        isCameraOnForcedPos = value;
+	public function setCameraForced(kade:Bool):Void {
+        isCameraOnForcedPos = kade;
     }
 
 	function callSingleHScript(func:String, args:Array<Dynamic>, filename:String) {
