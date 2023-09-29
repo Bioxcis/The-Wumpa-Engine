@@ -309,6 +309,7 @@ class PlayState extends MusicBeatState
 	public static var campaignScore:Int = 0;
 	public static var campaignMisses:Int = 0;
 	public static var seenCutscene:Bool = false;
+
 	public static var deathCounter:Int = 0;
 
 	public var defaultCamZoom:Float = 1.05;
@@ -3265,6 +3266,7 @@ class PlayState extends MusicBeatState
 				openPauseMenu();
 			}
 		}
+		setOnLuas('chartMode', chartingMode);
 
 		if (FlxG.keys.anyJustPressed(debugKeysChart) && !endingSong && !inCutscene && !SONG.disableDebugButtons)
 		{
@@ -3379,6 +3381,7 @@ class PlayState extends MusicBeatState
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 		}
+		setOnLuas("defaultzooms", defaultCamZoom);
 
 		FlxG.watch.addQuick("secShit", curSection);
 		FlxG.watch.addQuick("beatShit", curBeat);
@@ -3391,6 +3394,7 @@ class PlayState extends MusicBeatState
 			trace("RESET = True");
 		}
 		doDeathCheck();
+		setOnLuas("deaths", deathCounter);
 
 		if (unspawnNotes[0] != null)
 		{
@@ -3470,7 +3474,6 @@ class PlayState extends MusicBeatState
 				{
 					daNote.y = strumY + Math.sin(angleDir) * daNote.distance;
 
-					//Jesus fuck this took me so much mother fucking time AAAAAAAAAA
 					if(strumScroll && daNote.isSustainNote)
 					{
 						if (daNote.animation.curAnim.name.endsWith('end')) {
@@ -5469,6 +5472,10 @@ class PlayState extends MusicBeatState
 		callOnHScripts('beatHit', [curBeat]);
 	}
 
+	public function setCameraForced(value:Bool):Void {
+        isCameraOnForcedPos = value;
+    }
+
 	function callSingleHScript(func:String, args:Array<Dynamic>, filename:String) {
 		if (!hscriptArray.get(filename).variables.exists(func)) {
 			return;
@@ -5615,12 +5622,12 @@ class PlayState extends MusicBeatState
 
 			// Rating FC
 			ratingFC = "";
-			if (perfects > 0 && !ClientPrefs.removePerfects) ratingFC = "PFC";
-			if (sicks > 0) ratingFC = "BFC";
-			if (goods > 0) ratingFC = "OFC";
-			if (bads > 0 || shits > 0) ratingFC = "RFC";
-			if (songMisses > 0 && songMisses < 10) ratingFC = "PFC";
-			else if (songMisses >= 10) ratingFC = "CBC";
+			if (perfects > 0 && !ClientPrefs.removePerfects) ratingFC = "SS+";
+			if (sicks > 0) ratingFC = "A-";
+			if (goods > 0) ratingFC = "B-";
+			if (bads > 0 || shits > 0) ratingFC = "D-";
+			if (songMisses > 0 && songMisses < 10) ratingFC = "S+";
+			else if (songMisses >= 10) ratingFC = "A+";
 		}
 		setOnLuas('rating', ratingPercent);
 		setOnLuas('ratingName', ratingName);

@@ -62,6 +62,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		curDeathX = x;
 		curDeathY = y;
 
+		PlayState.instance.setOnLuas('curDeathX', x);
+		PlayState.instance.setOnLuas('curDeathY', y);
+
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
 		FlxG.sound.play(Paths.sound(deathSoundName));
@@ -122,8 +125,8 @@ class GameOverSubstate extends MusicBeatSubstate
 
 			if (boyfriend.animation.curAnim.finished && !playingDeathSound)
 			{
-				//if (PlayState.SONG.stage == 'tank') 		<--	RENDER ORIGINAL
-				if (PlayState.SONG.stage == '') //RENDERIZAR SOM ALEATÓRIO AO INICIO DO GAMEOVER DO WARP 1
+				//if (PlayState.SONG.stage == 'tank') 		<-- ORIGINAL
+				if (PlayState.SONG.stage == '') // SOM ALEATÓRIO AO INICIO DO GAMEOVER
 				{
 					playingDeathSound = true;
 					coolStartDeath(0.2);
@@ -142,6 +145,7 @@ class GameOverSubstate extends MusicBeatSubstate
 				{
 					endDeathIntro = true;
 					coolStartDeath();
+					PlayState.instance.setOnLuas('deathFinish', true);
 				}
 				boyfriend.startedDeath = true;
 			}
@@ -174,6 +178,7 @@ class GameOverSubstate extends MusicBeatSubstate
 		{
 			isEnding = true;
 			endDeathIntro = false;
+			PlayState.instance.setOnLuas('deathFinish', false);
 			boyfriend.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
 			FlxG.sound.play(Paths.music(endSoundName));

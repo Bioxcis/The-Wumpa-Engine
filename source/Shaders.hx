@@ -282,9 +282,8 @@ class GrainEffect extends Effect {
 
 class Grain extends FlxShader
 {
-	public function new()
-	{
-		super('#pragma header
+	public function new(){super('
+		////pragma header
 
 		/*
 		Film Grain post-process shader v1.1
@@ -428,10 +427,10 @@ class Grain extends FlxShader
 			vec4 texColor = texture2D(bitmap, openfl_TextureCoordv);
 				if (lockAlpha) bitch = texColor.a;
 			gl_FragColor =  vec4(col,bitch);
-		}');
-	}
+		}');//
 	
 	
+}
 }
 
 class VCRDistortionEffect extends Effect
