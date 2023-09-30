@@ -1580,12 +1580,14 @@ class FunkinLua {
 			return isDad;
 		});
 		Lua_helper.add_callback(lua, "CameraFollowPos", function(?camX:Dynamic, ?camY:Dynamic) {
-			if(caX == null || camY == null) {
-				PlayState.instance.triggerEventNote("Camera Follow Pos", "", "");
+			var targetX:String = "";
+			var targetY:String = "";
+			if(camX == null && camY == null) {
+				PlayState.instance.triggerEventNote("Camera Follow Pos", targetX, targetY);
 				return false;
 			} else {
-				var targetX:String = string(camX);
-				var targetY:String = string(camY);
+				targetX = camX != null ? Std.string(camX) : "0";
+				targetY = camY != null ? Std.string(camY) : "0";
 				PlayState.instance.triggerEventNote("Camera Follow Pos", targetX, targetY);
 				return true;
 			}
