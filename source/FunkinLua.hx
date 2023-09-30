@@ -956,9 +956,11 @@ class FunkinLua {
 				luaTrace('Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "doTweenLinear", function(tag:String, vars:String, fromX:Float, fromY:Float, toX:Float, toY:Float, duration:Float, ease:String) {
+		Lua_helper.add_callback(lua, "doTweenLinear", function(tag:String, vars:String, toX:Float, toY:Float, duration:Float, ease:String) {
 			var objectName:Dynamic = tweenShit(tag, vars);
 			if(objectName != null) {
+				var fromX:Float = objectName.x;
+				var fromY:Float = objectName.y;
 				PlayState.instance.modchartTweens.set(tag, FlxTween.linearMotion(objectName, fromX, fromY, toX, toY, duration, true, {ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
 						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
@@ -986,11 +988,11 @@ class FunkinLua {
 				luaTrace('Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "doTweenCurve", function(tag:String, vars:String, fromPos:Array<Dynamic>, controlPos:Array<Dynamic>, toPos:Array<Dynamic>, duration:Float, ease:String) {
+		Lua_helper.add_callback(lua, "doTweenCurve", function(tag:String, vars:String, controlPos:Array<Dynamic>, toPos:Array<Dynamic>, duration:Float, ease:String) {
 			var objectName:Dynamic = tweenShit(tag, vars);
 			if(objectName != null) {
-				var fromX:Float = (Std.isOfType(fromPos[0], Float) && fromPos[0] != null) ? fromPos[0] : 0;
-				var fromY:Float = (Std.isOfType(fromPos[1], Float) && fromPos[1] != null) ? fromPos[1] : 0;
+				var fromX:Float = objectName.x;
+				var fromY:Float = objectName.y;
 				var controlX:Float = (Std.isOfType(controlPos[0], Float) && controlPos[0] != null) ? controlPos[0] : 0;
 				var controlY:Float = (Std.isOfType(controlPos[1], Float) && controlPos[1] != null) ? controlPos[1] : 0;
 				var toX:Float = (Std.isOfType(toPos[0], Float) && toPos[0] != null) ? toPos[0] : 0;
@@ -1005,11 +1007,11 @@ class FunkinLua {
 				luaTrace('Couldnt find object: ' + vars, false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "doTweenDualCurve", function(tag:String, vars:String, fromPos:Array<Dynamic>, aControl:Array<Dynamic>, bControl:Array<Dynamic>, toPos:Array<Dynamic>, duration:Float, ease:String) {
+		Lua_helper.add_callback(lua, "doTweenDualCurve", function(tag:String, vars:String, aControl:Array<Dynamic>, bControl:Array<Dynamic>, toPos:Array<Dynamic>, duration:Float, ease:String) {
 			var objectName:Dynamic = tweenShit(tag, vars);
 			if(objectName != null) {
-				var fromX:Float = (Std.isOfType(fromPos[0], Float) && fromPos[0] != null) ? fromPos[0] : 0;
-				var fromY:Float = (Std.isOfType(fromPos[1], Float) && fromPos[1] != null) ? fromPos[1] : 0;
+				var fromX:Float = objectName.x;
+				var fromY:Float = objectName.y;
 				var aX:Float = (Std.isOfType(aControl[0], Float) && aControl[0] != null) ? aControl[0] : 0;
 				var aY:Float = (Std.isOfType(aControl[1], Float) && aControl[1] != null) ? aControl[1] : 0;
 				var bX:Float = (Std.isOfType(bControl[0], Float) && bControl[0] != null) ? bControl[0] : 0;
@@ -1030,8 +1032,10 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "doTweenLinearPath", function(tag:String, vars:String, points:Array<Dynamic>, duration:Float, ease:String) {
 			var objectName:Dynamic = tweenShit(tag, vars);
 			if(objectName != null) {
-				if(points.length < 2) throw "A matriz points deve ter pelo menos 2 elementos";
+				if(points.length < 1) throw "The points array must have at least 1 additional element";
 				var allPoints:Array<FlxPoint> = [];
+				var defaultPoint:FlxPoint = new FlxPoint(objectName.x, objectName.y);
+				allPoints.push(defaultPoint);
 				for(i in 0...points.length) {
 					var x:Float = 0;
 					var y:Float = 0;
@@ -1056,8 +1060,10 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "doTweenCurvePath", function(tag:String, vars:String, points:Array<Dynamic>, duration:Float, ease:String) {
 			var objectName:Dynamic = tweenShit(tag, vars);
 			if(objectName != null) {
-				if(points.length < 3) throw "A matriz points deve ter pelo menos 3 elementos";
+				if(points.length < 2) throw "A matriz points deve ter pelo menos 2 elementos";
 				var allPoints:Array<FlxPoint> = [];
+				var defaultPoint:FlxPoint = new FlxPoint(objectName.x, objectName.y);
+				allPoints.push(defaultPoint);
 				for(i in 0...points.length) {
 					var x:Float = 0;
 					var y:Float = 0;
