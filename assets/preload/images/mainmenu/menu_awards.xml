@@ -1,18 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TextureAtlas imagePath="menu_awards.png">
+<TextureAtlas imagePath="CRASH FNF_main_menu_assets.png">
 	<!-- Created with Adobe Animate version 19.1.0.349 -->
 	<!-- http://www.adobe.com/products/animate.html -->
-	<SubTexture name="awards basic0000" x="0" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0001" x="0" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0002" x="0" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0003" x="483" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0004" x="483" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0005" x="483" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0006" x="0" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0007" x="0" y="0" width="483" height="135"/>
-	<SubTexture name="awards basic0008" x="0" y="0" width="483" height="135"/>
-	<SubTexture name="awards white0000" x="966" y="0" width="488" height="157"/>
-	<SubTexture name="awards white0001" x="966" y="0" width="488" height="157"/>
-	<SubTexture name="awards white0002" x="1454" y="0" width="488" height="157"/>
-	<SubTexture name="awards white0003" x="1454" y="0" width="488" height="157"/>
+	<SubTexture name="awards basic0000" x="0" y="0" width="897" height="258"/>
+	<SubTexture name="awards basic0001" x="897" y="0" width="897" height="258"/>
+	<SubTexture name="awards basic0002" x="0" y="258" width="897" height="258"/>
+	<SubTexture name="awards basic0003" x="897" y="258" width="897" height="258"/>
+	<SubTexture name="awards basic0004" x="0" y="516" width="897" height="258"/>
+	<SubTexture name="awards basic0005" x="897" y="516" width="897" height="258"/>
+	<SubTexture name="awards basic0006" x="0" y="774" width="897" height="258"/>
+	<SubTexture name="awards basic0007" x="897" y="774" width="897" height="258"/>
+	<SubTexture name="awards basic0008" x="0" y="1032" width="897" height="258"/>
+	<SubTexture name="awards basic0009" x="0" y="0" width="897" height="258"/>
+	<SubTexture name="awards white0000" x="897" y="1032" width="897" height="250"/>
+	<SubTexture name="awards white0001" x="897" y="1032" width="897" height="250"/>
+	<SubTexture name="awards white0002" x="0" y="1290" width="897" height="250"/>
+	<SubTexture name="awards white0003" x="0" y="1290" width="897" height="250"/>
 </TextureAtlas>

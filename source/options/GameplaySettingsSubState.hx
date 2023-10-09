@@ -61,21 +61,21 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			'bool',
 			false);
 		addOption(option);
-
+		/*
 		var option:Option = new Option('Ocultar Notas Oponente',
 			'Se marcado, oculta as notas do oponente nas partidas.',
 			'opponentStrums',
 			'bool',
 			false);
 		addOption(option);
-
+		*/
 		var option:Option = new Option('Ghost Tapping',
-			'Se marcado, voce não vai errar ao pressionar qualquer tecla\nenquanto não houver notas que possam ser acertadas.',
+			'Se marcado, voce não vai errar ao pressionar as teclas enquanto\nnão houver notas que possam ser acertadas. Desativado no modo Nsano.',
 			'ghostTapping',
 			'bool',
 			false);
 		addOption(option);
-
+		/*
 		var option:Option = new Option('Remove Nsano!!! do Julgamento',
 			'Se marcado, remove o julgamento Nsano!!!',
 			'removePerfects',
@@ -83,15 +83,13 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
-		/*
 		var option:Option = new Option('Note Camera Movement',
-			'If checked, camera will move when pressing notes',
+			'Se marcado, a camera se move ao acertar a nota',
 			'cameramoveonnotes',
-			'bool',					should fix this someday.
+			'bool',
 			true);
 		addOption(option);
 		*/
-
 		var option:Option = new Option('Desativar Tecla Resete',
 			'Se marcado, ao pressionar a tecla Redefinir não acontecerá nada.',
 			'noReset',
@@ -119,7 +117,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			1);
 		addOption(option);
 		option.scrollSpeed = 1;
-		option.minValue = 0.0;
+		option.minValue = 0.1;
 		option.changeValue = 0.1;
 		option.maxValue = 1;
 		option.decimals = 1;
@@ -148,7 +146,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 		
-
+		/*
 		var option:Option = new Option('Rating Offset',
 			'Altera o quão cedo/tarde você tem que acertar para um "Whoa!"\nValores mais altos significam ter que acertar mais tarde.',
 			'ratingOffset',
@@ -214,7 +212,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 10;
 		option.changeValue = 0.1;
 		addOption(option);
-
+		*/
 		super();
 	}
 

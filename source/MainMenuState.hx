@@ -38,18 +38,17 @@ class MainMenuState extends MusicBeatState
 	private var camGame:FlxCamera;
 	private var camAchievement:FlxCamera;
 	
-	var optionShit:Array<String> = [
+	var optionsGroup:Array<String> = [
 		'story_mode',
 		'freeplay',
 		#if ACHIEVEMENTS_ALLOWED 'awards', #end
-		#if MODS_ALLOWED 'mods', #end
 		'options',
 		'exit'
 	];
-
-		//'credits', //pra retornar apague as barras no inicio daqui e nas linhas do código lá embaixo '-'
+		//#if MODS_ALLOWED 'mods', #end
+		//'credits',
 		//'donate',
-		//'discord', you can go to discord now by pressing ctrl in credits
+		//'discord',
 
 	#if MODS_ALLOWED
 	var customOption:String;
@@ -94,7 +93,8 @@ class MainMenuState extends MusicBeatState
 
 		persistentUpdate = persistentDraw = true;
 
-		var yScroll:Float = Math.max(0.25 - (0.05 * (optionShit.length - 4)), 0.1);
+		//var yScroll:Float = Math.max(0.25 - (0.05 * (optionsGroup.length - 4)), 0.1);
+		var yScroll:Float = 0;
         var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
         bg.scrollFactor.set(0, yScroll);
         bg.setGraphicSize(Std.int(bg.width * 1.175));
@@ -142,8 +142,8 @@ class MainMenuState extends MusicBeatState
 		add(menuItems);
 
 		var scale:Float = 0.7;
-		/*if(optionShit.length > 6) {
-			scale = 6 / optionShit.length;
+		/*if(optionsGroup.length > 6) {
+			scale = 6 / optionsGroup.length;
 		}*/
 
 		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
@@ -168,47 +168,55 @@ class MainMenuState extends MusicBeatState
 		pushModMenuItemsToList(Paths.currentModDirectory);
 		#end
 
-		for (i in 0...optionShit.length)
+		for (i in 0...optionsGroup.length)
 		{
-			var offset:Float = 108 - (Math.max(optionShit.length, 4) - 4) * 80;
+			var offset:Float = 108 - (Math.max(optionsGroup.length, 4) - 4) * 80;
 			var menuItem:FlxSprite = new FlxSprite(curoffset, (i * 140) + offset);
 			menuItem.scale.x = scale;
 			menuItem.scale.y = scale;
-			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionShit[i]);
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
+			menuItem.frames = Paths.getSparrowAtlas('mainmenu/menu_' + optionsGroup[i]);
+			menuItem.animation.addByPrefix('idle', optionsGroup[i] + " basic", 24);
+			menuItem.animation.addByPrefix('selected', optionsGroup[i] + " white", 24);
 			menuItem.animation.play('idle');
 			menuItem.ID = i;
 			menuItem.screenCenter(X);
 			menuItems.add(menuItem);
-			var scr:Float = (optionShit.length - 4) * 0.135;
-			if(optionShit.length < 6) scr = 0;
+			var scr:Float = (optionsGroup.length - 4) * 0.135;
+			if(optionsGroup.length < 6) scr = 0;
 			menuItem.scrollFactor.set(0, scr);
 			menuItem.antialiasing = ClientPrefs.globalAntialiasing;
 			//menuItem.setGraphicSize(Std.int(menuItem.width * 0.58));
 			menuItem.updateHitbox();
 			//curoffset = curoffset + 20;
+			var size:Float = 0.5;
 
-			switch (i)//ANIMAÇÃO DOS ITENS DO MENU E SUAS POSIÇÕES APÓS O TERMINO DA ANIMAÇÃO	//inicio
+			switch (i) //ITENS DO MENU E SUAS POSIÇÕES/TAMANHOS
 			{
 				case 0: //aventura
-					menuItem.x = 420;
-					menuItem.y = 20;
+					menuItem.x = 320;
+					menuItem.y = 100;
+					menuItem.scale.x = size;
+					menuItem.scale.y = size;
 				case 1: //modo livre
-					menuItem.x = 460;
-					menuItem.y = 150;
+					menuItem.x = 330;
+					menuItem.y = 220;
+					menuItem.scale.x = size;
+					menuItem.scale.y = size;
 				case 2: //missões
-					menuItem.x = 467;
-					menuItem.y = 250;
-				case 3: //mods
-					menuItem.x = 508;
-					menuItem.y = 380;
-				case 4: //opções
-					menuItem.x = 478;
-					menuItem.y = 490;
-				case 5: //sair
-					menuItem.x = 530;
-					menuItem.y = 620;
+					menuItem.x = 324;
+					menuItem.y = 310;
+					menuItem.scale.x = size - 0.1;
+					menuItem.scale.y = size - 0.1;
+				case 3: //opções
+					menuItem.x = 420;
+					menuItem.y = 440;
+					menuItem.scale.x = size;
+					menuItem.scale.y = size;
+				case 4: //sair
+					menuItem.x = 390;
+					menuItem.y = 520;
+					menuItem.scale.x = size - 0.2;
+					menuItem.scale.y = size - 0.23;
 			}
 
 			/*if(FlxG.save.data.antialiasing)
@@ -288,7 +296,7 @@ class MainMenuState extends MusicBeatState
 			if (firstarray[0].length > 0) {
 				var arr:Array<String> = firstarray[0].split('||');
 				//if(arr.length == 1) arr.push(folder);
-				optionShit.push(arr[0]);
+				optionsGroup.push(arr[0]);
 				customOption = arr[0];
 				customOptionLink = arr[1];
 			}
@@ -308,7 +316,7 @@ class MainMenuState extends MusicBeatState
 	#end
 
 	var selectedSomethin:Bool = false;
-
+	var currentFrame:Int = 0;
 	override function update(elapsed:Float)
 	{
 		if (FlxG.sound.music.volume < 0.8)
@@ -316,6 +324,12 @@ class MainMenuState extends MusicBeatState
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 			if(FreeplayState.vocals != null) FreeplayState.vocals.volume += 0.5 * elapsed;
 		}
+
+		menuItems.forEach(function(spr:FlxSprite) {
+			if (spr.animation.curAnim.name == 'idle') {
+				currentFrame = spr.animation.curAnim.curFrame;
+			}	
+		});
 
 		var lerpVal:Float = CoolUtil.boundTo(elapsed * 7.5, 0, 1);
 		camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
@@ -345,9 +359,9 @@ class MainMenuState extends MusicBeatState
 
 			if (controls.ACCEPT)
 			{
-				if (optionShit[curSelected] == 'donate') {
+				if (optionsGroup[curSelected] == 'donate') {
 					CoolUtil.browserLoad('https://ninja-muffin24.itch.io/funkin');
-				} else if (optionShit[curSelected] == customOption) {
+				} else if (optionsGroup[curSelected] == customOption) {
 					CoolUtil.browserLoad(customOptionLink);
 				}
 				else
@@ -377,34 +391,9 @@ class MainMenuState extends MusicBeatState
 						}
 						else
 						{
-							/*
-							FlxTween.tween(spr, {x: 500}, 1, {ease: FlxEase.backInOut, type: ONESHOT, onComplete: function(tween: FlxTween) {	no more tweenings
-								var daChoice:String = optionShit[curSelected];
-
-
-								switch (daChoice)
-								{
-									case 'story_mode':
-										MusicBeatState.switchState(new StoryMenuState());
-									case 'freeplay':
-										MusicBeatState.switchState(new FreeplayState());
-									#if MODS_ALLOWED
-									case 'mods':
-										MusicBeatState.switchState(new ModsMenuState());
-									#end			
-									case 'awards':
-										MusicBeatState.switchState(new AchievementsMenuState());
-									case 'credits':
-										MusicBeatState.switchState(new CreditsState());
-									case 'options':
-										LoadingState.loadAndSwitchState(new options.OptionsState());
-								}
-							}});
-							*/
 							FlxFlicker.flicker(spr, 1, 0.06, false, false, function(flick:FlxFlicker)
-
 							{
-								var daChoice:String = optionShit[curSelected];
+								var daChoice:String = optionsGroup[curSelected];
 
 								switch (daChoice)
 								{
@@ -414,14 +403,14 @@ class MainMenuState extends MusicBeatState
 										MusicBeatState.switchState(new FreeplayState());
 									case 'awards':
 										MusicBeatState.switchState(new AchievementsMenuState());
-									#if MODS_ALLOWED
-									case 'mods':
-										MusicBeatState.switchState(new ModsMenuState()); 
-									#end
+									//#if MODS_ALLOWED
+									//case 'mods':
+									// 	MusicBeatState.switchState(new ModsMenuState()); 
+									//#end
 									//case 'credits':
-									//	MusicBeatState.switchState(new CreditsState()); //pra retornar apague as barras no inicio daqui e nas linhas do código lá encima '-'
+									//	MusicBeatState.switchState(new CreditsState());
 									case 'options':
-										LoadingState.loadAndSwitchState(new options.OptionsState());//sem o loading nas opções o jogo trava por não conseguir carregar o state options...
+										LoadingState.loadAndSwitchState(new options.OptionsState(), true);
 									case 'exit':
 										MusicBeatState.switchState(new GameExitState());
 								}
@@ -457,6 +446,7 @@ class MainMenuState extends MusicBeatState
 		}
 	}
 
+	var prevSelected: Int = 999;
 	function changeItem(huh:Int = 0)
 	{
 		curSelected += huh;
@@ -468,23 +458,27 @@ class MainMenuState extends MusicBeatState
 
 		menuItems.forEach(function(spr:FlxSprite)
 		{
-			spr.animation.play('idle');
-			//spr.updateHitbox();
-			spr.scale.x = 0.7;
-			spr.scale.y = 0.7;
+			// spr.updateHitbox();
+			// spr.scale.x = 0.7;
+			// spr.scale.y = 0.7;
 
-			if (spr.ID == curSelected)
-			{
+			if (spr.ID == prevSelected) {
+				spr.animation.play('idle', false, false, currentFrame);
+				spr.scale.x -= 0.1;
+				spr.scale.y -= 0.1;
+			}
+			if (spr.ID == curSelected) {
 				spr.animation.play('selected');
-				spr.scale.x = 1.0;
-				spr.scale.y = 1.0;
+				spr.scale.x += 0.1;
+				spr.scale.y += 0.1;
 				var add:Float = 0;
 				if(menuItems.length > 4) {
 					add = menuItems.length * 8;
 				}
 				camFollow.setPosition(spr.getGraphicMidpoint().x, spr.getGraphicMidpoint().y - add);
-				//spr.centerOffsets();
+				// spr.centerOffsets();
 			}
 		});
+		prevSelected = curSelected;
 	}
 }

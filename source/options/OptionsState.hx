@@ -63,6 +63,9 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
+		FlxG.sound.playMusic(Paths.music('optionsTheme'), 0);
+		FlxG.sound.music.fadeIn(1, 0, 1);
+
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xff5a35ff;
 		bg.updateHitbox();
@@ -155,6 +158,8 @@ class OptionsState extends MusicBeatState
 				MusicBeatState.switchState(new PlayState());
 				PauseSubState.wasinsongbeforethenwenttooptions = false;
 			} else {
+				FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+				FlxG.sound.music.fadeIn(0.3, 0, 1);
 				MusicBeatState.switchState(new MainMenuState());
 			}
 		}

@@ -349,12 +349,12 @@ class FreeplayState extends MusicBeatState
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
-		if(ctrl)
-		{
-			persistentUpdate = false;
-			openSubState(new GameplayChangersSubstate());
-		}
-		else if(space)
+		// if(ctrl)
+		// {
+		// 	persistentUpdate = false;
+		// 	openSubState(new GameplayChangersSubstate());
+		// }
+		if(space)
 		{
 			if(instPlaying != curSelected)
 			{

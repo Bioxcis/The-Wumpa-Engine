@@ -55,6 +55,9 @@ class StoryMenuState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
+		FlxG.sound.playMusic(Paths.music('warpRoom'), 0);
+		FlxG.sound.music.fadeIn(0.3, 0.3, 1);
+
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
 		if(curWeek >= WeekData.weeksList.length) curWeek = 0;
@@ -240,8 +243,7 @@ class StoryMenuState extends MusicBeatState
 				//FlxG.sound.play(Paths.sound('tuff'));
 				rightArrow.animation.play('press');
 			}
-			else
-				rightArrow.animation.play('idle');
+			else rightArrow.animation.play('idle');
 
 			if (controls.UI_LEFT)
 			{
@@ -263,7 +265,7 @@ class StoryMenuState extends MusicBeatState
 			}
 			else if (upP || downP)
 			{
-				FlxG.sound.play(Paths.sound('tuff'));
+				//FlxG.sound.play(Paths.sound('tuff'));
 				changeDifficulty();
 			}
 
@@ -288,6 +290,8 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
+			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+			FlxG.sound.music.fadeIn(0.3, 0, 1);
 			MusicBeatState.switchState(new MainMenuState());
 		}
 

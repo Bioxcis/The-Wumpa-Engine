@@ -35,20 +35,27 @@ class VisualsUISubState extends BaseOptionsMenu
 		title = 'Visual e UI';
 		rpcTitle = 'Menu Ajustes de Visual & UI'; //for Discord Rich Presence
 
+		var option:Option = new Option('Luzes Piscantes',
+			"Desmarque esta opção se voce for sensível a luzes piscantes!",
+			'flashing',
+			'bool',
+			true);
+		addOption(option);
+
 		var option:Option = new Option('Splash da Nota',
 			"Se marcado, ao acertar as notas \"Sick!\" vai mostrar efeitos de splash.",
 			'noteSplashes',
 			'bool',
 			true);
 		addOption(option);
-
+		/*
 		var option:Option = new Option('Esconder HUD',
 			'Se marcado, oculta a maioria dos elementos do HUD.',
 			'hideHud',
 			'bool',
 			false);
 		addOption(option);
-
+		*/
 		var option:Option = new Option("Modo Exibicao",
 			'Se marcado, oculta todo o HUD e ativa o Botplay.',
 			'showcaseMode',
@@ -62,23 +69,22 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			false);
 		addOption(option);
-
+		/*
 		var option:Option = new Option('Trilha no Personagem',
 			'Gerava o efeito de trilha do Espirito de Thorns...\n!Disponivel apenas no Modo de Edição de Notas!',
-		/*	'characterTrail',				shit lol. i made better finally*/
+			'characterTrail',
 			'bool',
 			false);
 		addOption(option);
 		
-
 		var option:Option = new Option('Esconder Ponts',
 			'Se marcada, vai ocultar o texto de pontuação, precisão e erros\nno inferior da HUD nas músicas.',
 			'hideScoreText',
 			'bool',
 			false);
 		addOption(option);
-
-		var option:Option = new Option('Bop do Icone',
+		*/
+		var option:Option = new Option('Animacao do Icone',
 			'Clássico igual aos ícones do FNF original / OS igual aos ícone do OS Engine.',
 			'iconbops',
 			'string',
@@ -111,13 +117,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Tempo Restante', 'Tempo Recorrido', 'Nome da Musica', 'OS Tempo Restante', 'Desativado']);
 		addOption(option);
 
-		var option:Option = new Option('Luzes Piscantes',
-			"Desmarque esta opção se voce for sensível a luzes piscantes!",
-			'flashing',
-			'bool',
-			true);
-		addOption(option);
-
 		var option:Option = new Option('Zoom da Camera',
 			"Se marcado, a câmera vai dar zoom nos hits da batida.",
 			'camZooms',
@@ -131,14 +130,14 @@ class VisualsUISubState extends BaseOptionsMenu
 			'bool',
 			true);
 		addOption(option);
-
+		/*
 		var option:Option = new Option('Novo Tamanho Hud',
 			"Se marcado, a HUD do jogo será alterada\npara um novo tamanho!",
 			'hudSize',
 			'bool',
 			true);
 		addOption(option);
-
+		*/
 		var option:Option = new Option('Ativar Shaders',
 			"Se marcado, as shaders estarão ativadas.\nDesative essa opção caso seu computador rejeite as shaders.",
 			'shadersActive',
@@ -199,7 +198,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			'Classico',
 			['Classico', 'Circulo']);
 		addOption(option);
-		
+		/*
 		var option:Option = new Option('Musica do Pause:',
 			"Que música você prefere que toque ao pausar?",
 			'pauseMusic',
@@ -208,7 +207,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Nada', 'Breakfast', 'Tea Time', 'Crash Time']);
 		addOption(option);
 		option.onChange = onChangePauseMusic;
-		
+		*/
 		#if CHECK_FOR_UPDATES
 		var option:Option = new Option('Checar Updates',
 			'Para versões em desenvolvimento, ative para checar por atualizações ao iniciar o jogo.',

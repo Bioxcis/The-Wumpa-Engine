@@ -9,8 +9,10 @@ import Boyfriend;
 import Song;
 import GameOverSubstate;
 import HealthIcon;
-import sys.FileSystem;
+#if sys
 import sys.io.File;
+import sys.FileSystem;
+#end
 import haxe.Json;
 import Section;
 import StrumNote;
