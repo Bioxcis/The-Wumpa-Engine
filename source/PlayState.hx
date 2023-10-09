@@ -85,13 +85,9 @@ class PlayState extends MusicBeatState
 	public static var bons:Bool = false;
 	public static var templ:Bool = false;
 	public static var sewr:Bool = false;
-
-	public static var forstMiss:Bool = false;
-	public static var bonsMiss:Bool = false;
-	public static var templMiss:Bool = false;
-	public static var sewrMiss:Bool = false;
+	public static var forstSecret:Bool = false;
 	//End Lua Achieve shit
-	
+
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 	public static var cameramovingoffset = 20;
@@ -158,6 +154,7 @@ class PlayState extends MusicBeatState
 	public static var storyWeek:Int = 0;
 	public static var storyPlaylist:Array<String> = [];
 	public static var storyDifficulty:Int = 1;
+	public var isGhostTapping:Bool = false;
 
 	public var spawnTime:Float = 2000;
 
@@ -187,6 +184,7 @@ class PlayState extends MusicBeatState
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+	public var startInvisible:Bool = false;
 
 	public var camZooming:Bool = false;
 	public var camZoomingMult:Float = 1;
@@ -237,8 +235,6 @@ class PlayState extends MusicBeatState
 	public var cameraSpeed:Float = 1;
 	public var bubble:Int = 0;
 	public var isNoHIT:Bool = false;
-
-	var timerPlay = new FlxTimer();
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
@@ -388,6 +384,8 @@ class PlayState extends MusicBeatState
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_up')),
 			ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_right'))
 		];
+
+		isGhostTapping = ClientPrefs.ghostTapping;
 
 		//Ratings
 		if (!ClientPrefs.removePerfects) ratingsData.push(new Rating('perfect')); //default rating
@@ -2345,7 +2343,8 @@ class PlayState extends MusicBeatState
 						countdownGet.screenCenter();
 						countdownGet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGet);
-						FlxTween.tween(countdownGet, {/*y: countdownGet.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownGet.scale, {/*y: countdownGet.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
+							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2369,7 +2368,8 @@ class PlayState extends MusicBeatState
 						countdownReady.screenCenter();
 						countdownReady.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownReady);
-						FlxTween.tween(countdownReady, {/*y: countdownReady.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownReady.scale, {/*y: countdownReady.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
+							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2393,7 +2393,8 @@ class PlayState extends MusicBeatState
 						countdownSet.screenCenter();
 						countdownSet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownSet);
-						FlxTween.tween(countdownSet, {/*y: countdownSet.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						FlxTween.tween(countdownSet.scale, {/*y: countdownSet.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
+							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2420,6 +2421,7 @@ class PlayState extends MusicBeatState
 						countdownGo.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGo);
 						FlxTween.tween(countdownGo, {/*y: countdownGo.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
 							{
@@ -2931,7 +2933,7 @@ class PlayState extends MusicBeatState
 			{
 				//babyArrow.y -= 10;
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {/*y: babyArrow.y + 10,*/ alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
+				if(!startInvisible) FlxTween.tween(babyArrow, {/*y: babyArrow.y + 10,*/ alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
 			}
 			else
 			{
@@ -2991,6 +2993,9 @@ class PlayState extends MusicBeatState
 			for (timer in modchartTimers) {
 				timer.active = false;
 			}
+			for (flick in modchartFlickers) {
+				flick.pause();
+			}
 		}
 
 		super.openSubState(SubState);
@@ -3026,6 +3031,9 @@ class PlayState extends MusicBeatState
 			}
 			for (timer in modchartTimers) {
 				timer.active = true;
+			}
+			for (flick in modchartFlickers) {
+				flick.resume();
 			}
 			paused = false;
 			callOnLuas('onResume', []);
@@ -3097,6 +3105,10 @@ class PlayState extends MusicBeatState
 	var canPause:Bool = true;
 	var limoSpeed:Float = 0;
 
+	public var showCombo:Bool = false;
+	public var showComboNum:Bool = true;
+	public var showRating:Bool = true;
+
 	override public function update(elapsed:Float)
 	{
 		/*if (FlxG.keys.justPressed.NINE)
@@ -3105,6 +3117,51 @@ class PlayState extends MusicBeatState
 		}*/
 		callOnLuas('onUpdate', [elapsed]);
 		callOnHScripts('update', [elapsed]);
+
+		setOnLuas("showCombo", showCombo);
+		setOnLuas("showComboNumber", showComboNum);
+		setOnLuas("showRating", showRating);
+
+		// Change spawn notes scales
+		for (oneNote in notes) {
+			if(oneNote.mustPress==true) {		//BF STRUM
+				if(oneNote.noteData==0) {
+					oneNote.scale.x = playerStrums.members[0].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = playerStrums.members[0].scale.y;
+				}
+				if(oneNote.noteData==1){
+					oneNote.scale.x = playerStrums.members[1].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = playerStrums.members[1].scale.y;
+				}
+				if(oneNote.noteData==2){
+					oneNote.scale.x = playerStrums.members[2].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = playerStrums.members[2].scale.y;
+				}
+				if(oneNote.noteData==3){
+					oneNote.scale.x = playerStrums.members[3].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = playerStrums.members[3].scale.y;
+				}
+			}
+	
+			if(oneNote.mustPress==false) {		// DAD STRUM
+				if(oneNote.noteData==0) {
+					oneNote.scale.x = opponentStrums.members[0].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = opponentStrums.members[0].scale.y;
+				}
+				if(oneNote.noteData==1){
+					oneNote.scale.x = opponentStrums.members[1].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = opponentStrums.members[1].scale.y;
+				}
+				if(oneNote.noteData==2){
+					oneNote.scale.x = opponentStrums.members[2].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = opponentStrums.members[2].scale.y;
+				}
+				if(oneNote.noteData==3){
+					oneNote.scale.x = opponentStrums.members[3].scale.x;
+					if(oneNote.isSustainNote==false) oneNote.scale.y = opponentStrums.members[3].scale.y;
+				}
+			}
+        }
 
 		switch (curStage)
 		{
@@ -3381,8 +3438,6 @@ class PlayState extends MusicBeatState
 			FlxG.camera.zoom = FlxMath.lerp(defaultCamZoom, FlxG.camera.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 			camHUD.zoom = FlxMath.lerp(1, camHUD.zoom, CoolUtil.boundTo(1 - (elapsed * 3.125 * camZoomingDecay), 0, 1));
 		}
-		setOnLuas("defaultzooms", defaultCamZoom);
-
 		FlxG.watch.addQuick("secShit", curSection);
 		FlxG.watch.addQuick("beatShit", curBeat);
 		FlxG.watch.addQuick("stepShit", curStep);
@@ -3394,7 +3449,6 @@ class PlayState extends MusicBeatState
 			trace("RESET = True");
 		}
 		doDeathCheck();
-		setOnLuas("deaths", deathCounter);
 
 		if (unspawnNotes[0] != null)
 		{
@@ -3536,13 +3590,14 @@ class PlayState extends MusicBeatState
 				// Kill extremely late notes and cause misses
 				if (Conductor.songPosition > noteKillOffset + daNote.strumTime)
 				{
-					if (daNote.mustPress && !cpuControlled &&!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) {
+					if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) {
 						noteMiss(daNote);
 					}
 
 					daNote.active = false;
 					daNote.visible = false;
 
+					callOnLuas('onDespawnNote', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime]);
 					daNote.kill();
 					notes.remove(daNote, true);
 					daNote.destroy();
@@ -3601,7 +3656,6 @@ class PlayState extends MusicBeatState
 			FlxG.sound.music.pause();
 			vocals.pause();
 		}
-		timerPlay.manager.active = false;
 		openSubState(new PauseSubState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
 		//}
 
@@ -3666,6 +3720,9 @@ class PlayState extends MusicBeatState
 				}
 				for (timer in modchartTimers) {
 					timer.active = true;
+				}
+				for (flick in modchartFlickers) {
+					flick.resume();
 				}
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
@@ -4226,11 +4283,10 @@ class PlayState extends MusicBeatState
 		if(achievementObj != null) {
 			return;
 		} else {
-			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss',
-				'week5_nomiss', 'week6_nomiss', 'week7_nomiss', 'ur_bad',
+			var achieve:String = checkForAchievement(['week1_nomiss', 'week2_nomiss', 'week3_nomiss', 'week4_nomiss', 'week5_nomiss', 'week6_nomiss', 'week7_nomiss',
 				'warp1_nomiss', 'megamix_nomiss', 'fnf_nomiss', 'extra_nomiss', 'intro_nomiss',
-				'ur_good', 'hype', 'two_keys', 'toastie', 'debugger',
-				'flora', 'precioso', 'templo', 'bonus', 'toxico',
+				'ur_bad', 'ur_good', 'hype', 'two_keys', 'toastie', 'debugger',
+				'flora', 'templo', 'bonus', 'toxico', 'precioso',
 				'music1', 'music2', 'music3', 'music4']);
 
 			if(achieve != null) {
@@ -4377,10 +4433,6 @@ class PlayState extends MusicBeatState
 
 	public var totalPlayed:Int = 0;
 	public var totalNotesHit:Float = 0.0;
-
-	public var showCombo:Bool = false;
-	public var showComboNum:Bool = true;
-	public var showRating:Bool = true;
 
 	private function popUpScore(note:Note = null):Void
 	{
@@ -4602,7 +4654,7 @@ class PlayState extends MusicBeatState
 						}
 						if (SONG.disableAntiMash) {
 							canMiss = false;
-						} else {			// best code ever
+						} else {
 							canMiss = true;
 						}
 					} 
@@ -4615,7 +4667,7 @@ class PlayState extends MusicBeatState
 						}
 						if (SONG.disableAntiMash) {
 							canMiss = false;
-						} else {			// best code ever
+						} else {
 							canMiss = true;
 						}
 					}
@@ -4847,7 +4899,7 @@ class PlayState extends MusicBeatState
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
 	{
-		if(ClientPrefs.ghostTapping) return; //fuck it
+		if(isGhostTapping) return;
 
 		if (!boyfriend.stunned)
 		{
@@ -5646,23 +5698,26 @@ class PlayState extends MusicBeatState
 				var unlock:Bool = false;
 				switch(achievementName)
 				{
+					// Para as semanas
 					case 'week1_nomiss' | 'week2_nomiss' | 'week3_nomiss' | 'week4_nomiss' | 'week5_nomiss' | 'intro_nomiss'| 'warp1_nomiss' | 'megamix_nomiss' | 'fnf_nomiss' | 'extra_nomiss':
 						if(isStoryMode && campaignMisses + songMisses < 1 && CoolUtil.difficultyString() == 'DIFICIL' && storyPlaylist.length <= 1 && !changedDifficulty && !usedPractice)
 						{
 							var weekName:String = WeekData.getWeekFileName();
 							switch(weekName) //I know this is a lot of duplicated code, but it's easier readable and you can add weeks with different names than the achievement tag
 							{
-								case 'week1':
-									if(achievementName == 'week1_nomiss') unlock = true;
-								case 'week2':
-									if(achievementName == 'week2_nomiss') unlock = true;
-								case 'week3':
-									if(achievementName == 'week3_nomiss') unlock = true;
-								case 'week4':
-									if(achievementName == 'week4_nomiss') unlock = true;
-								case 'week5':
-									if(achievementName == 'week5_nomiss') unlock = true;
-								case 'intro':	//Para toda semana completada de forma perfeita
+								//Para toda semana completada de forma perfeita
+
+								// case 'week1':
+								// 	if(achievementName == 'week1_nomiss') unlock = true;
+								// case 'week2':
+								// 	if(achievementName == 'week2_nomiss') unlock = true;
+								// case 'week3':
+								// 	if(achievementName == 'week3_nomiss') unlock = true;
+								// case 'week4':
+								// 	if(achievementName == 'week4_nomiss') unlock = true;
+								// case 'week5':
+								// 	if(achievementName == 'week5_nomiss') unlock = true;
+								case 'intro':
 									if(achievementName == 'intro_nomiss') unlock = true;
 								case 'warp1':
 									if(achievementName == 'warp1_nomiss') unlock = true;
@@ -5674,26 +5729,34 @@ class PlayState extends MusicBeatState
 									if(achievementName == 'extra_nomiss') unlock = true;
 							}
 						}
+
+					// Tenha 20% ou menos
 					case 'ur_bad':
 						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && ratingPercent < 0.2 && !practiceMode) {
 							unlock = true;
 						}
+					// Tenha 100% ou mais (até parece q vai ter mais...)
 					case 'ur_good':
 						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && ratingPercent >= 1 && !usedPractice) {
 							unlock = true;
 						}
-					case 'roadkill_enthusiast':
-						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && Achievements.henchmenDeath >= 100) {
-							unlock = true;
-						}
+					// Nada...
+					// case 'roadkill_enthusiast':
+					// 	if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && Achievements.henchmenDeath >= 100) {
+					// 		unlock = true;
+					// 	}
+
+					// Nota Longa
 					case 'oversinging':
 						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && boyfriend.holdTimer >= 10 && !usedPractice) {
 							unlock = true;
 						}
+					// Sem ficar Ocioso
 					case 'hype':
 						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && !boyfriendIdled && !usedPractice) {
 							unlock = true;
 						}
+					// Apenas duas notas
 					case 'two_keys':
 						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && !usedPractice) {
 							var howManyPresses:Int = 0;
@@ -5705,44 +5768,64 @@ class PlayState extends MusicBeatState
 								unlock = true;
 							}
 						}
+					// Graficos Ruins
 					case 'toastie':
-						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' && ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing && !ClientPrefs.imagesPersist) {
+						if(Paths.formatToSongPath(SONG.song) != 'estatisticas' &&
+							(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' || Paths.formatToSongPath(SONG.song) == 'bonus' ||
+							Paths.formatToSongPath(SONG.song) == 'templo-obscuro' || Paths.formatToSongPath(SONG.song) == 'canal-toxico') &&
+							ClientPrefs.lowQuality && !ClientPrefs.globalAntialiasing && !ClientPrefs.imagesPersist) {
 							unlock = true;
 						}
+					// Zona de Testes
 					case 'debugger':
 						if(Paths.formatToSongPath(SONG.song) == 'teste-zone' && !usedPractice) {
 							unlock = true;
 						}
-					case 'flora': //Para todo Cristal Ganho!
+					// Para todo Cristal Ganho em:
+					// Bosque
+					case 'flora':
 						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && !usedPractice && forst) {
 							unlock = true;
 						}
+					// Secreto
+					case 'precioso':
+						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && !usedPractice && forstSecret) {
+							unlock = true;
+						}
+					// Bonus
 					case 'bonus':
 						if(Paths.formatToSongPath(SONG.song) == 'bonus' && !usedPractice && bons) {
 							unlock = true;
 						}
+					// Templo
 					case 'templo':
 						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && !usedPractice && templ) {
 							unlock = true;
 						}
+					// Esgoto
 					case 'toxico':
 						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && !usedPractice && sewr) {
 							unlock = true;
 						}
-					case 'music1': //Para Musicas Insanamente Perfeitas!
-						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && forstMiss) {
+					//Para Musicas Insanamente Perfeitas!
+					// Bosque
+					case 'music1':
+						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && songMisses < 1) {
 							unlock = true;
 						}
+					// Bonus
 					case 'music2':
-						if(Paths.formatToSongPath(SONG.song) == 'bonus' && bonsMiss) {
+						if(Paths.formatToSongPath(SONG.song) == 'bonus' && songMisses < 1) {
 							unlock = true;
 						}
+					// Templo
 					case 'music3':
-						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && templMiss) {
+						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && songMisses < 1) {
 							unlock = true;
 						}
+					// Esgoto
 					case 'music4':
-						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && sewrMiss) {
+						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && songMisses < 1) {
 							unlock = true;
 						}
 				}
