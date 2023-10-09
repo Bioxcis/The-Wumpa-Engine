@@ -191,6 +191,13 @@ class FunkinLua {
 		set('defaultOpponentY', PlayState.instance.DAD_Y);
 		set('defaultGirlfriendX', PlayState.instance.GF_X);
 		set('defaultGirlfriendY', PlayState.instance.GF_Y);
+
+		set('curBfX', 0);
+		set('curBfY', 0);
+		set('curDadX', 0);
+		set('curDadY', 0);
+		set('curGfX', 0);
+		set('curGfY', 0);
 		set('curDeathX', 0);
 		set('curDeathY', 0);
 
