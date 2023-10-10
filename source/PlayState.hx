@@ -3377,7 +3377,13 @@ class PlayState extends MusicBeatState
 			else 
 				iconP2.animation.curAnim.curFrame = 0;
 		}
-
+		
+		setOnLuas('curBfX', boyfriend.x);
+		setOnLuas('curBfY', boyfriend.y);
+		setOnLuas('curDadX', dad.x);
+		setOnLuas('curDadY', dad.y);
+		setOnLuas('curGfX', gf.x);
+		setOnLuas('curGfY', gf.y);
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			FlxG.sound.play(Paths.sound('debugSecret'));

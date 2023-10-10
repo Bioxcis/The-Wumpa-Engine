@@ -184,20 +184,19 @@ class FunkinLua {
 			set('defaultOpponentStrumY' + i, 0);
 		}
 
-		// Default character positions
+		// Character Positions
 		set('defaultBoyfriendX', PlayState.instance.BF_X);
 		set('defaultBoyfriendY', PlayState.instance.BF_Y);
 		set('defaultOpponentX', PlayState.instance.DAD_X);
 		set('defaultOpponentY', PlayState.instance.DAD_Y);
 		set('defaultGirlfriendX', PlayState.instance.GF_X);
 		set('defaultGirlfriendY', PlayState.instance.GF_Y);
-
-		set('curBfX', 0);
-		set('curBfY', 0);
-		set('curDadX', 0);
-		set('curDadY', 0);
-		set('curGfX', 0);
-		set('curGfY', 0);
+		set('curBoyfriendX', 0);
+		set('curBoyfriendY', 0);
+		set('curOpponentX', 0);
+		set('curOpponentY', 0);
+		set('curGirlfriendX', 0);
+		set('curGirlfriendY', 0);
 		set('curDeathX', 0);
 		set('curDeathY', 0);
 
@@ -1068,9 +1067,11 @@ class FunkinLua {
 				for(subArray in points) {
 					var x:Float = 0;
 					var y:Float = 0;
-					if (subArray.length > 1) {
+					if (subArray.length >= 2) {
 						x = subArray[0];
 						y = subArray[1];
+					} else {
+						throw "the subArray must have 2 valid values"; // This is to prevent sudden crashes that close the game
 					}
 					var newPointG:FlxPoint = new FlxPoint(x, y);
 					allPoints.push(newPointG);
@@ -1089,15 +1090,23 @@ class FunkinLua {
 			var objectName:Dynamic = tweenVars(tag, vars);
 			if(objectName != null) {
 				if(points.length < 2) throw "The points array must have at least 2 additional element";
+				if(points.length % 2 != 0) throw "The points array must have an even number of elements";
 				var allPoints:Array<FlxPoint> = [];
 				var defaultPoint:FlxPoint = new FlxPoint(objectName.x, objectName.y);
 				allPoints.push(defaultPoint);
 				for(subArray in points) {
-					var x:Float = 0;
-					var y:Float = 0;
-					if (subArray.length > 1) {
-						x = subArray[0];
-						y = subArray[1];
+					var x:Float = 1;
+					var y:Float = 1;
+					if(subArray.length >= 2) {
+						if(subArray.length % 2 == 0 && subArray.length != 0) {
+							if(subArray[0] != 0) x = subArray[0];
+							if(subArray[1] != 0) y = subArray[1];
+						}else{
+							x = subArray[0];
+							y = subArray[1];
+						}
+					}else{
+						throw "the subArray must have 2 valid values"; // This is to prevent sudden crashes that close the game
 					}
 					var newPointG:FlxPoint = new FlxPoint(x, y);
 					allPoints.push(newPointG);
@@ -1260,9 +1269,11 @@ class FunkinLua {
 				for(subArray in points) {
 					var x:Float = 0;
 					var y:Float = 0;
-					if (subArray.length > 1) {
+					if (subArray.length >= 2) {
 						x = subArray[0];
 						y = subArray[1];
+					} else {
+						throw "the subArray must have 2 valid values"; // This is to prevent sudden crashes that close the game
 					}
 					var newPointG:FlxPoint = new FlxPoint(x, y);
 					allPoints.push(newPointG);
@@ -1281,15 +1292,23 @@ class FunkinLua {
 			var theNote:StrumNote = PlayState.instance.strumLineNotes.members[note % PlayState.instance.strumLineNotes.length];
 			if(theNote != null) {
 				if(points.length < 2) throw "The points array must have at least 2 additional element";
+				if(points.length % 2 != 0) throw "The points array must have an even number of elements";
 				var allPoints:Array<FlxPoint> = [];
 				var defaultPoint:FlxPoint = new FlxPoint(theNote.x, theNote.y);
 				allPoints.push(defaultPoint);
 				for(subArray in points) {
-					var x:Float = 0;
-					var y:Float = 0;
-					if (subArray.length > 1) {
-						x = subArray[0];
-						y = subArray[1];
+					var x:Float = 1;
+					var y:Float = 1;
+					if(subArray.length >= 2) {
+						if(subArray.length % 2 == 0 && subArray.length != 0) {
+							if(subArray[0] != 0) x = subArray[0];
+							if(subArray[1] != 0) y = subArray[1];
+						}else{
+							x = subArray[0];
+							y = subArray[1];
+						}
+					}else{
+						throw "the subArray must have 2 valid values"; // This is to prevent sudden crashes that close the game
 					}
 					var newPointG:FlxPoint = new FlxPoint(x, y);
 					allPoints.push(newPointG);
