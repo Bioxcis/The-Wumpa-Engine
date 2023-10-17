@@ -1800,7 +1800,7 @@ class ChartingState extends MusicBeatState
 				autosaveSong();
 				MusicBeatState.switchState(new editors.EditorPlayState(sectionStartTime()));
 			}
-			if (FlxG.keys.justPressed.ENTER)
+			if (FlxG.keys.justPressed.ENTER || FlxG.keys.justPressed.BACKSPACE)
 			{
 				autosaveSong();
 				FlxG.mouse.visible = false;
@@ -1831,20 +1831,21 @@ class ChartingState extends MusicBeatState
 			}
 
 
-			if (FlxG.keys.justPressed.BACKSPACE) {	//RETIRADO POR PODER CAUSAR PERDA DAS NOTAS DURANTE A EDIÇÃO SEM SALVAR
+			if (FlxG.keys.justPressed.BACKSPACE) {	//REFEITO PARA NÃO QUITAR DA MUSICA SEM SALVAR NADA POR ACIDENTE
 				//if(onMasterEditor) {
 				//	MusicBeatState.switchState(new editors.MasterEditorMenu());
 				//	FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				//}
-				//FlxG.mouse.visible = false;			//AVISO! USAR ESSE MENU APENAS DURANTE A MUSICA E FDS
-				//return;								//EU PERDI MTS NOTAS COM ISSO ATIVO PERTO DO RETORNO ENTER
+				//FlxG.mouse.visible = false;
+				//return;
 			}
 
 			if(FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
 				undo();
 			}
-
-
+			if(FlxG.keys.justPressed.Y && FlxG.keys.pressed.CONTROL) {
+				redo();
+			}
 
 			if(FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL) {
 				--curZoom;
@@ -2974,9 +2975,9 @@ class ChartingState extends MusicBeatState
 
 	private function addNote(strum:Null<Float> = null, data:Null<Int> = null, type:Null<Int> = null):Void
 	{
-		//curUndoIndex++;
-		//var newsong = _song.notes;
-		//	undos.push(newsong);
+		curUndoIndex++;
+		var newsong = _song.notes;
+		undos.push(newsong);
 		var noteStrum = getStrumTime(dummyArrow.y, false) + sectionStartTime();
 		var noteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);
 		var noteSus = 0;
@@ -3018,19 +3019,18 @@ class ChartingState extends MusicBeatState
 		updateNoteUI();
 	}
 
-	// will figure this out l8r
 	function redo()
 	{
-		//_song = redos[curRedoIndex];
+		_song = redos[curRedoIndex];
 	}
 
 	function undo()
 	{
-		//redos.push(_song);
+		redos.push(_song);
 		undos.pop();
-		//_song.notes = undos[undos.length - 1];
-		///trace(_song.notes);
-		//updateGrid();
+		_song.notes = undos[undos.length - 1];
+		//trace(_song.notes);
+		updateGrid();
 	}
 
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float

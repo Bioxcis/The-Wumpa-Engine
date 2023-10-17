@@ -30,7 +30,7 @@ class ClientPrefs {
 	public static var imagesPersist:Bool = false;
 	public static var ghostTapping:Bool = false;
 	public static var timeBarType:String = 'Tempo Restante';
-	public static var iconbops:String = 'Classico';
+	public static var iconbops:String = 'Especial';
 	public static var colorblindMode:String = 'Nada';
 	public static var opponentStrums:Bool = false;
 	public static var scoreZoom:Bool = true;

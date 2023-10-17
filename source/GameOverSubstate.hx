@@ -59,11 +59,9 @@ class GameOverSubstate extends MusicBeatSubstate
 		boyfriend.x += boyfriend.positionArray[0];
 		boyfriend.y += boyfriend.positionArray[1];
 		add(boyfriend);
-		curDeathX = x;
-		curDeathY = y;
 
-		PlayState.instance.setOnLuas('curDeathX', x);
-		PlayState.instance.setOnLuas('curDeathY', y);
+		PlayState.instance.setOnLuas('curDeathX', boyfriend.x);
+		PlayState.instance.setOnLuas('curDeathY', boyfriend.y);
 
 		camFollow = new FlxPoint(boyfriend.getGraphicMidpoint().x, boyfriend.getGraphicMidpoint().y);
 
@@ -82,6 +80,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	}
 
 	var isFollowingAlready:Bool = false;
+	var isChoosed:Bool = false;
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
@@ -92,26 +91,31 @@ class GameOverSubstate extends MusicBeatSubstate
 			camFollowPos.setPosition(FlxMath.lerp(camFollowPos.x, camFollow.x, lerpVal), FlxMath.lerp(camFollowPos.y, camFollow.y, lerpVal));
 		}
 
-		if (controls.ACCEPT)
-		{
-			endBullshit();
-		}
-
-		if (controls.BACK)
-		{
-			FlxG.sound.music.stop();
-			PlayState.deathCounter = 0;
-			PlayState.seenCutscene = false;
-			PlayState.chartingMode = false;
-
-			WeekData.loadTheFirstEnabledMod();
-			if (PlayState.isStoryMode)
-				MusicBeatState.switchState(new StoryMenuState());
-			else
-				MusicBeatState.switchState(new FreeplayState());
-
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
-			PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
+		if (endDeathIntro) {
+			if (controls.ACCEPT)
+			{
+				isChoosed = true;
+				endBullshit();
+			}
+	
+			if (controls.BACK)
+			{
+				if (!isChoosed) {
+					FlxG.sound.music.stop();
+					PlayState.deathCounter = 0;
+					PlayState.seenCutscene = false;
+					PlayState.chartingMode = false;
+		
+					WeekData.loadTheFirstEnabledMod();
+					if (PlayState.isStoryMode)
+						MusicBeatState.switchState(new StoryMenuState());
+					else
+						MusicBeatState.switchState(new FreeplayState());
+		
+					FlxG.sound.playMusic(Paths.music('freakyMenu'));
+					PlayState.instance.callOnLuas('onGameOverConfirm', [false]);
+				}
+			}
 		}
 
 		if (boyfriend.animation.curAnim != null && boyfriend.animation.curAnim.name == 'firstDeath')

@@ -297,7 +297,7 @@ class PauseSubState extends MusicBeatSubstate
 							PlayState.restartSkipCountdown = false;
 							PlayState.seenCutscene = false;
 							MusicBeatState.switchState(new options.OptionsState());
-							FlxG.sound.playMusic(Paths.music('freakyMenu'));
+							//FlxG.sound.playMusic(Paths.music('freakyOptions'));
 						}
 					});
 				case 'Config Gameplay':

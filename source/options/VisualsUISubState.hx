@@ -85,11 +85,11 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 		*/
 		var option:Option = new Option('Animacao do Icone',
-			'Clássico igual aos ícones do FNF original / OS igual aos ícone do OS Engine.',
+			'Clássico igual aos ícones do FNF original / Especial da Wumpa Engine.',
 			'iconbops',
 			'string',
 			'OS',
-			['OS', 'Classico']);
+			['Especial', 'Classico']);
 		addOption(option);
 
 		/*var option:Option = new Option('Posicao do Texto Ponts',

@@ -30,7 +30,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var osEngineVersion:String = '1.5.1'; //This is also used for Discord RPC
+	public static var osEngineVersion:String = '1.5.1';
 	public static var curSelected:Int = 0;
 	public static var firstStart:Bool = true;
 
@@ -194,17 +194,17 @@ class MainMenuState extends MusicBeatState
 			{
 				case 0: //aventura
 					menuItem.x = 320;
-					menuItem.y = 100;
+					menuItem.y = 80;
 					menuItem.scale.x = size;
 					menuItem.scale.y = size;
 				case 1: //modo livre
 					menuItem.x = 330;
-					menuItem.y = 220;
+					menuItem.y = 200;
 					menuItem.scale.x = size;
 					menuItem.scale.y = size;
 				case 2: //missões
 					menuItem.x = 324;
-					menuItem.y = 310;
+					menuItem.y = 300;
 					menuItem.scale.x = size - 0.1;
 					menuItem.scale.y = size - 0.1;
 				case 3: //opções
@@ -410,7 +410,7 @@ class MainMenuState extends MusicBeatState
 									//case 'credits':
 									//	MusicBeatState.switchState(new CreditsState());
 									case 'options':
-										LoadingState.loadAndSwitchState(new options.OptionsState(), true);
+										LoadingState.loadAndSwitchState(new options.OptionsState());
 									case 'exit':
 										MusicBeatState.switchState(new GameExitState());
 								}

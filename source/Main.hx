@@ -32,7 +32,7 @@ class Main extends Sprite
 	var initialState:Class<FlxState> = TitleState; // The FlxState the game starts with.
 	var zoom:Float = -1; // If -1, zoom is automatically calculated to fit the window dimensions.
 	var framerate:Int = 60; // How many frames per second the game should run at.
-	var skipSplash:Bool = false; // Whether to skip the flixel splash screen that appears in release mode.
+	var skipSplash:Bool = true; // Whether to skip the flixel splash screen that appears in release mode.
 	var startFullscreen:Bool = false; // Whether to start the game in fullscreen on desktop targets
 	public static var fpsVar:FPS;
 
@@ -106,9 +106,7 @@ class Main extends Sprite
 
 	// Code was entirely made by sqirra-rng for their fnf engine named "Izzy Engine", big props to them!!!
 	// very cool person for real they don't get enough credit for their work
-	/*
-		KSKLDFJSLKFJERNWMRN KILL ME SOMEONE IT CAUSES 999999999999999999999 CRASHES FJSDHFKJQEBRMNDBF
-	*/
+	// Fica aqui o meu agradecimento a sqirra-rng pelo código. Contato: @gedehari
 	#if CRASH_HANDLER
 	function onCrash(e:UncaughtErrorEvent):Void
 	{
@@ -120,7 +118,7 @@ class Main extends Sprite
 		dateNow = dateNow.replace(" ", "_");
 		dateNow = dateNow.replace(":", "'");
 
-		path = "./crash/" + "OSEngine_" + dateNow + ".txt";
+		path = "./crash/" + "Wumpa_ERROR_" + dateNow + ".txt";
 
 		for (stackItem in callStack)
 		{
@@ -141,7 +139,7 @@ class Main extends Sprite
 		File.saveContent(path, errMsg + "\n");
 
 		Sys.println(errMsg);
-		Sys.println("Despejo de falha salvo em " + Path.normalize(path));
+		Sys.println("Documento de falha salvo em " + Path.normalize(path));
 
 		Application.current.window.alert(errMsg, "Erro!");
 		DiscordClient.shutdown();

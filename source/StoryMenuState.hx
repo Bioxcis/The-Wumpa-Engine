@@ -55,8 +55,16 @@ class StoryMenuState extends MusicBeatState
 		Paths.clearStoredMemory();
 		Paths.clearUnusedMemory();
 
-		FlxG.sound.playMusic(Paths.music('warpRoom'), 0);
-		FlxG.sound.music.fadeIn(0.3, 0.3, 1);
+		if (FlxG.sound.music == null) {
+			FlxG.sound.playMusic(Paths.music('warpRoom'), 0);
+			FlxG.sound.music.fadeIn(0.3, 0.3, 1);
+		} else {
+			FlxG.sound.music.fadeOut(0.3, 0,
+				function(fadeOut: FlxTween) {
+				FlxG.sound.playMusic(Paths.music('warpRoom'), 0);
+				FlxG.sound.music.fadeIn(0.3, 0, 1);
+			});
+		}
 
 		PlayState.isStoryMode = true;
 		WeekData.reloadWeekFiles(true);
@@ -290,8 +298,11 @@ class StoryMenuState extends MusicBeatState
 		{
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			movedBack = true;
-			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-			FlxG.sound.music.fadeIn(0.3, 0, 1);
+			FlxG.sound.music.fadeOut(0.3, 0,
+				function(fadeOut: FlxTween) {
+					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+					FlxG.sound.music.fadeIn(0.3, 0, 1);
+			});
 			MusicBeatState.switchState(new MainMenuState());
 		}
 
