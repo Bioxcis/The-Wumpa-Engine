@@ -112,8 +112,9 @@ class PlayState extends MusicBeatState
 	public var modchartFlickers:Map<String, FlxFlicker> = new Map<String, FlxFlicker>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
-	public var shader_chromatic_abberation:ChromaticAberrationEffect;
+	public var modchartBars:Map<String, FlxBar> = new Map<String, FlxBar>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
+	public var shader_chromatic_abberation:ChromaticAberrationEffect;
 	public var camGameShaders:Array<ShaderEffect> = [];
 	public var camHUDShaders:Array<ShaderEffect> = [];
 	public var camOtherShaders:Array<ShaderEffect> = [];
@@ -235,6 +236,13 @@ class PlayState extends MusicBeatState
 	public var cameraSpeed:Float = 1;
 	public var bubble:Int = 0;
 	public var isNoHIT:Bool = false;
+
+	private var tweenGet:FlxTween;
+	private var tweenReady:FlxTween;
+	private var tweenSet:FlxTween;
+	private var tweenGo:FlxTween;
+	private var iconP1Tween:FlxTween;
+	private var iconP2Tween:FlxTween;
 
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
@@ -1275,7 +1283,6 @@ class PlayState extends MusicBeatState
 		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
 			'health', 0, 2);
 		healthBar.scrollFactor.set();
-		// healthBar
 		healthBar.visible = !ClientPrefs.hideHud;
 		healthBar.alpha = ClientPrefs.healthBarAlpha;
 		add(healthBar);
@@ -1740,14 +1747,13 @@ class PlayState extends MusicBeatState
 				camGameShaders = [];
 				var newCamEffects:Array<BitmapFilter>=[];
 				camGame.setFilters(newCamEffects);
-		}
-		
-	  
-  }
+		}  
+  	}
 
-	public function getLuaObject(tag:String, text:Bool=true):FlxSprite {
+	public function getLuaObject(tag:String, text:Bool=true, bar:Bool=true):FlxSprite {
 		if(modchartSprites.exists(tag)) return modchartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
+		if(bar && modchartBars.exists(tag)) return modchartBars.get(tag);
 		return null;
 	}
 
@@ -2343,11 +2349,10 @@ class PlayState extends MusicBeatState
 						countdownGet.screenCenter();
 						countdownGet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGet);
-						FlxTween.tween(countdownGet.scale, {/*y: countdownGet.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
+						tweenGet = FlxTween.tween(countdownGet.scale, {/*y: countdownGet.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
 							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween)
-							{
+							onComplete: function(twn:FlxTween) {
 								remove(countdownGet);
 								countdownGet.destroy();
 							}
@@ -2368,11 +2373,10 @@ class PlayState extends MusicBeatState
 						countdownReady.screenCenter();
 						countdownReady.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownReady);
-						FlxTween.tween(countdownReady.scale, {/*y: countdownReady.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
+						tweenReady = FlxTween.tween(countdownReady.scale, {/*y: countdownReady.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
 							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween)
-							{
+							onComplete: function(twn:FlxTween) {
 								remove(countdownReady);
 								countdownReady.destroy();
 							}
@@ -2393,11 +2397,10 @@ class PlayState extends MusicBeatState
 						countdownSet.screenCenter();
 						countdownSet.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownSet);
-						FlxTween.tween(countdownSet.scale, {/*y: countdownSet.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
+						tweenSet = FlxTween.tween(countdownSet.scale, {/*y: countdownSet.y + 100,*/ x: 0.01, y: 0.01}, Conductor.crochet / 1000, {
 							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
-							onComplete: function(twn:FlxTween)
-							{
+							onComplete: function(twn:FlxTween) {
 								remove(countdownSet);
 								countdownSet.destroy();
 							}
@@ -2420,7 +2423,7 @@ class PlayState extends MusicBeatState
 						countdownGo.screenCenter();
 						countdownGo.antialiasing = antialias;
 						insert(members.indexOf(notes), countdownGo);
-						FlxTween.tween(countdownGo, {/*y: countdownGo.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
+						tweenGo = FlxTween.tween(countdownGo, {/*y: countdownGo.y + 100,*/ alpha: 0}, Conductor.crochet / 1000, {
 							startDelay: Conductor.crochet / 2000,
 							ease: FlxEase.cubeInOut,
 							onComplete: function(twn:FlxTween)
@@ -2996,6 +2999,12 @@ class PlayState extends MusicBeatState
 			for (flick in modchartFlickers) {
 				flick.pause();
 			}
+			if (tweenGet != null) tweenGet.active = false;
+			if (tweenReady != null) tweenReady.active = false;
+			if (tweenSet != null) tweenSet.active = false;
+			if (tweenGo != null) tweenGo.active = false;
+			if (iconP1Tween != null) iconP1Tween.active = false;
+			if (iconP2Tween != null) iconP2Tween.active = false;
 		}
 
 		super.openSubState(SubState);
@@ -3035,6 +3044,13 @@ class PlayState extends MusicBeatState
 			for (flick in modchartFlickers) {
 				flick.resume();
 			}
+			if (tweenGet != null) tweenGet.active = true;
+			if (tweenReady != null) tweenReady.active = true;
+			if (tweenSet != null) tweenSet.active = true;
+			if (tweenGo != null) tweenGo.active = true;
+			if (iconP1Tween != null) iconP1Tween.active = true;
+			if (iconP2Tween != null) iconP2Tween.active = true;
+
 			paused = false;
 			callOnLuas('onResume', []);
 
@@ -3323,7 +3339,6 @@ class PlayState extends MusicBeatState
 				openPauseMenu();
 			}
 		}
-		setOnLuas('chartMode', chartingMode);
 
 		if (FlxG.keys.anyJustPressed(debugKeysChart) && !endingSong && !inCutscene && !SONG.disableDebugButtons)
 		{
@@ -3378,12 +3393,12 @@ class PlayState extends MusicBeatState
 				iconP2.animation.curAnim.curFrame = 0;
 		}
 		
-		setOnLuas('curBfX', boyfriend.x);
-		setOnLuas('curBfY', boyfriend.y);
-		setOnLuas('curDadX', dad.x);
-		setOnLuas('curDadY', dad.y);
-		setOnLuas('curGfX', gf.x);
-		setOnLuas('curGfY', gf.y);
+		setOnLuas('curBoyfriendX', boyfriend.x);
+		setOnLuas('curBoyfriendY', boyfriend.y);
+		setOnLuas('curOpponentX', dad.x);
+		setOnLuas('curOpponentY', dad.y);
+		setOnLuas('curGirlfriendX', gf.x);
+		setOnLuas('curGirlfriendY', gf.y);
 
 		if (FlxG.keys.anyJustPressed(debugKeysCharacter) && !endingSong && !inCutscene) {
 			FlxG.sound.play(Paths.sound('debugSecret'));
@@ -3628,6 +3643,15 @@ class PlayState extends MusicBeatState
 		setOnLuas('cameraX', camFollowPos.x);
 		setOnLuas('cameraY', camFollowPos.y);
 		setOnLuas('botPlay', cpuControlled);
+		setOnLuas('chartMode', chartingMode);
+		setOnLuas('practice', practiceMode);
+
+		setOnLuas('totalShits', shits);
+		setOnLuas('totalBads', bads);
+		setOnLuas('totalGoods', goods);
+		setOnLuas('totalSicks', sicks);
+		setOnLuas('totalPerfects', perfects);
+		setOnLuas('totalCombo', combo);
 		for (shader in animatedShaders)
 			{
 				shader.update(elapsed);
@@ -3730,6 +3754,12 @@ class PlayState extends MusicBeatState
 				for (flick in modchartFlickers) {
 					flick.resume();
 				}
+				if (tweenGet != null) tweenGet.active = true;
+				if (tweenReady != null) tweenReady.active = true;
+				if (tweenSet != null) tweenSet.active = true;
+				if (tweenGo != null) tweenGo.active = true;
+				if (iconP1Tween != null) iconP1Tween.active = true;
+				if (iconP2Tween != null) iconP2Tween.active = true;
 				openSubState(new GameOverSubstate(boyfriend.getScreenPosition().x - boyfriend.positionArray[0], boyfriend.getScreenPosition().y - boyfriend.positionArray[1], camFollowPos.x, camFollowPos.y));
 
 				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
@@ -4843,7 +4873,7 @@ class PlayState extends MusicBeatState
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
-		callOnHScripts('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
+		callOnHScripts('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime]);
 		//Dupe note remove
 		if (daNote.isSustainNote) {
 			if (daNote.parent != null) {
@@ -4900,7 +4930,7 @@ class PlayState extends MusicBeatState
 			char.playAnim(animToPlay, true);
 		}
 
-		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote]);
+		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime]);
 	}
 
 	function noteMissPress(direction:Int = 1):Void //You pressed a key when there was no notes to press for this key
@@ -5155,8 +5185,9 @@ class PlayState extends MusicBeatState
 			var isSus:Bool = note.isSustainNote;
 			var leData:Int = Math.round(Math.abs(note.noteData));
 			var leType:String = note.noteType;
-			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
-			callOnHScripts('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
+			var leStrum:Float = note.strumTime;
+			callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus, leStrum]);
+			callOnHScripts('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus, leStrum]);
 
 			if (!note.isSustainNote)
 			{
@@ -5445,11 +5476,22 @@ class PlayState extends MusicBeatState
 
 		dancingLeft = !dancingLeft;
 
-		if (ClientPrefs.iconbops == "OS") {
+		if (ClientPrefs.iconbops == "Especial") {
+			// OS Engine didn't have this update ;-; 
+
+			// if (dancingLeft){
+			// 	iconP1.angle = 8; iconP2.angle = 8; // maybe i should do it with tweens, but i'm lazy // i'll make it in -1.0.0, i promise
+			// } else { 
+			// 	iconP1.angle = -8; iconP2.angle = -8;
+			// }
+
+			// So I've done it now! >:)
 			if (dancingLeft){
-				iconP1.angle = 8; iconP2.angle = 8; // maybe i should do it with tweens, but i'm lazy // i'll make it in -1.0.0, i promise
+				iconP1Tween = FlxTween.angle(iconP1, iconP1.angle, 8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
+				iconP2Tween = FlxTween.angle(iconP2, iconP2.angle, 8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
 			} else { 
-				iconP1.angle = -8; iconP2.angle = -8;
+				iconP1Tween = FlxTween.angle(iconP1, iconP1.angle, -8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
+				iconP2Tween = FlxTween.angle(iconP2, iconP2.angle, -8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
 			}
 		}
 
@@ -5525,7 +5567,7 @@ class PlayState extends MusicBeatState
 		}
 		lastBeatHit = curBeat;
 
-		setOnLuas('curBeat', curBeat); //DAWGG?????
+		setOnLuas('curBeat', curBeat);
 		callOnLuas('onBeatHit', []);
 		callOnHScripts('beatHit', [curBeat]);
 	}
