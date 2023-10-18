@@ -213,7 +213,7 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press SPACE para prévia da música               Press CTRL para abrir os Ajustes de Gameplay           Press RESET para redefinir pontuação e precisão  ";
+		var leText:String = "Press SPACE para prévia da música                     Press RESET para redefinir pontuação e precisão";
 		var size:Int = 22;
 		#else
 		var leText:String = "Press CTRL para abrir Menu Ajuste Gameplay / Press RESET para redefinir Pontuação e Precisão.";

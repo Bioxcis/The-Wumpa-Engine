@@ -1926,6 +1926,14 @@ class FunkinLua {
 				luaTrace("Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
+		Lua_helper.add_callback(lua, "getLuaBarPercent", function(obj:String) {
+			if(PlayState.instance.modchartBars.exists(obj)) {
+				return PlayState.instance.modchartBars.get(obj).pct;
+			} else {
+				luaTrace("Object " + obj + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return 0;
+		});
 		Lua_helper.add_callback(lua, "removeLuaBar", function(obj:String) {
 			luaBarRemove(obj);
 		});
@@ -2302,6 +2310,9 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "luaTweenExists", function(tag:String) {
 			return PlayState.instance.modchartTweens.exists(tag);
 		});
+		Lua_helper.add_callback(lua, "luaFlickerExists", function(tag:String) {
+			return PlayState.instance.modchartFlickers.exists(tag);
+		});
 
 		Lua_helper.add_callback(lua, "setHealthBarColors", function(leftHex:String, rightHex:String) {
 			var left:FlxColor = Std.parseInt(leftHex);
@@ -2501,19 +2512,19 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "playMusic", function(sound:String, volume:Float = 1, loop:Bool = false) {
 			FlxG.sound.playMusic(Paths.music(sound), volume, loop);
 		});
-		Lua_helper.add_callback(lua, "playSound", function(sound:String, volume:Float = 1, ?tag:String = null) {
+		Lua_helper.add_callback(lua, "playSound", function(sound:String, volume:Float = 1, ?tag:String = null, ?loop:Bool = false) {
 			if(tag != null && tag.length > 0) {
 				tag = tag.replace('.', '');
 				if(PlayState.instance.modchartSounds.exists(tag)) {
 					PlayState.instance.modchartSounds.get(tag).stop();
 				}
-				PlayState.instance.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, false, function() {
+				PlayState.instance.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, loop, function() {
 					PlayState.instance.modchartSounds.remove(tag);
 					PlayState.instance.callOnLuas('onSoundFinished', [tag]);
 				}));
 				return;
 			}
-			FlxG.sound.play(Paths.sound(sound), volume);
+			FlxG.sound.play(Paths.sound(sound), volume, loop);
 		});
 		Lua_helper.add_callback(lua, "stopSound", function(tag:String) {
 			if(tag != null && tag.length > 1 && PlayState.instance.modchartSounds.exists(tag)) {
@@ -2861,7 +2872,7 @@ class FunkinLua {
 			return Paths.getTextFromFile(path, ignoreModFolders);
 		});
 
-		// DEPRECATED, DONT MESS WITH THESE SHITS, ITS JUST THERE FOR BACKWARD COMPATIBILITY
+		// DEPRECATED, DONT MESS WITH THESE FUNCTIONS, ITS JUST THERE FOR BACKWARD COMPATIBILITY
 		Lua_helper.add_callback(lua, "objectPlayAnimation", function(obj:String, name:String, forced:Bool = false, ?startFrame:Int = 0) {
 			luaTrace("objectPlayAnimation is deprecated! Use playAnim instead", false, true);
 			if(PlayState.instance.getLuaObject(obj,false,false) != null) {
@@ -3048,13 +3059,14 @@ class FunkinLua {
 		/*
 		Lua_helper.add_callback(lua, "modifyShaderProperty", function(fileName:String, propertyName:String, value:Dynamic)
 		{
-			//var handler:DynamicShaderHandler = PlayState.instance.luaShaders.get(fileName);
-			//trace(Reflect.getProperty(handler.shader.data, propertyName));
-			//Reflect.setProperty(Reflect.getProperty(handler.shader.data, propertyName), 'value', value);
+			var handler:DynamicShaderHandler = PlayState.instance.luaShaders.get(fileName);
+			trace(Reflect.getProperty(handler.shader.data, propertyName));
+			Reflect.setProperty(Reflect.getProperty(handler.shader.data, propertyName), 'value', value);
 			handler.modifyShaderProperty(propertyName, value);
 		});
-		// shader set
 		*/
+	
+		// shader set
 		Lua_helper.add_callback(lua, "setShadersToCamera", function(fileName:Array<String>, cameraName:String) {
 			if (ClientPrefs.shadersActive)
 				{			

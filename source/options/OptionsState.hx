@@ -65,12 +65,12 @@ class OptionsState extends MusicBeatState
 
 		if (FlxG.sound.music == null) {
 			FlxG.sound.playMusic(Paths.music('freakyOptions'), 0);
-			FlxG.sound.music.fadeIn(0.3, 0, 1);
+			FlxG.sound.music.fadeIn(0.2, 0, 1);
 		} else {
-			FlxG.sound.music.fadeOut(0.3, 0,
+			FlxG.sound.music.fadeOut(0.2, 0,
 				function(fadeOut: FlxTween) {
 				FlxG.sound.playMusic(Paths.music('freakyOptions'), 0);
-				FlxG.sound.music.fadeIn(0.3, 0, 1);
+				FlxG.sound.music.fadeIn(0.2, 0, 1);
 			});
 		}
 
@@ -165,16 +165,16 @@ class OptionsState extends MusicBeatState
 			if (PauseSubState.wasinsongbeforethenwenttooptions) {
 				MusicBeatState.switchState(new PlayState());
 				PauseSubState.wasinsongbeforethenwenttooptions = false;
+				FlxG.sound.music.fadeOut(0.2, 0);
 			} else {
-				FlxG.sound.music.fadeOut(0.3, 0,
+				FlxG.sound.music.fadeOut(0.2, 0,
 					function(fadeOut: FlxTween) {
 						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-						FlxG.sound.music.fadeIn(0.3, 0, 1);
+						FlxG.sound.music.fadeIn(0.2, 0, 1);
 				});
 				MusicBeatState.switchState(new MainMenuState());
 			}
 		}
-
 
 		if (controls.ACCEPT) {
 			openSelectedSubstate(options[curSelected]);

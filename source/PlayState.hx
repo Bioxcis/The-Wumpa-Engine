@@ -2999,6 +2999,9 @@ class PlayState extends MusicBeatState
 			for (flick in modchartFlickers) {
 				flick.pause();
 			}
+			for (sound in modchartSounds) {
+				sound.pause();
+			}
 			if (tweenGet != null) tweenGet.active = false;
 			if (tweenReady != null) tweenReady.active = false;
 			if (tweenSet != null) tweenSet.active = false;
@@ -3043,6 +3046,9 @@ class PlayState extends MusicBeatState
 			}
 			for (flick in modchartFlickers) {
 				flick.resume();
+			}
+			for (sound in modchartSounds) {
+				sound.resume();
 			}
 			if (tweenGet != null) tweenGet.active = true;
 			if (tweenReady != null) tweenReady.active = true;
@@ -3753,6 +3759,9 @@ class PlayState extends MusicBeatState
 				}
 				for (flick in modchartFlickers) {
 					flick.resume();
+				}
+				for (sound in modchartSounds) {
+					sound.resume();
 				}
 				if (tweenGet != null) tweenGet.active = true;
 				if (tweenReady != null) tweenReady.active = true;
