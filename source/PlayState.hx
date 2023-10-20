@@ -38,6 +38,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
+import flixel.util.FlxGradient;
 import haxe.Json;
 import lime.utils.Assets;
 import openfl.Lib;
@@ -77,6 +78,7 @@ import vlc.MP4Handler;
 #end
 
 using StringTools;
+using flixel.util.FlxSpriteUtil;
 
 class PlayState extends MusicBeatState
 {

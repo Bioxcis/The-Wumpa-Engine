@@ -19,6 +19,7 @@ import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
 import flixel.util.FlxColor;
+import flixel.util.FlxGradient;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSprite;
@@ -53,6 +54,7 @@ import Discord;
 #end
 
 using StringTools;
+using flixel.util.FlxSpriteUtil;
 
 class FunkinLua {
 	public static var Function_Stop:Dynamic = 1;
@@ -1332,7 +1334,6 @@ class FunkinLua {
 					PlayState.instance.modchartTimers.remove(tag);
 				}
 				PlayState.instance.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft, extraVars]);
-				//trace('Timer Completed: ' + tag);
 			}, loops));
 		});
 		Lua_helper.add_callback(lua, "cancelTimer", function(tag:String) {
@@ -1990,15 +1991,20 @@ class FunkinLua {
 				animatinin.animation.addByPrefix(name, prefix, framerate, loop);
 				if(animatinin.animation.curAnim == null) {
 					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 				return;
 			}
-
 			var animatinin:FlxSprite = Reflect.getProperty(getInstance(), obj);
 			if(animatinin != null) {
 				animatinin.animation.addByPrefix(name, prefix, framerate, loop);
 				if(animatinin.animation.curAnim == null) {
 					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 			}
 		});
@@ -2009,15 +2015,20 @@ class FunkinLua {
 				animatinin.animation.add(name, frames, framerate, loop);
 				if(animatinin.animation.curAnim == null) {
 					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 				return;
 			}
-
 			var animatinin:FlxSprite = Reflect.getProperty(getInstance(), obj);
 			if(animatinin != null) {
 				animatinin.animation.add(name, frames, framerate, loop);
 				if(animatinin.animation.curAnim == null) {
 					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 			}
 		});
@@ -2028,21 +2039,25 @@ class FunkinLua {
 			for (i in 0...strIndices.length) {
 				indie.push(Std.parseInt(strIndices[i]));
 			}
-
 			if(PlayState.instance.getLuaObject(obj, false)!=null) {
-				var pussy:FlxSprite = PlayState.instance.getLuaObject(obj,false);
-				pussy.animation.addByIndices(name, prefix, indie, '', framerate, false);
-				if(pussy.animation.curAnim == null) {
-					pussy.animation.play(name, true);
+				var animatinin:FlxSprite = PlayState.instance.getLuaObject(obj,false);
+				animatinin.animation.addByIndices(name, prefix, indie, '', framerate, false);
+				if(animatinin.animation.curAnim == null) {
+					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 				return true;
 			}
-
-			var pussy:FlxSprite = Reflect.getProperty(getInstance(), obj);
-			if(pussy != null) {
-				pussy.animation.addByIndices(name, prefix, indie, '', framerate, false);
-				if(pussy.animation.curAnim == null) {
-					pussy.animation.play(name, true);
+			var animatinin:FlxSprite = Reflect.getProperty(getInstance(), obj);
+			if(animatinin != null) {
+				animatinin.animation.addByIndices(name, prefix, indie, '', framerate, false);
+				if(animatinin.animation.curAnim == null) {
+					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 				return true;
 			}
@@ -2055,6 +2070,9 @@ class FunkinLua {
 				if(luaObj.animation.getByName(name) != null)
 				{
 					luaObj.animation.play(name, forced, reverse, startFrame);
+					luaObj.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 					if(Std.isOfType(luaObj, ModchartSprite))
 					{
 						//convert luaObj to ModchartSprite
@@ -2072,7 +2090,6 @@ class FunkinLua {
 				}
 				return true;
 			}
-
 			var spr:FlxSprite = Reflect.getProperty(getInstance(), obj);
 			if(spr != null) {
 				if(spr.animation.getByName(name) != null)
@@ -2085,7 +2102,12 @@ class FunkinLua {
 						spr.playAnim(name, forced, reverse, startFrame);
 					}
 					else
+					{
 						spr.animation.play(name, forced, reverse, startFrame);
+						spr.animation.finishCallback = function(name:String):Void {
+							PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+						};
+					}
 				}
 				return true;
 			}
@@ -2635,6 +2657,17 @@ class FunkinLua {
 			var leText:ModchartText = new ModchartText(x, y, text, width);
 			PlayState.instance.modchartTexts.set(tag, leText);
 		});
+		Lua_helper.add_callback(lua, "makeLuaTextGradient", function(tag:String, text:String, width:Int, x:Float, y:Float, colors:Array<String>) {
+			tag = tag.replace('.', '');
+			resetTextTag(tag);
+			var leText:ModchartText = new ModchartText(x, y, text, width);
+			leText.drawFrame();
+			var colorTable:Array<Int> = [];
+			var gradientText = new FlxSprite();
+			var gradient = FlxGradient.createGradientFlxSprite(leText.frameWidth, leText.frameHeight, colorTable);
+			gradientText.alphaMask(gradient.framePixels, leText.framePixels);
+			PlayState.instance.modchartTexts.set(tag, leText);
+		});
 
 		Lua_helper.add_callback(lua, "setTextString", function(tag:String, text:String) {
 			var obj:FlxText = getTextObject(tag);
@@ -2877,12 +2910,18 @@ class FunkinLua {
 			luaTrace("objectPlayAnimation is deprecated! Use playAnim instead", false, true);
 			if(PlayState.instance.getLuaObject(obj,false,false) != null) {
 				PlayState.instance.getLuaObject(obj,false,false).animation.play(name, forced, false, startFrame);
+				PlayState.instance.getLuaObject(obj,false,false).animation.finishCallback = function(name:String):Void {
+					PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+				};
 				return true;
 			}
 
 			var spr:FlxSprite = Reflect.getProperty(getInstance(), obj);
 			if(spr != null) {
 				spr.animation.play(name, forced, false, startFrame);
+				spr.animation.finishCallback = function(name:String):Void {
+					PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+				};
 				return true;
 			}
 			return false;
@@ -2917,6 +2956,9 @@ class FunkinLua {
 				inSprites.animation.addByPrefix(name, prefix, framerate, loop);
 				if(inSprites.animation.curAnim == null) {
 					inSprites.animation.play(name, true);
+					inSprites.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 			}
 		});
@@ -2928,10 +2970,13 @@ class FunkinLua {
 				for (i in 0...strIndices.length) {
 					numbers.push(Std.parseInt(strIndices[i]));
 				}
-				var pussy:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-				pussy.animation.addByIndices(name, prefix, numbers, '', framerate, false);
-				if(pussy.animation.curAnim == null) {
-					pussy.animation.play(name, true);
+				var animatinin:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+				animatinin.animation.addByIndices(name, prefix, numbers, '', framerate, false);
+				if(animatinin.animation.curAnim == null) {
+					animatinin.animation.play(name, true);
+					animatinin.animation.finishCallback = function(name:String):Void {
+						PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+					};
 				}
 			}
 		});
@@ -2939,6 +2984,9 @@ class FunkinLua {
 			luaTrace("luaSpritePlayAnimation is deprecated! Use playAnim instead", false, true);
 			if(PlayState.instance.modchartSprites.exists(tag)) {
 				PlayState.instance.modchartSprites.get(tag).animation.play(name, forced);
+				PlayState.instance.modchartSprites.get(tag).animation.finishCallback = function(name:String):Void {
+					PlayState.instance.callOnLuas('onAnimationCompleted', [name]);
+				};
 			}
 		});
 		Lua_helper.add_callback(lua, "setLuaSpriteCamera", function(tag:String, camera:String = '') {
@@ -3300,12 +3348,12 @@ class FunkinLua {
 			return;
 		}
 
-		var theModchart:ModchartText = PlayState.instance.modchartTexts.get(tag);
-		theModchart.kill();
-		if(theModchart.wasAdded) {
-			PlayState.instance.remove(theModchart, true);
+		var theText:ModchartText = PlayState.instance.modchartTexts.get(tag);
+		theText.kill();
+		if(theText.wasAdded) {
+			PlayState.instance.remove(theText, true);
 		}
-		theModchart.destroy();
+		theText.destroy();
 		PlayState.instance.modchartTexts.remove(tag);
 	}
 
@@ -3314,12 +3362,12 @@ class FunkinLua {
 			return;
 		}
 
-		var theModchart:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
-		theModchart.kill();
-		if(theModchart.wasAdded) {
-			PlayState.instance.remove(theModchart, true);
+		var theSprite:ModchartSprite = PlayState.instance.modchartSprites.get(tag);
+		theSprite.kill();
+		if(theSprite.wasAdded) {
+			PlayState.instance.remove(theSprite, true);
 		}
-		theModchart.destroy();
+		theSprite.destroy();
 		PlayState.instance.modchartSprites.remove(tag);
 	}
 
