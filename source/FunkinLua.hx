@@ -2541,8 +2541,10 @@ class FunkinLua {
 					PlayState.instance.modchartSounds.get(tag).stop();
 				}
 				PlayState.instance.modchartSounds.set(tag, FlxG.sound.play(Paths.sound(sound), volume, loop, function() {
-					PlayState.instance.modchartSounds.remove(tag);
-					PlayState.instance.callOnLuas('onSoundFinished', [tag]);
+					if(!loop){
+						PlayState.instance.modchartSounds.remove(tag);
+						PlayState.instance.callOnLuas('onSoundFinished', [tag]);
+					}
 				}));
 				return;
 			}
@@ -2804,7 +2806,7 @@ class FunkinLua {
 			}
 		});
 
-		Lua_helper.add_callback(lua, "initSaveData", function(name:String, ?folder:String = 'psychenginemods') {
+		Lua_helper.add_callback(lua, "initSaveData", function(name:String, ?folder:String = 'TrashBaracutaPath') {
 			if(!PlayState.instance.modchartSaves.exists(name))
 			{
 				var save:FlxSave = new FlxSave();
@@ -2825,8 +2827,8 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getDataFromSave", function(name:String, field:String, ?defaultValue:Dynamic = null) {
 			if(PlayState.instance.modchartSaves.exists(name))
 			{
-				var retVal:Dynamic = Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
-				return retVal;
+				var getVal:Dynamic = Reflect.field(PlayState.instance.modchartSaves.get(name).data, field);
+				return getVal;
 			}
 			luaTrace('Save file not initialized: ' + name, false, false, FlxColor.RED);
 			return defaultValue;

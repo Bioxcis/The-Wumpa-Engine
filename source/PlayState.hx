@@ -1549,7 +1549,7 @@ class PlayState extends MusicBeatState
 	{
 		if(generatedMusic)
 		{
-			var ratio:Float = value / songSpeed; //funny word huh
+			var ratio:Float = value / songSpeed;
 			for (note in notes) note.resizeByRatio(ratio);
 			for (note in unspawnNotes) note.resizeByRatio(ratio);
 		}
@@ -2966,6 +2966,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
+	var soundIsPaused:Map<FlxSound, Bool> = new Map<FlxSound, Bool>();
 	override function openSubState(SubState:FlxSubState)
 	{
 		if (paused)
@@ -3002,7 +3003,11 @@ class PlayState extends MusicBeatState
 				flick.pause();
 			}
 			for (sound in modchartSounds) {
-				sound.pause();
+				if(sound.playing) {
+					sound.pause();
+				} else {
+					soundIsPaused.set(sound, false);
+				}
 			}
 			if (tweenGet != null) tweenGet.active = false;
 			if (tweenReady != null) tweenReady.active = false;
@@ -3050,7 +3055,11 @@ class PlayState extends MusicBeatState
 				flick.resume();
 			}
 			for (sound in modchartSounds) {
-				sound.resume();
+				if(soundIsPaused.exists(sound)) {
+					soundIsPaused.remove(sound);
+				} else {
+					sound.resume();
+				}
 			}
 			if (tweenGet != null) tweenGet.active = true;
 			if (tweenReady != null) tweenReady.active = true;
@@ -3763,7 +3772,11 @@ class PlayState extends MusicBeatState
 					flick.resume();
 				}
 				for (sound in modchartSounds) {
-					sound.resume();
+					if(soundIsPaused.exists(sound)) {
+						soundIsPaused.remove(sound);
+					} else {
+						sound.resume();
+					}
 				}
 				if (tweenGet != null) tweenGet.active = true;
 				if (tweenReady != null) tweenReady.active = true;
