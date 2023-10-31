@@ -3449,6 +3449,14 @@ class FunkinLua {
 			}
 		});
 		Discord.DiscordClient.addLuaCallbacks(lua);
+
+		// Other stuff
+		Lua_helper.add_callback(lua, "stringStartsWith", function(str:String, start:String) {
+			return str.startsWith(start);
+		});
+		Lua_helper.add_callback(lua, "stringEndsWith", function(str:String, end:String) {
+			return str.endsWith(end);
+		});
 		call('onCreate', []);
 		#end
 	}
