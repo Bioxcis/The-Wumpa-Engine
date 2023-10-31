@@ -113,7 +113,7 @@ class PlayState extends MusicBeatState
 	public var modchartTimers:Map<String, FlxTimer> = new Map<String, FlxTimer>();
 	public var modchartFlickers:Map<String, FlxFlicker> = new Map<String, FlxFlicker>();
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
-	public var modchartTexts:Map<String, ModchartText> = new Map<String, ModchartText>();
+	public var modchartTexts:Map<String, FlxText> = new Map<String, FlxText>();
 	public var modchartBars:Map<String, FlxBar> = new Map<String, FlxBar>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var shader_chromatic_abberation:ChromaticAberrationEffect;
@@ -122,17 +122,12 @@ class PlayState extends MusicBeatState
 	public var camOtherShaders:Array<ShaderEffect> = [];
 	//event variables
 	private var isCameraOnForcedPos:Bool = false;
-	#if (haxe >= "4.0.0")
-	public var boyfriendMap:Map<String, Boyfriend> = new Map();
-	public var dadMap:Map<String, Character> = new Map();
-	public var gfMap:Map<String, Character> = new Map();
-	public var variables:Map<String, Dynamic> = new Map();
-	#else
+
 	public var boyfriendMap:Map<String, Boyfriend> = new Map<String, Boyfriend>();
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
+	public var luaCharsMap:Map<String, LuaChar> = new Map<String, LuaChar>();
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
-	#end
 
 	public var BF_X:Float = 770;
 	public var BF_Y:Float = 100;
@@ -1560,18 +1555,20 @@ class PlayState extends MusicBeatState
 
 	public function addTextToDebug(text:String, color:FlxColor) {
 		#if LUA_ALLOWED
-		luaDebugGroup.forEachAlive(function(spr:DebugLuaText) {
-			spr.y += 20;
-		});
+		var newText:DebugLuaText = luaDebugGroup.recycle(DebugLuaText);
+		newText.text = text;
+		newText.color = color;
+		newText.disableTime = 6;
+		newText.alpha = 1;
+		newText.setPosition(10, 8 - newText.height);
 
-		if(luaDebugGroup.members.length > 34) {
-			var blah = luaDebugGroup.members[34];
-			blah.destroy();
-			luaDebugGroup.remove(blah);
-		}
-		luaDebugGroup.insert(0, new DebugLuaText(text, luaDebugGroup, color));
+		luaDebugGroup.forEachAlive(function(spr:DebugLuaText) {
+			spr.y += newText.height + 2;
+		});
+		luaDebugGroup.add(newText);
 		#end
 	}
+
 
 	public function reloadHealthBarColors() {
 		healthBar.createFilledBar(FlxColor.fromRGB(dad.healthColorArray[0], dad.healthColorArray[1], dad.healthColorArray[2]),
@@ -1615,7 +1612,7 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	function startCharacterLua(name:String)
+	public function startCharacterLua(name:String)
 	{
 		#if LUA_ALLOWED
 		var doPush:Bool = false;
@@ -1971,7 +1968,7 @@ class PlayState extends MusicBeatState
 			var timeForStuff:Float = Conductor.crochet / 1000 * 4.5;
 			FlxG.sound.music.fadeOut(timeForStuff);
 			FlxTween.tween(FlxG.camera, {zoom: defaultCamZoom}, timeForStuff, {ease: FlxEase.quadInOut});
-			moveCamera(true);
+			moveCamera(1);
 			startCountdown();
 
 			dadGroup.alpha = 1;
@@ -2304,17 +2301,19 @@ class PlayState extends MusicBeatState
 
 			startTimer = new FlxTimer().start(Conductor.crochet / 1000, function(tmr:FlxTimer)
 			{
-				if (gf != null && tmr.loopsLeft % Math.round(gfSpeed * gf.danceEveryNumBeats) == 0 && gf.animation.curAnim != null && !gf.animation.curAnim.name.startsWith("sing") && !gf.stunned)
-				{
+				if (gf != null && tmr.loopsLeft % Math.round(gfSpeed * gf.danceEveryNumBeats) == 0 && gf.animation.curAnim != null && !gf.animation.curAnim.name.startsWith("sing") && !gf.stunned) {
 					gf.dance();
 				}
-				if (tmr.loopsLeft % boyfriend.danceEveryNumBeats == 0 && boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned)
-				{
+				if (tmr.loopsLeft % boyfriend.danceEveryNumBeats == 0 && boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned) {
 					boyfriend.dance();
 				}
-				if (tmr.loopsLeft % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned)
-				{
+				if (tmr.loopsLeft % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) {
 					dad.dance();
+				}
+				for (char in luaCharsMap) {
+					if (tmr.loopsLeft % char.danceEveryNumBeats == 0 && char.animation.curAnim != null && !char.animation.curAnim.name.startsWith('sing') && !char.stunned) {
+						char.dance();
+					}
 				}
 
 				var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
@@ -3155,7 +3154,7 @@ class PlayState extends MusicBeatState
 		setOnLuas("showComboNumber", showComboNum);
 		setOnLuas("showRating", showRating);
 
-		// Change spawn notes scales
+		// Update spawn notes scales
 		for (oneNote in notes) {
 			if(oneNote.mustPress==true) {		//BF STRUM
 				if(oneNote.noteData==0) {
@@ -4206,7 +4205,7 @@ class PlayState extends MusicBeatState
 			case 'Set Property':
 				var killMe:Array<String> = value1.split('.');
 				if(killMe.length > 1) {
-					FunkinLua.setVarInArray(FunkinLua.getPropertyLoopThingWhatever(killMe, true, true), killMe[killMe.length-1], value2);
+					FunkinLua.setVarInArray(FunkinLua.getPropertyLoop(killMe, true, true), killMe[killMe.length-1], value2);
 				} else {
 					FunkinLua.setVarInArray(this, value1, value2);
 				}
@@ -4219,57 +4218,59 @@ class PlayState extends MusicBeatState
 
 		if (gf != null && SONG.notes[curSection].gfSection)
 		{
-			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
-			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
-			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
-			tweenCamIn();
+			moveCamera(2);
 			callOnLuas('onMoveCamera', ['gf']);
-			return;
 		}
-
-		if (!SONG.notes[curSection].mustHitSection)
+		else if (!SONG.notes[curSection].mustHitSection)
 		{
-			moveCamera(true);
+			moveCamera(1);
 			callOnLuas('onMoveCamera', ['dad']);
 		}
 		else
 		{
-			moveCamera(false);
+			moveCamera(0);
 			callOnLuas('onMoveCamera', ['boyfriend']);
 		}
 	}
 
 	var cameraTwn:FlxTween;
-	public function moveCamera(isDad:Bool)
+	public function moveCamera(toFollow:Int = 0, ?char:String = '')
 	{
-		if(isDad)
-		{
+		if(toFollow == 3) {
+			var luaChar:LuaChar = luaCharsMap.get(char);
+			if(luaChar != null) {
+				camFollow.set(luaChar.getMidpoint().x + 125, luaChar.getMidpoint().y - 100);
+				camFollow.x += luaChar.cameraPosition[0];
+				camFollow.y += luaChar.cameraPosition[1];
+				if(luaChar.isPlayer) {
+					tweenCamIn(1);
+				} else {
+					tweenCamIn(1.3);
+				}
+			} else {
+				moveCamera(0);
+			}
+		} else if(toFollow == 2) {
+			camFollow.set(gf.getMidpoint().x, gf.getMidpoint().y);
+			camFollow.x += gf.cameraPosition[0] + girlfriendCameraOffset[0];
+			camFollow.y += gf.cameraPosition[1] + girlfriendCameraOffset[1];
+			tweenCamIn(1.3);
+		} else if(toFollow == 1) {
 			camFollow.set(dad.getMidpoint().x + 150, dad.getMidpoint().y - 100);
 			camFollow.x += dad.cameraPosition[0] + opponentCameraOffset[0];
 			camFollow.y += dad.cameraPosition[1] + opponentCameraOffset[1];
-			tweenCamIn();
-		}
-		else
-		{
+			tweenCamIn(1.3);
+		} else {
 			camFollow.set(boyfriend.getMidpoint().x - 100, boyfriend.getMidpoint().y - 100);
 			camFollow.x -= boyfriend.cameraPosition[0] - boyfriendCameraOffset[0];
 			camFollow.y += boyfriend.cameraPosition[1] + boyfriendCameraOffset[1];
-
-			if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1)
-			{
-				cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut, onComplete:
-					function (twn:FlxTween)
-					{
-						cameraTwn = null;
-					}
-				});
-			}
+			tweenCamIn(1);
 		}
 	}
 
-	function tweenCamIn() {
-		if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != 1.3) {
-			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: 1.3}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut, onComplete:
+	function tweenCamIn(value:Float) {
+		if (Paths.formatToSongPath(SONG.song) == 'tutorial' && cameraTwn == null && FlxG.camera.zoom != value) {
+			cameraTwn = FlxTween.tween(FlxG.camera, {zoom: value}, (Conductor.stepCrochet * 4 / 1000), {ease: FlxEase.elasticInOut, onComplete:
 				function (twn:FlxTween) {
 					cameraTwn = null;
 				}
@@ -4874,10 +4875,15 @@ class PlayState extends MusicBeatState
 				}
 				#end
 			}
-			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss'))
-			{
+			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
 				boyfriend.dance();
 				//boyfriend.animation.curAnim.finish();
+			}
+
+			for (char in luaCharsMap) {
+				if (char.animation.curAnim != null && char.holdTimer > Conductor.stepCrochet * 0.0011 * char.singDuration && char.animation.curAnim.name.startsWith('sing') && !char.animation.curAnim.name.endsWith('miss')) {
+					char.dance();
+				}	
 			}
 		}
 
@@ -5080,8 +5086,8 @@ class PlayState extends MusicBeatState
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)), time);
 		note.hitByOpponent = true;
 
-		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
-		callOnHScripts('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
+		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote, note.strumTime]);
+		callOnHScripts('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote, note.strumTime]);
 
 		if (!note.isSustainNote)
 		{
@@ -5522,17 +5528,19 @@ class PlayState extends MusicBeatState
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
 
-		if (gf != null && curBeat % Math.round(gfSpeed * gf.danceEveryNumBeats) == 0 && gf.animation.curAnim != null && !gf.animation.curAnim.name.startsWith("sing") && !gf.stunned)
-		{
+		if (gf != null && curBeat % Math.round(gfSpeed * gf.danceEveryNumBeats) == 0 && gf.animation.curAnim != null && !gf.animation.curAnim.name.startsWith("sing") && !gf.stunned) {
 			gf.dance();
 		}
-		if (curBeat % boyfriend.danceEveryNumBeats == 0 && boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned)
-		{
+		if (curBeat % boyfriend.danceEveryNumBeats == 0 && boyfriend.animation.curAnim != null && !boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.stunned) {
 			boyfriend.dance();
 		}
-		if (curBeat % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned)
-		{
+		if (curBeat % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) {
 			dad.dance();
+		}
+		for (char in luaCharsMap) {
+			if (curBeat % char.danceEveryNumBeats == 0 && char.animation.curAnim != null && !char.animation.curAnim.name.startsWith('sing') && !char.stunned) {
+				char.dance();
+			}
 		}
 
 		switch (curStage)

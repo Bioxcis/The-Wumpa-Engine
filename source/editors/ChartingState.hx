@@ -226,7 +226,7 @@ class ChartingState extends MusicBeatState
 				healthdrain: 0,
 				healthdrainKill: false,
 				arrowSkin: '',
-				splashSkin: 'noteSplashes',//idk it would crash if i didn't
+				splashSkin: 'noteSplashes', //idk it would crash if i didn't
 				player1: 'bf',
 				player2: 'dad',
 				gfVersion: 'gf',
