@@ -1621,7 +1621,7 @@ class FunkinLua {
 			if(noteId >= 0) {
 				daNote = PlayState.instance.notes.members[noteId];
 			} else {
-				throw "The object was not found";
+				throw "value not supported!";
 			}
 			var charNote:Bool = false;
 			if(luaChar != null) {
@@ -1649,7 +1649,7 @@ class FunkinLua {
 			if(noteId >= 0) {
 				daNote = PlayState.instance.notes.members[noteId];
 			} else {
-				throw "The object was not found";
+				throw "value not supported!";
 			}
 			var charNote:Bool = false;
 			if(luaChar != null) {
