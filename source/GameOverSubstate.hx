@@ -28,6 +28,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	public static var endDeathIntro:Bool = false;
 	public static var curDeathX:Float = 0;
 	public static var curDeathY:Float = 0;
+	public var startedDeathToCustom:Bool = false;
 
 	public static var instance:GameOverSubstate;
 
@@ -50,6 +51,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	public function new(x:Float, y:Float, camX:Float, camY:Float)
 	{
 		super();
+		startedDeathToCustom = true;
 
 		PlayState.instance.setOnLuas('inGameOver', true);
 

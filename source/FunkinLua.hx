@@ -1597,9 +1597,10 @@ class FunkinLua {
 		});
 
 
-		// Characters
+		// Lua Characters
 
-		Lua_helper.add_callback(lua, "makeLuaCharacter", function(tag:String, x:Float, y:Float, char:String, player:Bool = false, arrows:Array<String> = null) {
+		Lua_helper.add_callback(lua, "makeLuaCharacter", function(tag:String, char:String, x:Float, y:Float, player:Bool = false, arrows:Array<String> = null) {
+			resetLuaChar(tag);
 			var luaChar:LuaChar = new LuaChar(x, y, char, player, arrows);
 			luaChar.x += luaChar.positionArray[0];
 			luaChar.y += luaChar.positionArray[1];
@@ -1614,76 +1615,103 @@ class FunkinLua {
 					luaChar.playAnim(anim, forced);
 			}
 		});
-		// Temporariamente deve ser usada na chamada "goodNoteHit".
-		Lua_helper.add_callback(lua, "luacharSingAnim", function(char:String, noteId:Int) {
-			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+		// it should be used in the "goodNoteHit" call.
+		Lua_helper.add_callback(lua, "luacharNoteHit", function(tag:String, noteId:Int) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
 			var daNote:Note;
 			if(noteId >= 0) {
 				daNote = PlayState.instance.notes.members[noteId];
-			} else {
+			} else 
 				throw "The object was not found";
-			}
-			var charNote:Bool = false;
 			if(luaChar != null) {
-				for (press in luaChar.arrowArray) {
-					if(press == daNote.noteType) {
-						charNote = true;
-						break;
+				var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
+				if(!daNote.hitByOpponent && luaChar.isPlayer) {
+					var charNote:Bool = luaChar.testNote(daNote.noteType);
+					if(charNote) {
+						luaChar.playAnim(animToPlay, true);
+						luaChar.holdTimer = 0;
 					}
-				}
-				if(charNote && daNote.hitByOpponent && !luaChar.isPlayer) {
-					var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
-					luaChar.playAnim(animToPlay, true);
-					luaChar.holdTimer = 0;
-				} else if(charNote && !daNote.hitByOpponent && luaChar.isPlayer) {
-					var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
-					luaChar.playAnim(animToPlay, true);
-					luaChar.holdTimer = 0;
+				} else if(!luaChar.isPlayer) {
+					var charNote:Bool = luaChar.testNote(daNote.noteType);
+					if(charNote) {
+						luaChar.playAnim(animToPlay, true);
+						luaChar.holdTimer = 0;
+					}
 				}
 			}
 		});
-		// Temporariamente deve ser usada nas chamadas "onNotePress" e "onDespawnNote".
-		Lua_helper.add_callback(lua, "luacharMissAnim", function(char:String, noteId:Int) {
-			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+		// it should be used in the "onNotePress" or "onDespawnNote" calls.
+		Lua_helper.add_callback(lua, "luacharMissAnim", function(tag:String, noteId:Int) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
 			var daNote:Note;
 			if(noteId >= 0) {
 				daNote = PlayState.instance.notes.members[noteId];
-			} else {
+			} else 
 				throw "The object was not found";
-			}
-			var charNote:Bool = false;
 			if(luaChar != null) {
-				for (press in luaChar.arrowArray) {
-					if(press == daNote.noteType) {
-						charNote = true;
-						break;
+				var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
+				if(!daNote.noMissAnimation && luaChar.hasMissAnimations && luaChar.isPlayer) {
+					var charNote:Bool = luaChar.testNote(daNote.noteType);
+					if(charNote) {
+						luaChar.playAnim(animToPlay, true);
 					}
-				}
-				if(charNote && !daNote.noMissAnimation && luaChar.hasMissAnimations && luaChar.isPlayer){
-					var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
-					luaChar.playAnim(animToPlay, true);
-					luaChar.holdTimer = 0;
 				}
 			}
 		});
-		Lua_helper.add_callback(lua, "getLuaCharacterX", function(char:String = null) {
-			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+		Lua_helper.add_callback(lua, "getLuaCharacterX", function(tag:String) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
 			if(luaChar != null) return luaChar.x;
-			return 0;
+			return PlayState.instance.boyfriendGroup.x;
 		});
-		Lua_helper.add_callback(lua, "setLuaCharacterX", function(char:String = null, value:Float) {
-			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+		Lua_helper.add_callback(lua, "setLuaCharacterX", function(tag:String, value:Float) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
 			if(luaChar != null) luaChar.x = value;
 		});
-		Lua_helper.add_callback(lua, "getLuaCharacterY", function(char:String = null) {
-			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+		Lua_helper.add_callback(lua, "getLuaCharacterY", function(tag:String) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
 			if(luaChar != null) return luaChar.y;
-			return 0;
+			return PlayState.instance.boyfriendGroup.y;
 		});
-		Lua_helper.add_callback(lua, "setLuaCharacterY", function(char:String = null, value:Float) {
-			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+		Lua_helper.add_callback(lua, "setLuaCharacterY", function(tag:String, value:Float) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
 			if(luaChar != null) luaChar.y = value;
 		});
+		Lua_helper.add_callback(lua, "changeLuaCharArrow", function(tag:String, arrows:Array<String> = null, ?reset:Bool = false) {
+			var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
+			if(luaChar != null) luaChar.changeArrows(arrows, reset);
+		});
+		Lua_helper.add_callback(lua, "luaCharDance", function(type:String, char:String = null) {
+			switch(type.toLowerCase()) {
+				case 'dad' | 'opponent': PlayState.instance.dad.dance();
+				case 'gf' | 'girlfriend': if(PlayState.instance.gf != null) PlayState.instance.gf.dance();
+				case 'char' | 'luaChar': 
+					var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
+					if(luaChar != null) luaChar.dance();
+				default: PlayState.instance.boyfriend.dance();
+			}
+		});
+		Lua_helper.add_callback(lua, "changeLuaCharacter", function(tag:String, newTag:String = null, newChar:String = null) {
+			if(newTag != null && newChar != null) {
+				var oldLuaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
+				if(oldLuaChar != null) {
+					var newLuaChar:LuaChar = new LuaChar(oldLuaChar.x, oldLuaChar.y, newChar, oldLuaChar.isPlayer, oldLuaChar.arrowArray);
+					newLuaChar.x += newLuaChar.positionArray[0];
+					newLuaChar.y += newLuaChar.positionArray[1];
+					newLuaChar.alpha = oldLuaChar.alpha;
+					newLuaChar.visible = oldLuaChar.visible;
+					resetLuaChar(tag);
+					PlayState.instance.startCharacterLua(newLuaChar.curCharacter);
+					PlayState.instance.luaCharsMap.set(newTag, newLuaChar);
+					PlayState.instance.add(newLuaChar);
+				} else {
+					luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+				}
+			}
+		});
+
+
+		// Default Characters
+
 		Lua_helper.add_callback(lua, "changeCharacter", function(type:String, newCharacter:String) {
 			var charType:Int = 0;
 			switch(type.toLowerCase()) {
@@ -1739,13 +1767,10 @@ class FunkinLua {
 					}
 			}
 		});
-		Lua_helper.add_callback(lua, "characterDance", function(type:String, char:String = null) {
+		Lua_helper.add_callback(lua, "characterDance", function(type:String) {
 			switch(type.toLowerCase()) {
 				case 'dad' | 'opponent': PlayState.instance.dad.dance();
 				case 'gf' | 'girlfriend': if(PlayState.instance.gf != null) PlayState.instance.gf.dance();
-				case 'char' | 'luaChar': 
-					var luaChar:LuaChar = PlayState.instance.luaCharsMap.get(char);
-					if(luaChar != null) luaChar.dance();
 				default: PlayState.instance.boyfriend.dance();
 			}
 		});
@@ -3671,6 +3696,14 @@ class FunkinLua {
 		}
 	}
 
+	function resetLuaChar(tag:String) {
+		if(PlayState.instance.luaCharsMap.exists(tag)) {
+			PlayState.instance.luaCharsMap.get(tag).kill();
+			PlayState.instance.luaCharsMap.get(tag).destroy();
+			PlayState.instance.luaCharsMap.remove(tag);
+		}
+	}
+
 	public static function getLuaTween(options:Dynamic) {
 		return {
 			type: getTweenTypeByString(options.type),
@@ -3854,14 +3887,14 @@ class FunkinLua {
 		return Function_Continue;
 	}
 
-	public static function getPropertyLoop(niArrayes:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool=true, ?checkForBarsToo:Bool = false):Dynamic
+	public static function getPropertyLoop(splitArrays:Array<String>, ?checkForTextsToo:Bool = true, ?getProperty:Bool=true, ?checkForBarsToo:Bool = false):Dynamic
 	{
-		var thePropertys:Dynamic = getObjectDirectly(niArrayes[0], checkForTextsToo, checkForBarsToo);
-		var end = niArrayes.length;
-		if(getProperty)end=niArrayes.length-1;
+		var thePropertys:Dynamic = getObjectDirectly(splitArrays[0], checkForTextsToo, checkForBarsToo);
+		var end = splitArrays.length;
+		if(getProperty) end = splitArrays.length-1;
 
 		for (i in 1...end) {
-			thePropertys = getVarInArray(thePropertys, niArrayes[i]);
+			thePropertys = getVarInArray(thePropertys, splitArrays[i]);
 		}
 		return thePropertys;
 	}
@@ -3874,7 +3907,7 @@ class FunkinLua {
 				return PlayState.instance;
 			default:
 				var thePropertys:Dynamic = PlayState.instance.getLuaObject(objectName, checkForTextsToo, checkForBarsToo);
-				if(thePropertys==null)
+				if(thePropertys == null)
 					thePropertys = getVarInArray(getInstance(), objectName);
 
 				return thePropertys;

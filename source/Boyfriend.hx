@@ -20,31 +20,23 @@ class Boyfriend extends Character
 	{
 		if (!debugMode && animation.curAnim != null)
 		{
-			if (animation.curAnim.name.startsWith('sing'))
-			{
+			if(animation.curAnim.name.startsWith('sing')) {
 				holdTimer += elapsed;
-			}
-			else
+			} else { 
 				holdTimer = 0;
+			}
 
-		/*
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode)
-			{
+			/*if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
 				playAnim('idle', true, false, 10);
-			}	
-		*/
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode && PlayState.instance.health <= 0.6) {
-				if (animation.exists('idle-two')) {
-					playAnim('idle-two', true, false, 10);
-				} else {
-					playAnim('idle', true, false, 10);
-				}
+			}*/
+
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode && PlayState.instance.health <= 0.6 && animation.exists('idle-low')) {
+				playAnim('idle-low', true, false, 10);
 			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
 				playAnim('idle', true, false, 10);
 			}
 
-			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && startedDeath)
-			{
+			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && startedDeath) {
 				playAnim('deathLoop');
 			}
 		}

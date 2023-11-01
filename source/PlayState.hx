@@ -1750,6 +1750,7 @@ class PlayState extends MusicBeatState
   	}
 
 	public function getLuaObject(tag:String, text:Bool=true, bar:Bool=true):FlxSprite {
+		if(luaCharsMap.exists(tag)) return luaCharsMap.get(tag);
 		if(modchartSprites.exists(tag)) return modchartSprites.get(tag);
 		if(text && modchartTexts.exists(tag)) return modchartTexts.get(tag);
 		if(bar && modchartBars.exists(tag)) return modchartBars.get(tag);
@@ -3744,7 +3745,7 @@ class PlayState extends MusicBeatState
 		#end
 	}
 
-	public var isDead:Bool = false; //Don't mess with this on Lua!!!
+	public var isDead:Bool = false;
 	public var oneLife:Bool = false;
 	function doDeathCheck(?skipHealthCheck:Bool = false) {
 		if (((skipHealthCheck && instakillOnMiss) || health <= 0) && !practiceMode && !isDead && !oneLife)
@@ -3990,7 +3991,7 @@ class PlayState extends MusicBeatState
 							{
 								for (i in 0...particlesNum)
 								{
-									var particle:PhillyGlow.PhillyGlowParticle = new PhillyGlow.PhillyGlowParticle(-400 + width * i + FlxG.random.float(-width / 5, width / 5), phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40), color);
+									var particle:PhillyGlow.PhillyGlowParticle = new PhillyGlow.PhillyGlowParticle(-400 + width * i + FlxG.random.float(-width / 5, width / 5),phillyGlowGradient.originalY + 200 + (FlxG.random.float(0, 125) + j * 40), color);
 									phillyGlowParticles.add(particle);
 								}
 							}
@@ -4071,7 +4072,6 @@ class PlayState extends MusicBeatState
 							case 2: char = gf;
 						}
 				}
-
 				if (char != null)
 				{
 					char.idleSuffix = value2;
@@ -4875,15 +4875,10 @@ class PlayState extends MusicBeatState
 				}
 				#end
 			}
-			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration && boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
+			else if (boyfriend.animation.curAnim != null && boyfriend.holdTimer > Conductor.stepCrochet * 0.0011 * boyfriend.singDuration 
+			&& boyfriend.animation.curAnim.name.startsWith('sing') && !boyfriend.animation.curAnim.name.endsWith('miss')) {
 				boyfriend.dance();
 				//boyfriend.animation.curAnim.finish();
-			}
-
-			for (char in luaCharsMap) {
-				if (char.animation.curAnim != null && char.holdTimer > Conductor.stepCrochet * 0.0011 * char.singDuration && char.animation.curAnim.name.startsWith('sing') && !char.animation.curAnim.name.endsWith('miss')) {
-					char.dance();
-				}	
 			}
 		}
 
@@ -4954,11 +4949,13 @@ class PlayState extends MusicBeatState
 			char = gf;
 		}
 
+		var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daNote.animSuffix;
 		if(char != null && !daNote.noMissAnimation && char.hasMissAnimations)
 		{
-			var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + 'miss' + daNote.animSuffix;
 			char.playAnim(animToPlay, true);
 		}
+
+		LuaChar.instance.charNoteMiss(daNote.noteType, daNote.noMissAnimation, animToPlay);
 
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime]);
 	}
@@ -5086,6 +5083,11 @@ class PlayState extends MusicBeatState
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)), time);
 		note.hitByOpponent = true;
 
+		if(!note.noAnimation) {
+			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + note.animSuffix;
+			LuaChar.instance.charNoteHit(note.noteType, note.hitByOpponent, animToPlay);
+		}
+
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote, note.strumTime]);
 		callOnHScripts('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote, note.strumTime]);
 
@@ -5156,7 +5158,11 @@ class PlayState extends MusicBeatState
 				}
 				else
 				{
-					boyfriend.playAnim(animToPlay + note.animSuffix, true);
+					if(health <= 0.6) {
+						boyfriend.playAnim(animToPlay + '-low', true);
+					} else {
+						boyfriend.playAnim(animToPlay + note.animSuffix, true);
+					}
 					boyfriend.holdTimer = 0;
 
 					if(SONG.cameraMoveOnNotes){
@@ -5211,6 +5217,11 @@ class PlayState extends MusicBeatState
 			}
 			note.wasGoodHit = true;
 			vocals.volume = vocalGeneralVol;
+
+			if(!note.noAnimation) {
+				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
+				LuaChar.instance.charNoteHit(note.noteType, false, animToPlay);
+			}
 
 			var isSus:Bool = note.isSustainNote;
 			var leData:Int = Math.round(Math.abs(note.noteData));
@@ -5517,11 +5528,11 @@ class PlayState extends MusicBeatState
 
 			// So I've done it now! >:)
 			if (dancingLeft){
-				iconP1Tween = FlxTween.angle(iconP1, iconP1.angle, 8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
-				iconP2Tween = FlxTween.angle(iconP2, iconP2.angle, 8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
+				iconP1Tween = FlxTween.angle(iconP1, iconP1.angle, 8, Conductor.crochet / 6000, { ease: FlxEase.quadInOut });
+				iconP2Tween = FlxTween.angle(iconP2, iconP2.angle, 8, Conductor.crochet / 6000, { ease: FlxEase.quadInOut });
 			} else { 
-				iconP1Tween = FlxTween.angle(iconP1, iconP1.angle, -8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
-				iconP2Tween = FlxTween.angle(iconP2, iconP2.angle, -8, Conductor.crochet / 4000, { ease: FlxEase.quadInOut });
+				iconP1Tween = FlxTween.angle(iconP1, iconP1.angle, -8, Conductor.crochet / 6000, { ease: FlxEase.quadInOut });
+				iconP2Tween = FlxTween.angle(iconP2, iconP2.angle, -8, Conductor.crochet / 6000, { ease: FlxEase.quadInOut });
 			}
 		}
 

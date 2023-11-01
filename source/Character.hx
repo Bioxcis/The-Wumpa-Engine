@@ -316,23 +316,25 @@ class Character extends FlxSprite
 	public var danced:Bool = false;
 
 	/**
-	 * FOR GF DANCING SHIT
+	 * FOR GF DANCING
 	 */
 	public function dance()
 	{
 		if (!debugMode && !skipDance && !specialAnim)
 		{
-			if(danceIdle)
-			{
+			if(danceIdle) {
 				danced = !danced;
 
 				if (danced)
 					playAnim('danceRight' + idleSuffix);
 				else
 					playAnim('danceLeft' + idleSuffix);
+			} 
+			else if(animation.getByName('idle-low') != null && PlayState.instance.health <= 0.6 && isPlayer) {
+				playAnim('idle-low');
 			}
 			else if(animation.getByName('idle' + idleSuffix) != null) {
-					playAnim('idle' + idleSuffix);
+				playAnim('idle' + idleSuffix);
 			}
 		}
 	}

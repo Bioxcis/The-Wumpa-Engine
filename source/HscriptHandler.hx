@@ -42,10 +42,11 @@ import flixel.tweens.FlxTween;
 
 class HscriptHandler {
     public static function setVars(interp:Interp) {
-        interp.variables.set('PlayState', PlayState);
-        interp.variables.set('Character', Character);
         interp.variables.set('Paths', Paths);
+        interp.variables.set('PlayState', PlayState);
         interp.variables.set('Boyfriend', Boyfriend);
+        interp.variables.set('Character', Character);
+        interp.variables.set('LuaChar', LuaChar);
         interp.variables.set('HealthIcon', HealthIcon);
         interp.variables.set('StrumNote', StrumNote);
         interp.variables.set('Conductor', Conductor);
