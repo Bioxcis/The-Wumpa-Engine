@@ -1597,7 +1597,7 @@ class FunkinLua {
 		});
 
 
-		// Lua Characters
+		// Lua Custom Characters
 
 		Lua_helper.add_callback(lua, "makeLuaCharacter", function(tag:String, char:String, x:Float, y:Float, player:Bool = false, arrows:Array<String> = null) {
 			resetLuaChar(tag);
