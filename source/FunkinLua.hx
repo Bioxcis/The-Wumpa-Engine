@@ -1621,8 +1621,10 @@ class FunkinLua {
 			var daNote:Note;
 			if(noteId >= 0) {
 				daNote = PlayState.instance.notes.members[noteId];
-			} else 
+			} else {
 				throw "The object was not found";
+			}
+			var charNote:Bool = false;
 			if(luaChar != null) {
 				var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
 				if(!daNote.hitByOpponent && luaChar.isPlayer) {
@@ -1646,8 +1648,10 @@ class FunkinLua {
 			var daNote:Note;
 			if(noteId >= 0) {
 				daNote = PlayState.instance.notes.members[noteId];
-			} else 
+			} else {
 				throw "The object was not found";
+			}
+			var charNote:Bool = false;
 			if(luaChar != null) {
 				var animToPlay:String = singAnimations[Std.int(Math.abs(daNote.noteData))] + daNote.animSuffix;
 				if(!daNote.noMissAnimation && luaChar.hasMissAnimations && luaChar.isPlayer) {
