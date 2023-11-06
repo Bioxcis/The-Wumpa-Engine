@@ -27,6 +27,39 @@ class BuildingEffect {
   }
 }
 
+class Displace extends FlxShader
+{
+    @:glFragmentSource('
+        #pragma header
+
+        uniform float waves;
+        uniform float uTime;
+
+        void main()
+        {
+            //Calculate the size of a pixel (normalized)
+            vec2 pixel = vec2(1.0,1.0) / openfl_TextureSize;
+			
+            //Grab the current position (normalized)
+            vec2 p = openfl_TextureCoordv;
+            
+            //Create the effect using sine waves
+            p.x += sin( p.y*waves+uTime*2.0 )*pixel.x;
+            
+            //Apply
+            vec4 source = flixel_texture2D(bitmap, p);
+            gl_FragColor = source;
+
+        }'
+    )
+
+    public function new(Waves:Float)
+    {
+        super();
+        this.waves.value = [Waves];
+    }
+}
+
 class BuildingShader extends FlxShader
 {
   public function new(){
@@ -918,8 +951,8 @@ class PulseEffect extends Effect
     public var shader:PulseShader = new PulseShader();
 
     public var waveSpeed(default, set):Float = 0;
-	public var waveFrequency(default, set):Float = 0;
-	public var waveAmplitude(default, set):Float = 0;
+	  public var waveFrequency(default, set):Float = 0;
+	  public var waveAmplitude(default, set):Float = 0;
     public var Enabled(default, set):Bool = false;
 
 	public function new(waveSpeed:Float,waveFrequency:Float,waveAmplitude:Float):Void

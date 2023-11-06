@@ -72,6 +72,7 @@ import HscriptHandler;
 import sys.io.File;
 import sys.FileSystem;
 #end
+//import flixel.addons.display.FlxShaderMaskCamera;
 
 #if VIDEOS_ALLOWED
 import vlc.MP4Handler;
@@ -115,6 +116,7 @@ class PlayState extends MusicBeatState
 	public var modchartSounds:Map<String, FlxSound> = new Map<String, FlxSound>();
 	public var modchartTexts:Map<String, FlxText> = new Map<String, FlxText>();
 	public var modchartBars:Map<String, FlxBar> = new Map<String, FlxBar>();
+	public var modchartEmitters:Map<String, FlxEmitter> = new Map<String, FlxEmitter>();
 	public var modchartSaves:Map<String, FlxSave> = new Map<String, FlxSave>();
 	public var shader_chromatic_abberation:ChromaticAberrationEffect;
 	public var camGameShaders:Array<ShaderEffect> = [];
@@ -233,6 +235,7 @@ class PlayState extends MusicBeatState
 	public var cameraSpeed:Float = 1;
 	public var bubble:Int = 0;
 	public var isNoHIT:Bool = false;
+	public var daTaeb:Int = 0;
 
 	private var tweenGet:FlxTween;
 	private var tweenReady:FlxTween;
@@ -2311,11 +2314,6 @@ class PlayState extends MusicBeatState
 				if (tmr.loopsLeft % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) {
 					dad.dance();
 				}
-				for (char in luaCharsMap) {
-					if (tmr.loopsLeft % char.danceEveryNumBeats == 0 && char.animation.curAnim != null && !char.animation.curAnim.name.startsWith('sing') && !char.stunned) {
-						char.dance();
-					}
-				}
 
 				var introAssets:Map<String, Array<String>> = new Map<String, Array<String>>();
 				introAssets.set('default', ['get', 'ready', 'set', 'go']);
@@ -2967,6 +2965,7 @@ class PlayState extends MusicBeatState
 	}
 
 	var soundIsPaused:Map<FlxSound, Bool> = new Map<FlxSound, Bool>();
+	var emitterActive:Map<FlxEmitter, Bool> = new Map<FlxEmitter, Bool>();
 	override function openSubState(SubState:FlxSubState)
 	{
 		if (paused)
@@ -3007,6 +3006,13 @@ class PlayState extends MusicBeatState
 					sound.pause();
 				} else {
 					soundIsPaused.set(sound, false);
+				}
+			}
+			for (emitter in modchartEmitters) {
+				if(emitter.emitting) {
+					emitter.emitting = false;
+				} else {
+					emitterActive.set(emitter, false);
 				}
 			}
 			if (tweenGet != null) tweenGet.active = false;
@@ -3059,6 +3065,13 @@ class PlayState extends MusicBeatState
 					soundIsPaused.remove(sound);
 				} else {
 					sound.resume();
+				}
+			}
+			for (emitter in modchartEmitters) {
+				if(emitterActive.exists(emitter)) {
+					emitterActive.remove(emitter);
+				} else {
+					emitter.emitting = true;
 				}
 			}
 			if (tweenGet != null) tweenGet.active = true;
@@ -3356,7 +3369,7 @@ class PlayState extends MusicBeatState
 				openPauseMenu();
 			}
 		}
-
+		daTaeb = curBeat;
 		if (FlxG.keys.anyJustPressed(debugKeysChart) && !endingSong && !inCutscene && !SONG.disableDebugButtons)
 		{
 			FlxG.sound.play(Paths.sound('debugSecret'), 0.6);
@@ -3375,6 +3388,14 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 
 		var iconOffset:Int = 26;
+
+		// var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+		// emitter.loadParticles(Paths.image(image), quantity, rotations, multiply, buff);
+		// for (i in 0...150) {
+		// 	var particle = new FlxParticle();
+		// 	particle.loadGraphic(Paths.image(image), false, width, height);
+		// 	emitter.add(particle);
+		// }
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;
@@ -3776,6 +3797,13 @@ class PlayState extends MusicBeatState
 						soundIsPaused.remove(sound);
 					} else {
 						sound.resume();
+					}
+				}
+				for (emitter in modchartEmitters) {
+					if(emitterActive.exists(emitter)) {
+						emitterActive.remove(emitter);
+					} else {
+						emitter.emitting = true;
 					}
 				}
 				if (tweenGet != null) tweenGet.active = true;
@@ -4955,7 +4983,9 @@ class PlayState extends MusicBeatState
 			char.playAnim(animToPlay, true);
 		}
 
-		LuaChar.instance.charNoteMiss(daNote.noteType, daNote.noMissAnimation, animToPlay);
+		// if(LuaChar.instance != null) {
+		// 	LuaChar.instance.charNoteMiss(daNote.noteType, daNote.noMissAnimation, animToPlay);
+		// }
 
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime]);
 	}
@@ -5083,10 +5113,10 @@ class PlayState extends MusicBeatState
 		StrumPlayAnim(true, Std.int(Math.abs(note.noteData)), time);
 		note.hitByOpponent = true;
 
-		if(!note.noAnimation) {
-			var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + note.animSuffix;
-			LuaChar.instance.charNoteHit(note.noteType, note.hitByOpponent, animToPlay);
-		}
+		// if(!note.noAnimation) {
+		// 	var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))] + note.animSuffix;
+		// 	LuaChar.instance.charNoteHit(note.noteType, note.hitByOpponent, animToPlay);
+		// }
 
 		callOnLuas('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote, note.strumTime]);
 		callOnHScripts('opponentNoteHit', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote, note.strumTime]);
@@ -5218,10 +5248,10 @@ class PlayState extends MusicBeatState
 			note.wasGoodHit = true;
 			vocals.volume = vocalGeneralVol;
 
-			if(!note.noAnimation) {
-				var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
-				LuaChar.instance.charNoteHit(note.noteType, false, animToPlay);
-			}
+			// if(!note.noAnimation) {
+			// 	var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
+			// 	LuaChar.instance.charNoteHit(note.noteType, false, animToPlay);
+			// }
 
 			var isSus:Bool = note.isSustainNote;
 			var leData:Int = Math.round(Math.abs(note.noteData));
@@ -5547,11 +5577,6 @@ class PlayState extends MusicBeatState
 		}
 		if (curBeat % dad.danceEveryNumBeats == 0 && dad.animation.curAnim != null && !dad.animation.curAnim.name.startsWith('sing') && !dad.stunned) {
 			dad.dance();
-		}
-		for (char in luaCharsMap) {
-			if (curBeat % char.danceEveryNumBeats == 0 && char.animation.curAnim != null && !char.animation.curAnim.name.startsWith('sing') && !char.stunned) {
-				char.dance();
-			}
 		}
 
 		switch (curStage)

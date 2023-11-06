@@ -9,8 +9,6 @@ using StringTools;
 
 class LuaChar extends Character
 {
-	public static var instance:LuaChar;
-
 	private var defaultArrows:Array<String> = ["", "Alt Animation", "Hey!", "GF Sing", "No Animation"];
 	public var arrowArray:Array<String> = [];
 
@@ -33,6 +31,10 @@ class LuaChar extends Character
 				holdTimer += elapsed;
 			} else { 
 				holdTimer = 0;
+			}
+
+			if (PlayState.instance.daTaeb % danceEveryNumBeats == 0 && animation.curAnim != null && !animation.curAnim.name.startsWith('sing') && !stunned) {
+				dance();
 			}
 
 			if(animation.curAnim != null && holdTimer > Conductor.stepCrochet * 0.0011 * singDuration && animation.curAnim.name.startsWith('sing') && !animation.curAnim.name.endsWith('miss')) {
@@ -60,6 +62,8 @@ class LuaChar extends Character
 			}
 		}
 	}
+/*
+	// Ideia aparentemente descartada... ainda...
 
 	public function charNoteHit(noteType:String, hitByOpponent:Bool, animToPlay:String) {
 		if(!hitByOpponent && isPlayer) {
@@ -76,7 +80,6 @@ class LuaChar extends Character
 			}
 		}
 	}
-
 	public function charNoteMiss(noteType:String, noMissAnimation:Bool, animToPlay:String) {
 		if(!noMissAnimation && hasMissAnimations && isPlayer) {
 			var charNote:Bool = testNote(noteType);
@@ -85,7 +88,7 @@ class LuaChar extends Character
 			}
 		}
 	}
-
+*/
 	public function testNote(noteType:String) {
 		for (press in arrowArray) {
 			if(press == noteType) {
