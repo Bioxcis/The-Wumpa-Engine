@@ -11,7 +11,6 @@ import flixel.addons.effects.FlxTrail;
 import flixel.input.keyboard.FlxKey;
 import flixel.tweens.FlxTween;
 import flixel.tweens.FlxEase;
-import flixel.text.FlxText;
 import flixel.group.FlxSpriteGroup;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxPoint;
@@ -19,11 +18,12 @@ import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 import flixel.FlxSprite;
 import flixel.FlxCamera;
-import flixel.util.FlxColor;
-import flixel.util.FlxGradient;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
+import flixel.util.FlxGradient;
 import flixel.effects.FlxFlicker;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
@@ -34,6 +34,7 @@ import openfl.filters.ShaderFilter;
 import openfl.display.BlendMode;
 import openfl.filters.BitmapFilter;
 import haxe.Json;
+import Achievements;
 import openfl.utils.Assets;
 import flixel.math.FlxMath;
 import Shaders;
@@ -57,7 +58,6 @@ import Discord;
 #end
 
 using StringTools;
-using flixel.util.FlxSpriteUtil;
 
 typedef LuaTweenOptions = {
 	type:FlxTweenType,
@@ -1609,13 +1609,11 @@ class FunkinLua {
 				real.blend = blendModeFromString(blend);
 				return true;
 			}
-
 			var varValues:Array<String> = obj.split('.');
 			var spr:FlxSprite = getObjectDirectly(varValues[0],true,false);
 			if(varValues.length > 1) {
 				spr = getVarInArray(getPropertyLoop(varValues), varValues[varValues.length-1]);
 			}
-
 			if(spr != null) {
 				spr.blend = blendModeFromString(blend);
 				return true;
@@ -1625,7 +1623,6 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "screenCenter", function(obj:String, pos:String = 'xy') {
 			var spr:FlxSprite = PlayState.instance.getLuaObject(obj);
-
 			if(spr==null){
 				var varValues:Array<String> = obj.split('.');
 				spr = getObjectDirectly(varValues[0]);
@@ -1633,7 +1630,6 @@ class FunkinLua {
 					spr = getVarInArray(getPropertyLoop(varValues,true,true,true), varValues[varValues.length-1]);
 				}
 			}
-
 			if(spr != null)
 			{
 				switch(pos.trim().toLowerCase())
@@ -1682,6 +1678,36 @@ class FunkinLua {
 			}
 			return false;
 		});
+		Lua_helper.add_callback(lua, "setSpriteColor", function(obj:String, targetColor:String) {
+			if(PlayState.instance.getLuaObject(obj,true,false)!=null) {
+				var leImage:FlxSprite = PlayState.instance.getLuaObject(obj,true,false);
+
+				var flxColor:FlxColor;
+				var color:Int = Std.parseInt(targetColor);
+				if(!targetColor.startsWith('0x')) color = Std.parseInt('0x' + targetColor);
+				flxColor = color;
+
+				leImage.color = flxColor;
+				return;
+			}
+
+			var varValues:Array<String> = obj.split('.');
+			var inLuaPicture:FlxSprite = getObjectDirectly(varValues[0],true,false);
+			if(varValues.length > 1) {
+				inLuaPicture = getVarInArray(getPropertyLoop(varValues), varValues[varValues.length-1]);
+			}
+
+			if(inLuaPicture != null) {
+				var flxColor:FlxColor;
+				var color:Int = Std.parseInt(targetColor);
+				if(!targetColor.startsWith('0x')) color = Std.parseInt('0x' + targetColor);
+				flxColor = color;
+
+				inLuaPicture.color = flxColor;
+				return;
+			}
+			luaTrace('Couldnt find object: ' + obj, false, false, FlxColor.RED);
+		});
 
 		Lua_helper.add_callback(lua, "setupStageObject", function(path:String) {
 			if (FileSystem.exists(Paths.modsObjects(path))) {
@@ -1727,35 +1753,9 @@ class FunkinLua {
 			leText.borderSize = 2;
 			PlayState.instance.modchartTexts.set(tag, leText);
 		});
-		Lua_helper.add_callback(lua, "makeLuaTextGradient", function(tag:String, text:String, width:Int, x:Float, y:Float, colors:Array<String>) {
-			tag = tag.replace('.', '');
-			resetTextTag(tag);
-			var leText:FlxText = new FlxText(x, y, text, width);
-			leText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-			leText.cameras = [PlayState.instance.camHUD];
-			leText.scrollFactor.set();
-			leText.borderSize = 2;
-			leText.drawFrame();
-			var colorArray:Array<Int> = [];
-			if(colors != null) {
-				for (color in colors) {
-					var colorNum:Int = Std.parseInt(color);
-					if(!color.startsWith('0x')) colorNum = Std.parseInt('0xff' + color);
-					colorArray.push(colorNum);
-				}
-			} else {
-				colorArray.push(0xff00F400);
-				colorArray.push(0xff005100);
-			}
-			var gradientText = new FlxSprite();
-			var gradient = FlxGradient.createGradientFlxSprite(leText.frameWidth, leText.frameHeight, colorArray);
-			gradientText.alphaMask(gradient.framePixels, leText.framePixels);
-			PlayState.instance.modchartTexts.set(tag, leText);
-		});
 		Lua_helper.add_callback(lua, "setTextString", function(tag:String, text:String) {
 			var obj:FlxText = getTextObject(tag);
-			if(obj != null)
-			{
+			if(obj != null) {
 				obj.text = text;
 				return true;
 			}
@@ -1782,7 +1782,7 @@ class FunkinLua {
 			luaTrace('Couldnt find object: ' + tag, false, false, FlxColor.RED);
 			return false;
 		});
-		Lua_helper.add_callback(lua, "setTextBorder", function(tag:String, size:Int, color:String) {
+		Lua_helper.add_callback(lua, "setTextBorder", function(tag:String, size:Int, color:String, style:String) {
 			var obj:FlxText = getTextObject(tag);
 			if(obj != null)
 			{
@@ -1898,19 +1898,50 @@ class FunkinLua {
 			if(!PlayState.instance.modchartTexts.exists(tag)) {
 				return;
 			}
-
 			var objText:FlxText = PlayState.instance.modchartTexts.get(tag);
 			if(destroy) {
 				objText.kill();
 			}
-
 			getInstance().remove(objText, true);
 			if(destroy) {
 				objText.destroy();
 				PlayState.instance.modchartTexts.remove(tag);
 			}
 		});
-		
+
+
+		// Lua Texts Gradients
+	/*
+		Lua_helper.add_callback(lua, "makeLuaTextGradient", function(tag:String, text:String, width:Int, x:Float, y:Float, colors:Array<String>) {
+			tag = tag.replace('.', '');
+			resetTextAndGradientTag(tag);
+			var text = new FlxText(x, y, text, width);
+			text.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			text.drawFrame();
+			var colorArray:Array<FlxColor> = [];
+			if(colors != null){
+				for (i in 0...colors.length) {
+					var colorNum:Int = Std.parseInt(colors[i]);
+					if(!colors[i].startsWith('0x')) colorNum = Std.parseInt('0xff' + colors[i]);
+					var colorFlx:FlxColor = new FlxColor(colorNum);
+					colorArray.push(colorFlx);
+				}
+			} else {
+				var colorDefault1:FlxColor = new FlxColor(0xff00F400);
+				var colorDefault2:FlxColor = new FlxColor(0xff005100);
+				colorArray.push(colorDefault1);
+				colorArray.push(colorDefault2);
+			}
+			var gradientText = new FlxSprite();
+			var gradient = FlxGradient.createGradientFlxSprite(text.frameWidth, text.frameHeight, [FlxColor.BLACK, FlxColor.GREEN, FlxColor.WHITE]);
+			gradientText.screenCenter();
+			gradientText.alphaMask(gradient.framePixels, text.framePixels);
+			gradientText.cameras = [cameraFromString(cameraType)];
+			getInstance().add(gradientText);
+			PlayState.instance.modchartTexts.set(tag, leText);
+		});
+	*/
+
 
 		// Tweens
 
@@ -1987,8 +2018,8 @@ class FunkinLua {
 				var fromY:Float = objectName.y;
 				PlayState.instance.modchartTweens.set(tag, FlxTween.linearMotion(objectName, fromX, fromY, toX, toY, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else {
@@ -2009,8 +2040,8 @@ class FunkinLua {
 				}
 				PlayState.instance.modchartTweens.set(tag, FlxTween.linearPath(objectName, allPoints, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else {
@@ -2030,8 +2061,8 @@ class FunkinLua {
 				var toY:Float = toPos[1];
 				PlayState.instance.modchartTweens.set(tag, FlxTween.quadMotion(objectName, fromX, fromY, controlX, controlY, toX, toY, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else {
@@ -2054,8 +2085,8 @@ class FunkinLua {
 				var toY:Float = toPos[1];
 				PlayState.instance.modchartTweens.set(tag, FlxTween.cubicMotion(objectName, fromX, fromY, aX, aY, bX, bY, toX, toY, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else {
@@ -2084,8 +2115,8 @@ class FunkinLua {
 				}
 				PlayState.instance.modchartTweens.set(tag, FlxTween.quadPath(objectName, allPoints, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else {
@@ -2103,8 +2134,8 @@ class FunkinLua {
 				var angle:Float = circleConfig[1];
 				PlayState.instance.modchartTweens.set(tag, FlxTween.circularMotion(objectName, centerX, centerY, radius, angle, clockwise, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			} else {
@@ -2123,8 +2154,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(theNote, {x: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2137,8 +2168,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(theNote, {y: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2151,8 +2182,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(theNote, {angle: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2165,8 +2196,8 @@ class FunkinLua {
 			if(testicle != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(testicle, {alpha: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2179,8 +2210,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(theNote, {direction: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2193,8 +2224,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(theNote.scale, {x: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2207,8 +2238,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.tween(theNote.scale, {y: value}, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2223,8 +2254,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.linearMotion(theNote, fromX, fromY, toX, toY, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2248,8 +2279,8 @@ class FunkinLua {
 				}
 				PlayState.instance.modchartTweens.set(tag, FlxTween.linearPath(theNote, allPoints, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2269,8 +2300,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.quadMotion(theNote, fromX, fromY, controlX, controlY, toX, toY, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2299,8 +2330,8 @@ class FunkinLua {
 				}
 				PlayState.instance.modchartTweens.set(tag, FlxTween.quadPath(theNote, allPoints, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2319,8 +2350,8 @@ class FunkinLua {
 			if(theNote != null) {
 				PlayState.instance.modchartTweens.set(tag, FlxTween.circularMotion(theNote, centerX, centerY, radius, angle, clockwise, duration, true, {startDelay: delay, ease: getFlxEaseByString(ease),
 					onComplete: function(twn:FlxTween) {
-						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 						PlayState.instance.modchartTweens.remove(tag);
+						PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					}
 				}));
 			}
@@ -2337,8 +2368,8 @@ class FunkinLua {
 			if(objectName != null) {
 				PlayState.instance.modchartFlickers.set(tag, FlxFlicker.flicker(objectName, duration, interval, endVisibility, false, 
 					function(flick: FlxFlicker) {
-						PlayState.instance.callOnLuas('onFlickerCompleted', [tag]);
 						PlayState.instance.modchartFlickers.remove(tag);
+						PlayState.instance.callOnLuas('onFlickerCompleted', [tag]);
 					}
 				));
 			} else {
@@ -2352,13 +2383,13 @@ class FunkinLua {
 
 		// Timers
 
-		Lua_helper.add_callback(lua, "runTimer", function(tag:String, time:Float = 1, loops:Int = 1, ?extraVars:Array<Dynamic>) {
+		Lua_helper.add_callback(lua, "runTimer", function(tag:String, time:Float = 1, loops:Int = 1) {
 			cancelTimer(tag);
 			PlayState.instance.modchartTimers.set(tag, new FlxTimer().start(time, function(tmr:FlxTimer) {
 				if(tmr.finished) {
 					PlayState.instance.modchartTimers.remove(tag);
 				}
-				PlayState.instance.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft, extraVars]);
+				PlayState.instance.callOnLuas('onTimerCompleted', [tag, tmr.loops, tmr.loopsLeft]);
 			}, loops));
 		});
 		Lua_helper.add_callback(lua, "cancelTimer", function(tag:String) {
@@ -2368,7 +2399,7 @@ class FunkinLua {
 
 		// Lua Characters
 
-		Lua_helper.add_callback(lua, "makeLuaCharacter", function(tag:String, char:String, x:Float, y:Float, player:Bool = false, arrows:Array<String> = null) {
+		Lua_helper.add_callback(lua, "makeLuaCharacter", function(tag:String, char:String, x:Float, y:Float, player:Bool = false, arrows:Array<String>) {
 			resetLuaChar(tag);
 			var luaChar:LuaChar = new LuaChar(x, y, char, player, arrows);
 			luaChar.x += luaChar.positionArray[0];
@@ -2463,23 +2494,32 @@ class FunkinLua {
 				luaTrace("The character " + tag + " doesn't exist!", false, false, FlxColor.RED);	
 			}
 		});
-		Lua_helper.add_callback(lua, "changeLuaCharacter", function(tag:String, newTag:String = null, newChar:String = null) {
+		Lua_helper.add_callback(lua, "changeLuaCharacter", function(tag:String, newCharacter:String) {
 			if(PlayState.instance.luaCharsMap.exists(tag)) {
-				if(newTag != null && newChar != null) {
-					var oldLuaChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
-					var newLuaChar:LuaChar = new LuaChar(oldLuaChar.x, oldLuaChar.y, newChar, oldLuaChar.isPlayer, oldLuaChar.arrowArray);
-					newLuaChar.x += newLuaChar.positionArray[0];
-					newLuaChar.y += newLuaChar.positionArray[1];
-					newLuaChar.alpha = oldLuaChar.alpha;
-					newLuaChar.visible = oldLuaChar.visible;
-					resetLuaChar(tag);
-					PlayState.instance.startCharacterLua(newLuaChar.curCharacter);
-					PlayState.instance.luaCharsMap.set(newTag, newLuaChar);
-					PlayState.instance.add(newLuaChar);
+				var oldChar:LuaChar = PlayState.instance.luaCharsMap.get(tag);
+				var lastAlpha:Float = oldChar.alpha;
+				var lastVisible:Bool = oldChar.visible;
+
+				if(oldChar.curCharacter != newCharacter) {
+					var newChar:LuaChar = new LuaChar(oldChar.x, oldChar.y, newCharacter, oldChar.isPlayer, oldChar.arrowArray);
+					PlayState.instance.luaCharsMap.set(newCharacter, newChar);
+					newChar.x += newChar.positionArray[0];
+					newChar.y += newChar.positionArray[1];
+					newChar.alpha = 0.00001;
+					PlayState.instance.startCharacterLua(newChar.curCharacter);
 				}
+
+				oldChar.alpha = 0.00001;
+				oldChar = PlayState.instance.luaCharsMap.get(newCharacter);
+				PlayState.instance.luaCharsMap.remove(newCharacter);
+				oldChar.alpha = lastAlpha;
+				oldChar.visible = lastVisible;
 			} else {
 				luaTrace("The character " + tag + " doesn't exist!", false, false, FlxColor.RED);	
 			}
+		});
+		Lua_helper.add_callback(lua, "removeLuaCharacter", function(tag:String) {
+			resetLuaChar(tag);
 		});
 
 
@@ -2707,14 +2747,13 @@ class FunkinLua {
 
 		// Lua Emitters
 
-		Lua_helper.add_callback(lua, "makeParticlesEmitter", function(tag:String, x:Float, y:Float, amount:Int, ?type:Bool = false, ?camera:String = 'game') {
+		Lua_helper.add_callback(lua, "makeParticlesEmitter", function(tag:String, x:Float, y:Float, amount:Int, ?type:Bool = false) {
 			resetEmitter(tag);
 			var emitter:FlxEmitter = new FlxEmitter(x, y, amount);
 			emitter.launchMode = getEmitterLaunchMode(type);
-			emitter.cameras = [cameraFromString(camera)];
 			PlayState.instance.modchartEmitters.set(tag, emitter);
 		});
-		Lua_helper.add_callback(lua, "loadEmitterGraphic", function(tag:String, width:Float, height:Float, color:String = 'FFFFFF', quantity:Int = 50) {
+		Lua_helper.add_callback(lua, "loadEmitterGraphic", function(tag:String, width:Float, height:Float, color:String = 'FFFFFF', quantity:Int = 1) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
 				var colorNum:Int = Std.parseInt(color);
@@ -2732,7 +2771,7 @@ class FunkinLua {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "makeEmitterGraphic", function(tag:String, width:Float, height:Float, color:String = 'FFFFFF', quantity:Int = 50) {
+		Lua_helper.add_callback(lua, "makeEmitterGraphic", function(tag:String, width:Float, height:Float, color:String = 'FFFFFF', quantity:Int = 1) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
 				var colorNum:Int = Std.parseInt(color);
@@ -2747,7 +2786,7 @@ class FunkinLua {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "makeEmitterSprite", function(tag:String, image:String, quantity:Int = 50) {
+		Lua_helper.add_callback(lua, "makeEmitterSprite", function(tag:String, image:String, quantity:Int = 1) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
 				if(quantity <= 0) quantity = 1;
@@ -2756,6 +2795,38 @@ class FunkinLua {
 					particle.loadGraphic(Paths.image(image));
 					emitter.add(particle);
 				}
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "makeEmitterAnimatedSprite", function(tag:String, image:String, name:String, prefix:String, framerate:Int = 24, loop:Bool = true, quantity:Int = 1) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				if(quantity <= 0) quantity = 1;
+				for (i in 0...quantity) {
+					var particle = new FlxParticle();
+					particle.loadGraphic(Paths.image(image));
+					particle.animation.addByPrefix(name, prefix, framerate, loop);
+					particle.animation.play(name);
+					emitter.add(particle);
+				}
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "addEmitter", function(tag:String, camera:String) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				emitter.cameras = [cameraFromString(camera)];
+				getInstance().add(emitter);
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "startEmitter", function(tag:String, explode:Bool = false, frequency:Float = 0.1, quantity:Int = 0) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				emitter.start(explode, frequency, quantity);
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
@@ -2776,11 +2847,10 @@ class FunkinLua {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "addEmitter", function(tag:String, explode:Bool = false, frequency:Float = 0.1, quantity:Int = 0) {
+		Lua_helper.add_callback(lua, "stopEmitting", function(tag:String, active:Bool = true) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				getInstance().add(emitter);
-				emitter.start(explode, frequency, quantity);
+				emitter.kill();
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
@@ -2796,72 +2866,188 @@ class FunkinLua {
 
 		// Emitters Assets
 
-		Lua_helper.add_callback(lua, "setEmitterFrequency", function(tag:String, value:Float) {
+		Lua_helper.add_callback(lua, "setEmitterLaunchMode", function(tag:String, type:Bool = false) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.frequency = value;
+				emitter.launchMode = getEmitterLaunchMode(type);
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setEmitterPosition", function(tag:String, x:Float, y:Float) {
+		Lua_helper.add_callback(lua, "setEmitterFrequency", function(tag:String, value:Float, time:Float = 0) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.setPosition(x, y);
+				if(time <= 0) {
+					emitter.frequency = value;
+				} else {
+					FlxTween.tween(emitter, {frequency: value}, time, {ease: FlxEase.linear});
+				}
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setEmitterSize", function(tag:String, width:Float, height:Float) {
+		Lua_helper.add_callback(lua, "setEmitterPosition", function(tag:String, posX:Float, posY:Float, time:Float = 0) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.setSize(width, height);
+				if(time <= 0) {
+					emitter.setPosition(posX, posY);
+				} else {
+					FlxTween.tween(emitter, {x: posX, y: posY}, time, {ease: FlxEase.linear});
+				}
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setEmitterSpeed", function(tag:String, minX:Float, maxX:Float, minY:Float, maxY:Float) {
+		Lua_helper.add_callback(lua, "setEmitterSize", function(tag:String, sizeX:Float, sizeY:Float, time:Float = 0) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				if(emitter.launchMode == SQUARE)
+				if(time <= 0) {
+					emitter.setSize(sizeX, sizeY);
+				} else {
+					FlxTween.tween(emitter, {width: sizeX, height: sizeY}, time, {ease: FlxEase.linear});
+				}
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+		});
+		Lua_helper.add_callback(lua, "setEmitterVelocity", function(tag:String, startMinXY:Array<Float>, ?startMaxXY:Array<Float>, ?endMinXY:Array<Float>, ?endMaxXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				if(emitter.launchMode == SQUARE) {
 					// Only square emitter mode
-					emitter.velocity.set(minX, minY, maxX, maxY);
-				else
+					var startMinX:Float = startMinXY[0];
+					var startMinY:Float = startMinXY[1];
+					if(startMaxXY != null){
+						var startMaxX:Float = startMaxXY[0];
+						var startMaxY:Float = startMaxXY[1];
+						if(endMinXY != null) {
+							var endMinX:Float = endMinXY[0];
+							var endMinY:Float = endMinXY[1];
+							if(endMaxXY != null){
+								var endMaxX:Float = endMaxXY[0];
+								var endMaxY:Float = endMaxXY[1];	
+								emitter.velocity.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
+								return true;
+							}
+							emitter.velocity.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY);
+							return true;
+						}
+						emitter.velocity.set(startMinX, startMinY, startMaxX, startMaxY);
+						return true;
+					}
+					emitter.velocity.set(startMinX, startMinY);
+					return true;
+				}
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setEmitterSpeed", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				if(emitter.launchMode == CIRCLE) {
+					var startMin:Float = startXY[0];
+					var startMax:Float = startXY[1];
+					if(endXY != null) {
+						var endMin:Float = endXY[0];
+						var endMax:Float = endXY[1];
+						// Only circle emitter mode
+						emitter.speed.set(startMin, startMax, endMin, endMax);
+						return true;
+					}
 					// Only circle emitter mode
-					emitter.speed.set(minX, minY);
+					emitter.speed.set(startMin, startMax);
+					return true;
+				}
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setEmitterLaunchAngle", function(tag:String, minVal:Float, maxVal:Float) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				// Only circle emitter mode
+				emitter.launchAngle.set(minVal, maxVal);
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		// Only circle emitter mode
-		Lua_helper.add_callback(lua, "setEmitterLaunchAngle", function(tag:String, min:Float, max:Float) {
+		Lua_helper.add_callback(lua, "setEmitterAngularAcceleration", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.launchAngle.set(min, max);
+				var startMin:Float = startXY[0];
+				var startMax:Float = startXY[1];
+				if(endXY != null) {
+					var endMin:Float = endXY[0];
+					var endMax:Float = endXY[1];
+					emitter.angularAcceleration.set(startMin, startMax, endMin, endMax);
+					return true;
+				}
+				emitter.angularAcceleration.set(startMin, startMax);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setEmitterAngularDrag", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var startMin:Float = startXY[0];
+				var startMax:Float = startXY[1];
+				if(endXY != null) {
+					var endMin:Float = endXY[0];
+					var endMax:Float = endXY[1];
+					emitter.angularDrag.set(startMin, startMax, endMin, endMax);
+					return true;
+				}
+				emitter.angularDrag.set(startMin, startMax);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setEmitterAngularVelocity", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var startMin:Float = startXY[0];
+				var startMax:Float = startXY[1];
+				if(endXY != null) {
+					var endMin:Float = endXY[0];
+					var endMax:Float = endXY[1];
+					emitter.angularVelocity.set(startMin, startMax, endMin, endMax);
+					return true;
+				}
+				emitter.angularVelocity.set(startMin, startMax);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "emitterKeepScaleRatio", function(tag:String, value:Bool = false) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				emitter.keepScaleRatio = value;
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setEmitterAcceleration", function(tag:String, min:Float, max:Float) {
+		Lua_helper.add_callback(lua, "emitterIgnoreAngularVelocity", function(tag:String, value:Bool = false) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.angularAcceleration.set(min, max);
+				emitter.ignoreAngularVelocity = value;
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setEmitterDrag", function(tag:String, min:Float, max:Float) {
+		Lua_helper.add_callback(lua, "setEmitterVisible", function(tag:String, visibility:Bool = true) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.angularDrag.set(min, max);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
-		Lua_helper.add_callback(lua, "setEmitterVelocity", function(tag:String, min:Float, max:Float) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.angularVelocity.set(min, max);
+				emitter.visible = visibility;
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
@@ -2870,50 +3056,6 @@ class FunkinLua {
 
 		// Particles Assets
 
-		Lua_helper.add_callback(lua, "setParticleLife", function(tag:String, lifeTime:Float) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.lifespan.set(lifeTime);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
-		Lua_helper.add_callback(lua, "setParticleAngle", function(tag:String, value:Float) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.angle.set(value);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
-		Lua_helper.add_callback(lua, "setParticleScale", function(tag:String, width:Float, height:Float) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.scale.set(width, height);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
-		Lua_helper.add_callback(lua, "setParticleAlpha", function(tag:String, value:Float) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.alpha.set(value);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
-		Lua_helper.add_callback(lua, "setParticleColor", function(tag:String, color1:String = 'FFFFFF', color2:String = 'FFFFFF') {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				var colorNum1:Int = Std.parseInt(color1);
-				var colorNum2:Int = Std.parseInt(color2);
-				if(!color1.startsWith('0x')) colorNum1 = Std.parseInt('0xff' + color1);
-				if(!color2.startsWith('0x')) colorNum2 = Std.parseInt('0xff' + color2);
-				emitter.color.set(colorNum1, colorNum2);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
 		Lua_helper.add_callback(lua, "setParticleBlend", function(tag:String, blend:String) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
@@ -2922,38 +3064,213 @@ class FunkinLua {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setParticleDrag", function(tag:String, x:Float, y:Float) {
+		Lua_helper.add_callback(lua, "setParticleLife", function(tag:String, min:Float, ?max:Float = null) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.drag.set(x, y);
+				emitter.lifespan.set(min, max);
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setParticleAcceleration", function(tag:String, x:Float, y:Float) {
+		Lua_helper.add_callback(lua, "setParticleAngle", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
 			if(PlayState.instance.modchartEmitters.exists(tag)) {
 				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.acceleration.set(x, y);
+				var startMin:Float = startXY[0];
+				var startMax:Float = startXY[1];
+				if(endXY != null) {
+					var endMin:Float = endXY[0];
+					var endMax:Float = endXY[1];
+					emitter.angle.set(startMin, startMax, endMin, endMax);
+					return true;
+				}
+				emitter.angle.set(startMin, startMax);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setParticleScale", function(tag:String, startMinXY:Array<Float>, ?startMaxXY:Array<Float>, ?endMinXY:Array<Float>, ?endMaxXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var startMinX:Float = startMinXY[0];
+				var startMinY:Float = startMinXY[1];
+				if(startMaxXY != null){
+					var startMaxX:Float = startMaxXY[0];
+					var startMaxY:Float = startMaxXY[1];
+					if(endMinXY != null) {
+						var endMinX:Float = endMinXY[0];
+						var endMinY:Float = endMinXY[1];
+						if(endMaxXY != null){
+							var endMaxX:Float = endMaxXY[0];
+							var endMaxY:Float = endMaxXY[1];	
+							emitter.scale.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
+							return true;
+						}
+						emitter.scale.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY);
+						return true;
+					}
+					emitter.scale.set(startMinX, startMinY, startMaxX, startMaxY);
+					return true;
+				}
+				emitter.scale.set(startMinX, startMinY);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setParticleAlpha", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var startMin:Float = startXY[0];
+				var startMax:Float = startXY[1];
+				if(endXY != null) {
+					var endMin:Float = endXY[0];
+					var endMax:Float = endXY[1];
+					emitter.alpha.set(startMin, startMax, endMin, endMax);
+					return true;
+				}
+				emitter.alpha.set(startMin, startMax);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setParticleColor", function(tag:String, color1:String = 'FFFFFF', ?color2:String = null, ?color3:String = null, ?color4:String = null) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var colorNum1:Int = Std.parseInt(color1);
+				if(!color1.startsWith('0x')) colorNum1 = Std.parseInt('0xff' + color1);
+				if(color2 != null) {
+					var colorNum2 = Std.parseInt(color2);
+					if(!color2.startsWith('0x')) colorNum2 = Std.parseInt('0xff' + color2);
+					if(color3 != null) {
+						var colorNum3 = Std.parseInt(color3);
+						if(!color3.startsWith('0x')) colorNum3 = Std.parseInt('0xff' + color3);
+						if(color4 != null) {
+							var colorNum4 = Std.parseInt(color4);
+							if(!color4.startsWith('0x')) colorNum4 = Std.parseInt('0xff' + color4);
+							emitter.color.set(colorNum1, colorNum2, colorNum3, colorNum4);
+							return true;
+						}
+						emitter.color.set(colorNum1, colorNum2, colorNum3);
+						return true;
+					}
+					emitter.color.set(colorNum1, colorNum2);
+					return true;
+				}
+				emitter.color.set(colorNum1);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setParticleDrag", function(tag:String, startMinXY:Array<Float>, ?startMaxXY:Array<Float>, ?endMinXY:Array<Float>, ?endMaxXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var startMinX:Float = startMinXY[0];
+				var startMinY:Float = startMinXY[1];
+				if(startMaxXY != null){
+					var startMaxX:Float = startMaxXY[0];
+					var startMaxY:Float = startMaxXY[1];
+					if(endMinXY != null) {
+						var endMinX:Float = endMinXY[0];
+						var endMinY:Float = endMinXY[1];
+						if(endMaxXY != null){
+							var endMaxX:Float = endMaxXY[0];
+							var endMaxY:Float = endMaxXY[1];	
+							emitter.drag.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
+							return true;
+						}
+						emitter.drag.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY);
+						return true;
+					}
+					emitter.drag.set(startMinX, startMinY, startMaxX, startMaxY);
+					return true;
+				}
+				emitter.drag.set(startMinX, startMinY);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setParticleAcceleration", function(tag:String, startMinXY:Array<Float>, ?startMaxXY:Array<Float>, ?endMinXY:Array<Float>, ?endMaxXY:Array<Float>) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				var startMinX:Float = startMinXY[0];
+				var startMinY:Float = startMinXY[1];
+				if(startMaxXY != null){
+					var startMaxX:Float = startMaxXY[0];
+					var startMaxY:Float = startMaxXY[1];
+					if(endMinXY != null) {
+						var endMinX:Float = endMinXY[0];
+						var endMinY:Float = endMinXY[1];
+						if(endMaxXY != null){
+							var endMaxX:Float = endMaxXY[0];
+							var endMaxY:Float = endMaxXY[1];	
+							emitter.acceleration.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY, endMaxX, endMaxY);
+							return true;
+						}
+						emitter.acceleration.set(startMinX, startMinY, startMaxX, startMaxY, endMinX, endMinY);
+						return true;
+					}
+					emitter.acceleration.set(startMinX, startMinY, startMaxX, startMaxY);
+					return true;
+				}
+				emitter.acceleration.set(startMinX, startMinY);
+				return true;
+			} else {
+				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+			}
+			return false;
+		});
+		Lua_helper.add_callback(lua, "setParticleAutoUpdateHitbox", function(tag:String, value:Bool = false) {
+			if(PlayState.instance.modchartEmitters.exists(tag)) {
+				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+				emitter.autoUpdateHitbox = value;
 			} else {
 				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
 			}
 		});
-		Lua_helper.add_callback(lua, "setParticleElasticity", function(tag:String, value:Float) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.elasticity.set(value);
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
-		Lua_helper.add_callback(lua, "setParticleImmovable", function(tag:String, value:Bool = false) {
-			if(PlayState.instance.modchartEmitters.exists(tag)) {
-				var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
-				emitter.immovable = value;
-			} else {
-				luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
-			}
-		});
+		// Futuramente farei colisões.. de alguma forma
+		// 
+		// Lua_helper.add_callback(lua, "setParticleElasticity", function(tag:String, startXY:Array<Float>, ?endXY:Array<Float>) {
+		// 	if(PlayState.instance.modchartEmitters.exists(tag)) {
+		// 		var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+		// 		var startMin:Float = startXY[0];
+		// 		var startMax:Float = startXY[1];
+		// 		if(endXY != null) {
+		// 			var endMin:Float = endXY[0];
+		// 			var endMax:Float = endXY[1];
+		// 			emitter.elasticity.set(startMin, startMax, endMin, endMax);
+		// 			return true;
+		// 		}
+		// 		emitter.elasticity.set(startMin, startMax);
+		// 		return true;
+		// 	} else {
+		// 		luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+		// 	}
+		// });
+		// Lua_helper.add_callback(lua, "setParticleImmovable", function(tag:String, value:Bool = false) {
+		// 	if(PlayState.instance.modchartEmitters.exists(tag)) {
+		// 		var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+		// 		emitter.immovable = value;
+		// 	} else {
+		// 		luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+		// 	}
+		// });
+		// Lua_helper.add_callback(lua, "setParticleSolid", function(tag:String, value:Bool = false) {
+		// 	if(PlayState.instance.modchartEmitters.exists(tag)) {
+		// 		var emitter:FlxEmitter = PlayState.instance.modchartEmitters.get(tag);
+		// 		emitter.solid = value;
+		// 	} else {
+		// 		luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+		// 	}
+		// });
 
 
 		// Start Special Objects
@@ -3402,6 +3719,27 @@ class FunkinLua {
 
 		// Lua Extra Functions
 
+		// Lua_helper.add_callback(lua, "luaAchievement", function(name:String, description:String, achievTag:String) {
+		// 	if(name != null) {
+		// 		var achieve:Array<String> = [name, description, achievTag];
+		// 		Achievements.achievementsStuff.push(achieve);
+		// 		var achievementObj = new AchievementObject(achieve, PlayState.instance.camOther);
+		// 		achievementObj.onFinish = achievementEnd;
+		// 		add(achievementObj);
+		// 		return;
+		// 	}
+		// });
+		Lua_helper.add_callback(lua, "luaAchievement", function(achievement:String, id:Int = 0) {
+			#if ACHIEVEMENTS_ALLOWED
+			var achieve:String = confirmAchievement(achievement, id);
+			if (achieve != null) {
+				var achievementObj = new AchievementObject(achieve, PlayState.instance.camOther);
+				PlayState.instance.add(achievementObj);
+				return true;
+			}
+			return false;
+			#end
+		});
 		Lua_helper.add_callback(lua, "setWatermarkText", function(value:String) {
 			PlayState.instance.songTxt.text = value;
 		});
@@ -3457,7 +3795,14 @@ class FunkinLua {
 		Lua_helper.add_callback(lua, "getRandomBool", function(chance:Float = 50) {
 			return FlxG.random.bool(chance);
 		});
-		Lua_helper.add_callback(lua, "getHexColor", function(color:String) {
+		Lua_helper.add_callback(lua, "getColorFromRGB", function(value1:Int, value2:Int, value3:Int) {
+			if(value1 < 0 || value1 > 255) value1 = 0;
+			if(value2 < 0 || value2 > 255) value2 = 0;
+			if(value3 < 0 || value3 > 255) value3 = 0;
+			var color:FlxColor = FlxColor.fromRGB(value1, value2, value3);
+			return color;
+		});
+		Lua_helper.add_callback(lua, "getColorFromHex", function(color:String) {
 			if(!color.startsWith('0x')) color = '0xff' + color;
 			return Std.parseInt(color);
 		});
@@ -3913,6 +4258,25 @@ class FunkinLua {
 		#end
 	}
 
+	// function resetTextAndGradientTag(tag:String) {
+	// 	#if LUA_ALLOWED
+	// 	if(!PlayState.instance.modchartTexts.exists(tag) && (!PlayState.instance.modchartGradients.exists(tag))) {
+	// 		return;
+	// 	}
+	// 	var theText:FlxText = PlayState.instance.modchartTexts.get(tag);
+	// 	theText.kill();
+	// 	PlayState.instance.remove(theText, true);
+	// 	theText.destroy();
+	// 	PlayState.instance.modchartTexts.remove(tag);
+
+	// 	var theSprite:FlxSprite = PlayState.instance.modchartGradients.get(tag);
+	// 	theSprite.kill();
+	// 	PlayState.instance.remove(theSprite, true);
+	// 	theSprite.destroy();
+	// 	PlayState.instance.modchartGradients.remove(tag);
+	// 	#end
+	// }
+
 	function resetSpriteTag(tag:String) {
 		if(!PlayState.instance.modchartSprites.exists(tag)) {
 			return;
@@ -4003,6 +4367,50 @@ class FunkinLua {
 			ease: getFlxEaseByString(options.ease)
 		};
 	}
+
+	#if ACHIEVEMENTS_ALLOWED
+	function confirmAchievement(achievementName:String, id:Int):String
+	{
+		var usedPractice:Bool = (ClientPrefs.getGameplaySetting('practice', false) || ClientPrefs.getGameplaySetting('botplay', false));
+		if(!Achievements.isAchievementUnlocked(achievementName) && !PlayState.instance.cpuControlled) {
+			var unlock:Bool = false;
+			switch(achievementName) {
+				// Para todo Cristal Ganho em:
+				// Bosque
+				case 'flora':
+					if(Paths.formatToSongPath(PlayState.SONG.song) == 'bosques-de-wumpa' && !usedPractice && id == 13) {
+						unlock = true;
+					}
+				// Bonus
+				case 'bonus':
+					if(Paths.formatToSongPath(PlayState.SONG.song) == 'bonus' && !usedPractice && id == 21) {
+						unlock = true;
+					}
+				// Templo
+				case 'templo':
+					if(Paths.formatToSongPath(PlayState.SONG.song) == 'templo-obscuro' && !usedPractice && id == 38) {
+						unlock = true;
+					}
+				// Esgoto
+				case 'toxico':
+					if(Paths.formatToSongPath(PlayState.SONG.song) == 'canal-toxico' && !usedPractice && id == 45) {
+						unlock = true;
+					}
+				// Secreto
+				case 'precioso':
+					if(Paths.formatToSongPath(PlayState.SONG.song) == 'bosques-de-wumpa' && !usedPractice && id == 69) {
+						unlock = true;
+					}
+			}
+
+			if(unlock) {
+				Achievements.unlockAchievement(achievementName);
+				return achievementName;
+			}
+		}
+		return null;
+	}
+	#end
 
 	public static function getTweenTypeByString(?type:String = '') {
 		switch(type.toLowerCase().trim())
@@ -4114,8 +4522,8 @@ class FunkinLua {
 		if(objectName != null) {
 			PlayState.instance.modchartTweens.set(tag, FlxTween.tween(objectName, tweenValue, duration, {startDelay: delay, ease: getFlxEaseByString(ease),
 				onComplete: function(twn:FlxTween) {
-					PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 					PlayState.instance.modchartTweens.remove(tag);
+					PlayState.instance.callOnLuas('onTweenCompleted', [tag]);
 				}
 			}));
 		} else {
