@@ -24,11 +24,11 @@ class Achievements {
 		["Duplex Crash",     				"Termine uma musica apenas com 2 notas!",				'two_keys',				false],
 		["Um Gamer em uma Torradeira",		"Porque não pede o Notebook da Coco emprestado?",		'toastie',				false],
 		["Crunched",						"Termine o Estagio \"Test\" do Editor de Notas.",		'debugger',				false],
-/***/	["Musica nos Bosques", 	   			"Consiga um Cristal nos Bosques da Ilha Wumpa",			'flora',				false],
-		["Um Bonus Descontraido",			"Consiga um Cristal na rodada Bonus",					'bonus',				false],
-		["Trapalhadas no Escuro",			"Consiga um Cristal nos Templos Subterraneos",			'templo',				false],
-		["Triunfo Tóxico",					"Consiga um Cristal nos Esgotos da Ilha Industrial",	'toxico',				false],
-		["Um Brilho Azul",					"Você achou a Gema Azul do Crash 2!!!",					'precioso',				false],
+/***/	["Musica nos Bosques", 	   			"Consiga o Cristal dos Bosques da Ilha Wumpa",			'flora',				false],
+		["Um Bonus Descontraido",			"Consiga o Cristal da rodada Bonus",					'bonus',				false],
+		["Trapalhadas no Escuro",			"Consiga o Cristal dos Templos Subterraneos",			'templo',				false],
+		["Triunfo Tóxico",					"Consiga o Cristal dos Esgotos da Fabrica Abandonada",	'toxico',				false],
+		["Um Brilho Azul",					"Você achou a Gema Azul Brilhante!!!",					'precioso',				false],
 		["Perfectus Flora",					"Um desempenho insanamente perfeito!",					'music1',				false],
 		["Perfectus Bonus",					"Um desempenho insanamente perfeito!",					'music2',				false],
 		["Perfectus Tenebris",				"Um desempenho insanamente perfeito!",					'music3',				false],
@@ -45,7 +45,7 @@ class Achievements {
 	public static function unlockAchievement(name:String):Void {
 		FlxG.log.add('Conquista completa "' + name +'"');
 		achievementsMap.set(name, true);
-		FlxG.sound.play(Paths.sound('crash/cristal'), 0.7);
+		FlxG.sound.play(Paths.sound('achiev'), 0.7);
 	}
 
 	public static function isAchievementUnlocked(name:String) {
