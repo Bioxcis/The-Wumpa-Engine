@@ -9,18 +9,18 @@ using StringTools;
 
 class LuaChar extends Character
 {
-	private var defaultArrows:Array<String> = ["", "Alt Animation", "Hey!", "GF Sing", "No Animation"];
+	final defaultArrows:Array<String> = ["", "Alt Animation", "Hey!", "GF Sing", "No Animation"];
 	public var arrowArray:Array<String> = [];
 
-	public function new(x:Float, y:Float, ?char:String = 'bf', ?isPlayer:Bool = false, ?arrows:Array<String> = null) {
+	public function new(x:Float, y:Float, ?char:String = 'bf', ?isPlayer:Bool = false, arrows:Array<String>) {
 		super(x, y, char, isPlayer);
-		if(arrows == null) {
-			for (ar in defaultArrows) {
+		if(arrows != null) {
+			for (ar in arrows) {
 				arrowArray.push(ar);
 			}
 		} else {
-			for (ar in arrows) {
-				arrowArray.push(ar);
+			for (er in defaultArrows) {
+				arrowArray.push(er);
 			}
 		}
 	}
@@ -63,7 +63,7 @@ class LuaChar extends Character
 		}
 	}
 /*
-	// Ideia aparentemente descartada... ainda...
+	// Ideia aparentemente descartada... por enquanto...
 
 	public function charNoteHit(noteType:String, hitByOpponent:Bool, animToPlay:String) {
 		if(!hitByOpponent && isPlayer) {
