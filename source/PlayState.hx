@@ -83,14 +83,6 @@ using flixel.util.FlxSpriteUtil;
 
 class PlayState extends MusicBeatState
 {
-	//Lua achieve shit
-	public static var forst:Bool = false;
-	public static var bons:Bool = false;
-	public static var templ:Bool = false;
-	public static var sewr:Bool = false;
-	public static var forstSecret:Bool = false;
-	//End Lua Achieve shit
-
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 	public static var cameramovingoffset = 20;
@@ -5895,32 +5887,6 @@ class PlayState extends MusicBeatState
 					// Zona de Testes
 					case 'debugger':
 						if(Paths.formatToSongPath(SONG.song) == 'teste-zone' && !usedPractice) {
-							unlock = true;
-						}
-					// Para todo Cristal Ganho em:
-					// Bosque
-					case 'flora':
-						if(Paths.formatToSongPath(SONG.song) == 'bosques-de-wumpa' && !usedPractice && forst) {
-							unlock = true;
-						}
-					// Secreto
-					case 'precioso':
-						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && !usedPractice && forstSecret) {
-							unlock = true;
-						}
-					// Bonus
-					case 'bonus':
-						if(Paths.formatToSongPath(SONG.song) == 'bonus' && !usedPractice && bons) {
-							unlock = true;
-						}
-					// Templo
-					case 'templo':
-						if(Paths.formatToSongPath(SONG.song) == 'templo-obscuro' && !usedPractice && templ) {
-							unlock = true;
-						}
-					// Esgoto
-					case 'toxico':
-						if(Paths.formatToSongPath(SONG.song) == 'canal-toxico' && !usedPractice && sewr) {
 							unlock = true;
 						}
 					//Para Musicas Insanamente Perfeitas!
