@@ -202,7 +202,7 @@ class NoteOffsetState extends MusicBeatState
 		textBG.cameras = [camHUD];
 		add(textBG);
 
-		exitText = new FlxText(0, textBG.y - 2, FlxG.width, "", 32);//não tinha nenhum aviso aqui antes, agora tem :D
+		exitText = new FlxText(0, textBG.y - 2, FlxG.width, "", 32); //não tinha nenhum aviso aqui antes, agora tem :D
 		exitText.setFormat(Paths.font("nsane.ttf"), 28, FlxColor.WHITE, CENTER);
 		exitText.scrollFactor.set();
 		exitText.cameras = [camHUD];
