@@ -100,8 +100,6 @@ class AchievementsMenuState extends MusicBeatState
 	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		var accepted = controls.ACCEPT;
-
 		if (controls.UI_UP_P) {
 			frontEngine.animation.play('engineSpin', true, false);
 			changeSelection(-1);
@@ -147,3 +145,13 @@ class AchievementsMenuState extends MusicBeatState
 	}
 	#end
 }
+
+/*
+	Plano para 'Custom Achievements':
+	- Adicionar Conquistas via Lua
+	- Adicionar Conquista e salvar para o 'achievementsMap'
+	- Ao carregar no menu, deve-se carregar pelo mapa:
+		- conquista
+		- icone
+		- texto
+*/
