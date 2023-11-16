@@ -1840,12 +1840,12 @@ class ChartingState extends MusicBeatState
 				//return;
 			}
 
-			if(FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
-				undo();
-			}
-			if(FlxG.keys.justPressed.Y && FlxG.keys.pressed.CONTROL) {
-				redo();
-			}
+			// if(FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL) {
+			// 	undo();
+			// }
+			// if(FlxG.keys.justPressed.Y && FlxG.keys.pressed.CONTROL) {
+			// 	redo();
+			// }
 
 			if(FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL) {
 				--curZoom;
@@ -3019,19 +3019,19 @@ class ChartingState extends MusicBeatState
 		updateNoteUI();
 	}
 
-	function redo()
-	{
-		_song = redos[curRedoIndex];
-	}
+	// function redo()
+	// {
+	// 	_song = redos[curRedoIndex];
+	// }
 
-	function undo()
-	{
-		redos.push(_song);
-		undos.pop();
-		_song.notes = undos[undos.length - 1];
-		//trace(_song.notes);
-		updateGrid();
-	}
+	// function undo()
+	// {
+	// 	redos.push(_song);
+	// 	undos.pop();
+	// 	_song.notes = undos[undos.length - 1];
+	// 	//trace(_song.notes);
+	// 	updateGrid();
+	// }
 
 	function getStrumTime(yPos:Float, doZoomCalc:Bool = true):Float
 	{
