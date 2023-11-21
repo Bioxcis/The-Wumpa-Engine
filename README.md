@@ -3,11 +3,31 @@
 ![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/d07d8cc8de600a080965a575f149261c5285a272/art/CBNF_Logo.png)
 
 ## Compilação:
-You must have [the most up-to-date version of Haxe](https://haxe.org/download/), seriously, stop using 4.1.5, it misses some stuff.
-Necessário ter [a versão mais atualizada do Haxe](https://haxe.org/download/), não use versões anteriores.
+Necessário ter [a versão mais atualizada do Haxe](https://haxe.org/download/), não use outras versões.
 
 Follow a Friday Night Funkin' source code compilation tutorial, after this you will need to install LuaJIT.
 Siga um tutorial de compilação do código-fonte do Friday Night Funkin', de preferencia o descrito [aqui](https://github.com/notweuz/FNF-OSEngine).
+
+To Compile, use this on a Command prompt/PowerShell:
+
+Install actuate: `haxelib install actuate 1.9.0`
+Install discord_rpc: `haxelib install https://github.com/discord/discord-rpc.git`
+Install flixel: `haxelib install flixel 4.11.0`
+Install flixel-addons: `haxelib install flixel-addons 2.12.0`
+Install flixel-demos: `haxelib install flixel-demos 2.9.0`
+Install flixel-templates: `haxelib install flixel-templates 2.6.6`
+Install flixel-tools: `haxelib install flixel-tools 1.5.1`
+Install flixel-ui: `haxelib install flixel-ui 2.5.0`
+Install hscript: `haxelib install hscript 2.5.0`
+Install hxCodec/Video support: `haxelib install hxCodec 2.5.1`
+Install hxcpp: `haxelib install hxcpp 4.2.1`
+Install lime-samples: `haxelib install lime-samples 7.0.0`
+Install lime: `haxelib install lime 8.0.0`
+Install LuaJIT: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit`
+Install newgrounds: `haxelib install newgrounds 2.0.1`
+Install openfl-webm: `haxelib install openfl-webm 0.0.4`
+Install openfl: `haxelib install openfl 9.2.0`
+Install polymod: `haxelib install polymod`
 
 ## Creditos Wumpa Engine:
 * [Bioxcis](https://github.com/Bioxcis) - Codificação, Tradução, Artes e design
