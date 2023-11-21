@@ -1,3 +1,4 @@
+![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/d07d8cc8de600a080965a575f149261c5285a272/art/CBNF_Logo.png)
 
 # Crash Bandicoot Night Funkin' - Wumpa Engine - Modded OS Engine 
 
