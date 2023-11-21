@@ -10,24 +10,24 @@ Siga um tutorial de compilação do código-fonte do Friday Night Funkin', de pr
 
 To Compile, use this on a Command prompt/PowerShell:
 
-Install actuate: `haxelib install actuate 1.9.0`
-Install discord_rpc: `haxelib install https://github.com/discord/discord-rpc.git`
-Install flixel: `haxelib install flixel 4.11.0`
-Install flixel-addons: `haxelib install flixel-addons 2.12.0`
-Install flixel-demos: `haxelib install flixel-demos 2.9.0`
-Install flixel-templates: `haxelib install flixel-templates 2.6.6`
-Install flixel-tools: `haxelib install flixel-tools 1.5.1`
-Install flixel-ui: `haxelib install flixel-ui 2.5.0`
-Install hscript: `haxelib install hscript 2.5.0`
-Install hxCodec/Video support: `haxelib install hxCodec 2.5.1`
-Install hxcpp: `haxelib install hxcpp 4.2.1`
-Install lime-samples: `haxelib install lime-samples 7.0.0`
-Install lime: `haxelib install lime 8.0.0`
-Install LuaJIT: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit`
-Install newgrounds: `haxelib install newgrounds 2.0.1`
-Install openfl-webm: `haxelib install openfl-webm 0.0.4`
-Install openfl: `haxelib install openfl 9.2.0`
-Install polymod: `haxelib install polymod`
+1. Install actuate: `haxelib install actuate 1.9.0`
+2. Install discord_rpc: `haxelib install https://github.com/discord/discord-rpc.git`
+3. Install flixel: `haxelib install flixel 4.11.0`
+4. Install flixel-addons: `haxelib install flixel-addons 2.12.0`
+5. Install flixel-demos: `haxelib install flixel-demos 2.9.0`
+6. Install flixel-templates: `haxelib install flixel-templates 2.6.6`
+7. Install flixel-tools: `haxelib install flixel-tools 1.5.1`
+8. Install flixel-ui: `haxelib install flixel-ui 2.5.0`
+9. Install hscript: `haxelib install hscript 2.5.0`
+0. Install hxCodec/Video support: `haxelib install hxCodec 2.5.1`
+1. Install hxcpp: `haxelib install hxcpp 4.2.1`
+2. Install lime-samples: `haxelib install lime-samples 7.0.0`
+3. Install lime: `haxelib install lime 8.0.0`
+4. Install LuaJIT: `haxelib git linc_luajit https://github.com/nebulazorua/linc_luajit`
+5. Install newgrounds: `haxelib install newgrounds 2.0.1`
+6. Install openfl-webm: `haxelib install openfl-webm 0.0.4`
+7. Install openfl: `haxelib install openfl 9.2.0`
+8. Install polymod: `haxelib install polymod`
 
 ## Creditos Wumpa Engine:
 * [Bioxcis](https://github.com/Bioxcis) - Codificação, Tradução, Artes e design
