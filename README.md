@@ -13,7 +13,7 @@ Siga um tutorial de compilação do código-fonte do Friday Night Funkin', de pr
 * [Bioxcis](https://github.com/Bioxcis) - Codificação, Tradução, Artes e design
 
 ### Agradecimentos Especiais Wumpa Engine
-* [Airumu](https://x.com/airumuu?s=20) - Crash Bandicoot modder, instrumentos originais de Crash Bandicoot PlayStation One
+* [Airumu](https://x.com/airumuu?s=20) - Crash Bandicoot modder, instrumentos originais (musicas) de Crash Bandicoot - PlayStation One Series
 
 ## Creditos OS Engine:
 * [weuz_](https://github.com/notweuz) - Codificação
@@ -21,7 +21,7 @@ Siga um tutorial de compilação do código-fonte do Friday Night Funkin', de pr
 * [Cooljer](https://github.com/cooljer) - Artes
 
 ### Agradecimentos Especiais OS Engine
-* [jonnycat](https://github.com/McJonnycat) - Correção de bugs na Engine <3.
+* [jonnycat](https://github.com/McJonnycat) - Correção de bugs na Engine <3
 * [Kade Engine](https://gamebanana.com/mods/44291) - Skin das Notas Circulares
 
 ## Creditos Psych Engine:
