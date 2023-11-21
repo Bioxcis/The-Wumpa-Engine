@@ -30,7 +30,7 @@ To Compile, use this on a Command prompt/PowerShell:
 8. Install polymod: `haxelib install polymod`
 
 ## Creditos Wumpa Engine:
-* [Bioxcis](https://github.com/Bioxcis) - Codificação, Tradução, Artes e design
+* [Bioxcis](https://github.com/Bioxcis) - Codificação, Composição, Artes, Design e Efeitos Especiais
 
 ### Agradecimentos Especiais Wumpa Engine
 * [Airumu](https://x.com/airumuu?s=20) - Crash Bandicoot modder, instrumentos originais (musicas) de Crash Bandicoot - PlayStation One Series
