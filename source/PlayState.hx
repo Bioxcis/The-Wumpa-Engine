@@ -1752,6 +1752,11 @@ class PlayState extends MusicBeatState
 		return null;
 	}
 
+	public function getEmissor(tag:String):FlxEmitter {
+		if(modchartEmitters.exists(tag)) return modchartEmitters.get(tag);
+		return null;
+	}
+
 	function startCharacterPos(char:Character, ?gfCheck:Bool = false) {
 		if(gfCheck && char.curCharacter.startsWith('gf')) { //IF DAD IS GIRLFRIEND, HE GOES TO HER POSITION
 			char.setPosition(GF_X, GF_Y);
@@ -5696,32 +5701,99 @@ class PlayState extends MusicBeatState
 		callOnHScripts('sectionHit', [curSection]);
 	}
 
-	public function callOnLuas(event:String, args:Array<Dynamic>, ignoreStops = true, exclusions:Array<String> = null):Dynamic {
+	// Old
+	// public function callOnLuas(event:String, args:Array<Dynamic>, ignoreStops = true, exclusions:Array<String> = null):Dynamic {
+	// 	var returnVal:Dynamic = FunkinLua.Function_Continue;
+	// 	#if LUA_ALLOWED
+	// 	if(exclusions == null) exclusions = [];
+	// 	for (script in luaArray) {
+	// 		if(exclusions.contains(script.scriptName))
+	// 			continue;
+
+	// 		var ret:Dynamic = script.call(event, args);
+	// 		if(ret == FunkinLua.Function_StopLua && !ignoreStops)
+	// 			break;
+			
+	// 		if(ret != FunkinLua.Function_Continue)
+	// 			returnVal = ret;
+	// 	}
+	// 	#end
+	// 	//trace(event, returnVal);
+	// 	return returnVal;
+	// }
+
+	public function callOnLuas(funcToCall:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
 		var returnVal:Dynamic = FunkinLua.Function_Continue;
+		#if LUA_ALLOWED
+		if(args == null) args = [];
+		if(exclusions == null) exclusions = [];
+		if(excludeValues == null) excludeValues = [FunkinLua.Function_Continue];
+
+		var len:Int = luaArray.length;
+		var i:Int = 0;
+		while(i < len)
+		{
+			var script:FunkinLua = luaArray[i];
+			if(exclusions.contains(script.scriptName))
+			{
+				i++;
+				continue;
+			}
+
+			var myValue:Dynamic = script.call(funcToCall, args);
+			if((myValue == FunkinLua.Function_StopLua || myValue == FunkinLua.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops)
+			{
+				returnVal = myValue;
+				break;
+			}
+			
+			if(myValue != null && !excludeValues.contains(myValue))
+				returnVal = myValue;
+
+			if(!script.closed) i++;
+			else len--;
+		}
+		#end
+		return returnVal;
+	}
+
+	// New
+	public function callOnScripts(funcToCall:String, args:Array<Dynamic> = null, ignoreStops = false, exclusions:Array<String> = null, excludeValues:Array<Dynamic> = null):Dynamic {
+		var returnVal:Dynamic = psychlua.FunkinLua.Function_Continue;
+		if(args == null) args = [];
+		if(exclusions == null) exclusions = [];
+		if(excludeValues == null) excludeValues = [psychlua.FunkinLua.Function_Continue];
+
+		var result:Dynamic = callOnLuas(funcToCall, args, ignoreStops, exclusions, excludeValues);
+		if(result == null || excludeValues.contains(result)) result = callOnHScript(funcToCall, args, ignoreStops, exclusions, excludeValues);
+		return result;
+	}
+
+	// Old
+	// public function setOnLuas(variable:String, arg:Dynamic) {
+	// 	#if LUA_ALLOWED
+	// 	for (i in 0...luaArray.length) {
+	// 		luaArray[i].set(variable, arg);
+	// 	}
+	// 	#end
+	// }
+
+	public function setOnLuas(variable:String, arg:Dynamic, exclusions:Array<String> = null) {
 		#if LUA_ALLOWED
 		if(exclusions == null) exclusions = [];
 		for (script in luaArray) {
 			if(exclusions.contains(script.scriptName))
 				continue;
 
-			var ret:Dynamic = script.call(event, args);
-			if(ret == FunkinLua.Function_StopLua && !ignoreStops)
-				break;
-			
-			if(ret != FunkinLua.Function_Continue)
-				returnVal = ret;
+			script.set(variable, arg);
 		}
 		#end
-		//trace(event, returnVal);
-		return returnVal;
 	}
 
-	public function setOnLuas(variable:String, arg:Dynamic) {
-		#if LUA_ALLOWED
-		for (i in 0...luaArray.length) {
-			luaArray[i].set(variable, arg);
-		}
-		#end
+	// New
+	public function setOnScripts(variable:String, arg:Dynamic, exclusions:Array<String> = null) {
+		if(exclusions == null) exclusions = [];
+		setOnLuas(variable, arg, exclusions);
 	}
 
 	function StrumPlayAnim(isDad:Bool, id:Int, time:Float) {
