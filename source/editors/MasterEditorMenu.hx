@@ -26,8 +26,8 @@ class MasterEditorMenu extends MusicBeatState
 		'Editor Dialogo',
 		//'Editor Notas',
 		'Editor Figura Dialogo',
-		'Editor Personagem'
-		//'Editor Estagios (ALPHA)'
+		'Editor Personagem',
+		'Editor Estagio'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 	private var directories:Array<String> = [null];
@@ -151,8 +151,8 @@ class MasterEditorMenu extends MusicBeatState
 					LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
 				//case 'Editor Notas'://felt it would be cool maybe				//isso não é legal se o jogo não salva direito a edição e perde todo o trabalho das notas ao sair, não pretendo arrumar essa engine.
 					//LoadingState.loadAndSwitchState(new ChartingState(), false);
-				//case 'Editor Estagios (ALPHA)': // i'll finish it somedays... maybe....
-					//LoadingState.loadAndSwitchState(new StageEditorState(), false);
+				case 'Editor Estagio':
+					LoadingState.loadAndSwitchState(new StageEditorState(), false);
 			}
 			FlxG.sound.music.volume = 0;
 			frontEngine.animation.play('engineSpin', true, false);

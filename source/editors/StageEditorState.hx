@@ -109,13 +109,13 @@ class StageEditorState extends MusicBeatState
             {name: 'Add/Remove', label: 'Add/Remove'},
         ];
 
-        betaTXT = new FlxText(12, FlxG.height - 24, 0, "ALPHA", 20);
-		betaTXT.setFormat(Paths.font("nsane.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		betaTXT.scrollFactor.set();
-		betaTXT.borderSize = 1;
-		betaTXT.cameras = [camMenu];
-        betaTXT.visible = true;
-		add(betaTXT);
+        // betaTXT = new FlxText(12, FlxG.height - 24, 0, "ALPHA", 20);
+		// betaTXT.setFormat(Paths.font("nsane.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		// betaTXT.scrollFactor.set();
+		// betaTXT.borderSize = 1;
+		// betaTXT.cameras = [camMenu];
+        // betaTXT.visible = true;
+		// add(betaTXT);
 
 		FlxG.cameras.reset(camEditor);
 		FlxG.cameras.add(camHUD);
@@ -130,13 +130,14 @@ class StageEditorState extends MusicBeatState
 		UI_box.y = 25;
 		UI_box.scrollFactor.set();
 
-        var tipTextArray:Array<String> = "E/Q - Camera Zoom In/Out
-        \nO/P - Object Size Increase/Decrease
-		\nR - Reset Camera Zoom
-		\nJKLI - Move Camera
-		\nArrow Keys - Move Object Offset
-		\nHold Shift to Move 10x faster
-        \nHold Ctrl to Move 100x faster\n".split('\n');
+        var tipTextArray:Array<String> = "E/Q - Zoom da Camera
+        \nO/P - Aumentar/Diminuir tamanho do Objeto
+		\nR - Resetar Zoom da Camera
+		\nJKLI - Mover Camera
+		\nArrow Keys - Mover Objeto
+		\nPress Shift para Mover 10x mais Rapido
+        \nPress Ctrl para Mover 100x mais Rapido
+        \n".split('\n');
 
 		for (i in 0...tipTextArray.length-1)
 		{
