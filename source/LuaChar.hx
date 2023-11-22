@@ -57,38 +57,12 @@ class LuaChar extends Character
 			if(resetArrows)
 				arrowArray = [];
 
-			for (newAr in newArrows) {
-				arrowArray.push(newAr);
+			for (news in newArrows) {
+				arrowArray.push(news);
 			}
 		}
 	}
-/*
-	// Ideia aparentemente descartada... por enquanto...
 
-	public function charNoteHit(noteType:String, hitByOpponent:Bool, animToPlay:String) {
-		if(!hitByOpponent && isPlayer) {
-			var charNote:Bool = testNote(noteType);
-			if(charNote) {
-				playAnim(animToPlay, true);
-				holdTimer = 0;
-			}
-		} else if(!isPlayer) {
-			var charNote:Bool = testNote(noteType);
-			if(charNote) {
-				playAnim(animToPlay, true);
-				holdTimer = 0;
-			}
-		}
-	}
-	public function charNoteMiss(noteType:String, noMissAnimation:Bool, animToPlay:String) {
-		if(!noMissAnimation && hasMissAnimations && isPlayer) {
-			var charNote:Bool = testNote(noteType);
-			if(charNote) {
-				playAnim(animToPlay, true);
-			}
-		}
-	}
-*/
 	public function testNote(noteType:String) {
 		for (press in arrowArray) {
 			if(press == noteType) {
