@@ -219,6 +219,7 @@ class ChartingState extends MusicBeatState
 				events: [],
 				characterTrails: false,
 				bfTrails: false,
+				gfTrails: false,
 				bpm: 150.0,
 				songInstVolume: 1.0,
 				needsVoices: true,
@@ -226,7 +227,7 @@ class ChartingState extends MusicBeatState
 				healthdrain: 0,
 				healthdrainKill: false,
 				arrowSkin: '',
-				splashSkin: 'noteSplashes', //idk it would crash if i didn't
+				splashSkin: 'noteSplashes',
 				player1: 'bf',
 				player2: 'dad',
 				gfVersion: 'gf',
@@ -486,7 +487,7 @@ class ChartingState extends MusicBeatState
 		{
 			_song.disableAntiMash = check_antiMash.checked;
 		};
-		var check_disableDebug = new FlxUICheckBox(reloadSongJson.x + 90, reloadSongJson.y, null, null, "Desat Botoes Debugmenu", 100);
+		var check_disableDebug = new FlxUICheckBox(reloadSongJson.x + 90, reloadSongJson.y, null, null, "Desat Botoes DebugMenu", 100);
 		check_disableDebug.checked = _song.disableDebugButtons;
 		check_disableDebug.callback = function()
 		{
@@ -510,7 +511,13 @@ class ChartingState extends MusicBeatState
 		{
 			_song.bfTrails = check_bfTrails.checked;
 		};
-		var check_cameraMove = new FlxUICheckBox(80, 105, null, null, "Mover Camera Batida das Notas", 100);
+		var check_gfTrails = new FlxUICheckBox(check_bfTrails.x, check_bfTrails.y+30, null, null, "Trilha na\nGirlfriend", 100);
+		check_gfTrails.checked = _song.gfTrails;
+		check_gfTrails.callback = function()
+		{
+			_song.gfTrails = check_gfTrails.checked;
+		};
+		var check_cameraMove = new FlxUICheckBox(80, 105, null, null, "Mover Camera Acerto das Notas", 100);
 		check_cameraMove.checked = _song.cameraMoveOnNotes;
 		check_cameraMove.callback = function()
 		{
@@ -689,6 +696,7 @@ class ChartingState extends MusicBeatState
 		tab_group_song.add(loadAutosaveBtn);
 		tab_group_song.add(check_Trails);
 		tab_group_song.add(check_bfTrails);
+		tab_group_song.add(check_gfTrails);
 		tab_group_song.add(check_antiMash);
 		tab_group_song.add(check_swapNote);
 		tab_group_song.add(check_disableDebug);
