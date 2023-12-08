@@ -30,7 +30,7 @@ using StringTools;
 
 class MainMenuState extends MusicBeatState
 {
-	public static var osEngineVersion:String = '1.5.1';
+	public static var wumpaEngineVersion:String = '1.5.1';
 	public static var curSelected:Int = 0;
 	public static var firstStart:Bool = true;
 
@@ -252,7 +252,7 @@ class MainMenuState extends MusicBeatState
 		version2Box.updateHitbox();
 		add(version2Box);
 
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 21, 0, "Wumpa Engine v" + osEngineVersion + " - por Bioxcis-dono", 24);
+		var versionShit:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 21, 0, "Wumpa Engine v" + wumpaEngineVersion + " - por Bioxcis-dono", 24);
 		versionShit.scrollFactor.set();
 		versionShit.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(versionShit);
