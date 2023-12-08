@@ -32,6 +32,7 @@ typedef SwagSong =
 	var validScore:Bool;
 	var characterTrails:Bool;
 	var bfTrails:Bool;
+	var gfTrails:Bool;
 	var cameraMoveOnNotes:Bool;
 	var healthdrain:Float;
 	var songInstVolume:Float;
@@ -56,6 +57,7 @@ class Song
 	public var healthdrainKill:Bool = false;
 	public var characterTrails:Bool = false;
 	public var bfTrails:Bool = false;
+	public var gfTrails:Bool = false;
 	public var disableAntiMash:Bool = false;
 	public var disableDebugButtons:Bool = false;
 	public var swapStrumLines:Bool = false;
