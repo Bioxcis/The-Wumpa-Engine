@@ -1,0 +1,21 @@
+{
+	"songs": [
+		["Smash", "dad", [146, 113, 253]],
+		["Ridge", "mom", [146, 113, 253]]
+	],
+
+	"weekCharacters": [
+		"dad",
+		"bf",
+		"gf"
+	],
+	"weekBackground": "stage",
+
+	"storyName": "Unused Songs",
+	"weekBefore": "tutorial",
+	"weekName": "Extras",
+	"startUnlocked": true,
+
+	"hideStoryMode": true,
+	"hideFreeplay": false
+}
