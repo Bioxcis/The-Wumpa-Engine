@@ -75,3 +75,43 @@ I love Tom Fulp.
                                                                                   
 ##################################################################################
 i stole this from stamper.
+
+||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
+Unused but not entirely discarded code
+
+// Lua Pie Dial
+
+Lua_helper.add_callback(lua, "makePieDial", function(tag:String, xy:Array<Float>, radius:Int, color:String, frames:Int, shape:String, clockwise:Bool = true, innerRadius:Int) {
+    resetPieDial(tag);
+    var x:Float = 0;
+    var y:Float = 0;
+    if(xy != null && xy.length > 1) {
+        x = xy[0];
+        y = xy[1];
+    }
+    var dial:FlxPieDial = new FlxPieDial(x, y, radius, FlxColor.fromString(color), frames, getDialShape(shape), clockwise, innerRadius);
+    PlayState.instance.modchartPies.set(tag, dial);
+});
+Lua_helper.add_callback(lua, "setDialAmount", function(tag:String, ) {
+    var x:Float = 0;
+    var y:Float = 0;
+    if(xy != null && xy.length > 1) {
+        x = xy[0];
+        y = xy[1];
+    }
+    var dial:FlxPieDial = new FlxPieDial(x, y, radius, FlxColor.fromString(color), frames, shape, clockwise, innerRadius);
+    PlayState.instance.modchartPies.set(tag, dial);
+});
+Lua_helper.add_callback(lua, "addPieDial", function(tag:String, camera:String) {
+    if(PlayState.instance.modchartPies.exists(tag)) {
+        var dial:FlxPieDial = PlayState.instance.modchartPies.get(tag);
+        dial.cameras = [cameraFromString(camera)];
+        getInstance().add(dial);
+    } else {
+        luaTrace("Object " + tag + " doesn't exist!", false, false, FlxColor.RED);
+    }
+});
+Lua_helper.add_callback(lua, "removePieDial", function(tag:String) {
+    resetPieDial(tag);
+});
