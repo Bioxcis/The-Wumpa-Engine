@@ -15,8 +15,7 @@ typedef BPMChangeEvent =
 	@:optional var stepCrochet:Float;
 }
 
-class Conductor
-{
+class Conductor {
 	public static var bpm:Float = 100;
 	public static var crochet:Float = ((60 / bpm) * 1000); // beats in milliseconds
 	public static var stepCrochet:Float = crochet / 4; // steps in milliseconds
@@ -33,16 +32,13 @@ class Conductor
 	{
 	}
 
-	public static function judgeNote(note:Note, diff:Float=0):Rating // die
+	public static function judgeNote(arr:Array<Rating>, diff:Float=0):Rating
 	{
-		var data:Array<Rating> = PlayState.instance.ratingsData; //shortening cuz fuck u
-		for(i in 0...data.length-1) //skips last window (Shit)
-		{
+		var data:Array<Rating> = arr;
+		for(i in 0...data.length-1)
 			if (diff <= data[i].hitWindow)
-			{
 				return data[i];
-			}
-		}
+
 		return data[data.length - 1];
 	}
 
@@ -155,30 +151,27 @@ class Conductor
 	}
 }
 
-class Rating
-{
+class Rating {
 	public var name:String = '';
 	public var image:String = '';
 	public var counter:String = '';
 	public var hitWindow:Null<Int> = 0; //ms
-	public var ratingMod:Float = 1;
+	public var ratingMod:Float = 1.02;
 	public var score:Int = 500;
 	public var noteSplash:Bool = true;
+	public var hits:Int = 0;
 
-	public function new(name:String)
-	{
+	public function new(name:String) {
 		this.name = name;
 		this.image = name;
 		this.counter = name + 's';
 		this.hitWindow = Reflect.field(ClientPrefs, name + 'Window');
-		if(hitWindow == null)
-		{
+		if(hitWindow == null) {
 			hitWindow = 0;
 		}
 	}
 
-	public function increase(blah:Int = 1)
-	{
+	public function increase(blah:Int = 1) {
 		Reflect.setField(PlayState.instance, counter, Reflect.field(PlayState.instance, counter) + blah);
 	}
 }
