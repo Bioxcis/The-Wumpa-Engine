@@ -7,9 +7,19 @@ import flixel.util.FlxTimer;
 
 using StringTools;
 
+/**
+ * @author Bioxcis-dono
+ */
 class LuaChar extends Character
 {
+	/**
+	 * Array with default notes for characters created without specified notes.
+	 */
 	final defaultArrows:Array<String> = ["", "Alt Animation", "Hey!", "GF Sing", "No Animation"];
+	
+	/**
+	 * Array for the notes to be defined for the character.
+	 */
 	public var arrowArray:Array<String> = [];
 
 	public function new(x:Float, y:Float, ?char:String = 'bf', ?isPlayer:Bool = false, arrows:Array<String>) {
@@ -52,6 +62,9 @@ class LuaChar extends Character
 		super.update(elapsed);
 	}
 
+	/**
+	 * Change or add notes for the character.
+	 */
 	public function changeArrows(newArrows:Array<String>, resetArrows:Bool = false) {
 		if(newArrows != null) {
 			if(resetArrows)
@@ -63,6 +76,9 @@ class LuaChar extends Character
 		}
 	}
 
+	/**
+	 * Checks if the note is the same type as the character's notes.
+	 */
 	public function testNote(noteType:String) {
 		for (press in arrowArray) {
 			if(press == noteType) {
