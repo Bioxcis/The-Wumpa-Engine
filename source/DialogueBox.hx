@@ -18,7 +18,6 @@ class DialogueBox extends FlxSpriteGroup
 
 	var curCharacter:String = '';
 
-	var dialogue:Alphabet;
 	var dialogueList:Array<String> = [];
 
 	// SECOND DIALOGUE FOR THE PIXEL SHIT INSTEAD???
@@ -39,16 +38,6 @@ class DialogueBox extends FlxSpriteGroup
 	public function new(talkingRight:Bool = true, ?dialogueList:Array<String>)
 	{
 		super();
-
-		switch (PlayState.SONG.song.toLowerCase())
-		{
-			case 'senpai':
-				FlxG.sound.playMusic(Paths.music('Lunchbox'), 0);
-				FlxG.sound.music.fadeIn(1, 0, 0.8);
-			case 'thorns':
-				FlxG.sound.playMusic(Paths.music('LunchboxScary'), 0);
-				FlxG.sound.music.fadeIn(1, 0, 0.8);
-		}
 
 		bgFade = new FlxSprite(-200, -200).makeGraphic(Std.int(FlxG.width * 1.3), Std.int(FlxG.height * 1.3), 0xFFB3DFd8);
 		bgFade.scrollFactor.set();
@@ -89,6 +78,8 @@ class DialogueBox extends FlxSpriteGroup
 				var face:FlxSprite = new FlxSprite(320, 170).loadGraphic(Paths.image('weeb/spiritFaceForward'));
 				face.setGraphicSize(Std.int(face.width * 6));
 				add(face);
+			default:
+				hasDialog = false;
 		}
 
 		this.dialogueList = dialogueList;
@@ -144,10 +135,6 @@ class DialogueBox extends FlxSpriteGroup
 		swagDialogue.color = 0xFF3F2021;
 		swagDialogue.sounds = [FlxG.sound.load(Paths.sound('pixelText'), 0.6)];
 		add(swagDialogue);
-
-		dialogue = new Alphabet(0, 80, "", false, true);
-		// dialogue.x = 90;
-		// add(dialogue);
 	}
 
 	var dialogueOpened:Bool = false;
@@ -187,7 +174,6 @@ class DialogueBox extends FlxSpriteGroup
 		{
 			if (dialogueEnded)
 			{
-				remove(dialogue);
 				if (dialogueList[1] == null && dialogueList[0] != null)
 				{
 					if (!isEnding)
