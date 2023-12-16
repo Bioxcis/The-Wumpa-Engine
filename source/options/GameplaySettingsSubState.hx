@@ -31,15 +31,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 {
 	public function new()
 	{
-		title = 'Ajustes Gameplay';
+		title = 'Ajustes de Gameplay';
 		rpcTitle = 'Menu Ajustes de Jogo'; //for Discord Rich Presence
-
-		var option:Option = new Option('Modo Controle',
-			'Marque isto se for jogar com um controle em vez de teclado.',
-			'controllerMode',
-			'bool',
-			false);
-		addOption(option);
 
 		var option:Option = new Option('Rolagem Abaixo',
 			'Se marcado, as notas vem de cima para baixo.',
@@ -55,46 +48,39 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Exibir MS ao acertar',
-			'Se marcado, a janela de acerto (em ms) vai aparecer perto das notas',
-			'showMsText',
-			'bool',
-			false);
-		addOption(option);
-		/*
-		var option:Option = new Option('Ocultar Notas Oponente',
-			'Se marcado, oculta as notas do oponente nas partidas.',
-			'opponentStrums',
-			'bool',
-			false);
-		addOption(option);
-		*/
 		var option:Option = new Option('Ghost Tapping',
 			'Se marcado, voce não vai errar ao pressionar as teclas enquanto\nnão houver notas que possam ser acertadas. Desativado no modo Nsano.',
 			'ghostTapping',
 			'bool',
 			false);
 		addOption(option);
-		/*
-		var option:Option = new Option('Remove Nsano!!! do Julgamento',
-			'Se marcado, remove o julgamento Nsano!!!',
-			'removePerfects',
+
+		var option:Option = new Option('Desativar Tecla Resete',
+			'Se marcado, a tecla Redefinir não fará nada.',
+			'noReset',
 			'bool',
 			false);
 		addOption(option);
 
-		var option:Option = new Option('Note Camera Movement',
-			'Se marcado, a camera se move ao acertar a nota',
-			'cameramoveonnotes',
+		var option:Option = new Option('Exibir MS ao acertar',
+			'Se marcado, a janela de acerto (em ms) vai aparecer perto das notas',
+			'showMsText',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option('Converter Graficos Nao-EK',
+			'Se marcado, gráficos que não são EK serão convertidos.',
+			'convertEK',
 			'bool',
 			true);
 		addOption(option);
-		*/
-		var option:Option = new Option('Desativar Tecla Resete',
-			'Se marcado, ao pressionar a tecla Redefinir não acontecerá nada.',
-			'noReset',
+
+		var option:Option = new Option('Movimento da Camera',
+			'Se marcado, a camera pode se mover ao acertar uma nota\nse essa ação for pré-definida na música.',
+			'cameramoveonnotes',
 			'bool',
-			false);
+			true);
 		addOption(option);
 
 		var option:Option = new Option('Volume do Tick de Nota',
@@ -110,8 +96,8 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Visibilidade das Notas Longas',
-			'As linhas das notas longas serao mostradas com a visibilidade selecionada',
+		var option:Option = new Option('Visibilidade das Caldas',
+			'As caldas das notas serão mostradas com a visibilidade selecionada',
 			'holdNoteVisibility',
 			'percent',
 			1);
@@ -122,7 +108,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 1;
 		option.decimals = 1;
 
-		var option:Option = new Option('Visibilidade Pista do Oponente',
+		var option:Option = new Option('Visibilidade da Pista Oponente',
 			'Define a visibilidade da base da pista do oponente.',
 			'opponentUnderlaneVisibility',
 			'percent',
@@ -134,7 +120,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 
-		var option:Option = new Option('Visibilidade Pista do Jogador',
+		var option:Option = new Option('Visibilidade da Pista Atual',
 			'Define a visibilidade da base da sua pista.',
 			'underlaneVisibility',
 			'percent',
@@ -147,6 +133,27 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		
 		/*
+		var option:Option = new Option('Modo Controle',
+			'Marque isto se for jogar com um controle em vez de teclado.',
+			'controllerMode',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option('Ocultar Notas Oponente',
+			'Se marcado, oculta as notas do oponente nas partidas.',
+			'opponentStrums',
+			'bool',
+			false);
+		addOption(option);
+
+		var option:Option = new Option('Remove Nsano!!! do Julgamento',
+			'Se marcado, remove o julgamento Nsano!!!',
+			'removePerfects',
+			'bool',
+			false);
+		addOption(option);
+
 		var option:Option = new Option('Rating Offset',
 			'Altera o quão cedo/tarde você tem que acertar para um "Whoa!"\nValores mais altos significam ter que acertar mais tarde.',
 			'ratingOffset',
