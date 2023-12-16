@@ -26,11 +26,7 @@ class Boyfriend extends Character
 				holdTimer = 0;
 			}
 
-			/*if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
-				playAnim('idle', true, false, 10);
-			}*/
-
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode && PlayState.instance.health <= 0.6 && animation.exists('idle-low')) {
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode && lowHealth && animation.exists('idle-low')) {
 				playAnim('idle-low', true, false, 10);
 			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
 				playAnim('idle', true, false, 10);
@@ -40,7 +36,6 @@ class Boyfriend extends Character
 				playAnim('deathLoop');
 			}
 		}
-
 		super.update(elapsed);
 	}
 }
