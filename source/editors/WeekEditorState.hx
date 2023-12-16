@@ -259,7 +259,7 @@ class WeekEditorState extends MusicBeatState
 		
 		tab_group.add(new FlxText(weekBeforeInputText.x, weekBeforeInputText.y - 28, 0, 'Nome do arquivo da Semana\npara terminar e desbloquear:'));
 		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y - 20, 0, 'Dificuldades:'));
-		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y + 20, 0, 'Dificuldades padrao: "facil, normal, dificil, nsano, trial"\nsem aspas.'));
+		tab_group.add(new FlxText(difficultiesInputText.x, difficultiesInputText.y + 20, 0, 'Dificuldades padrao:\n"facil, normal, dificil, nsano, trial" sem aspas.'));
 		tab_group.add(weekBeforeInputText);
 		tab_group.add(difficultiesInputText);
 		tab_group.add(hiddenUntilUnlockCheckbox);
@@ -615,6 +615,20 @@ class WeekEditorFreeplayState extends MusicBeatState
 			var icon:HealthIcon = new HealthIcon(weekFile.songs[i][1]);
 			icon.sprTracker = songText;
 
+			// This was annoying to fix when it only has 2 frames but I thought the end result was cool! I'm a baka :D - Bioxcis
+			var iconFrame:Int = weekFile.songs[i][3];
+			if(iconFrame < 0 || iconFrame > 2) iconFrame = 0; // Prevent Crash (meme)
+
+			if(icon.animation.frames == 3) {
+				icon.animation.curAnim.curFrame = iconFrame;
+			} else {
+				if(iconFrame < 2) {
+					icon.animation.curAnim.curFrame = iconFrame;
+				} else {
+					icon.animation.curAnim.curFrame = 0; // Prevent Crash Again
+				}
+			}
+
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
 			add(icon);
@@ -675,9 +689,26 @@ class WeekEditorFreeplayState extends MusicBeatState
 		if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
 			weekFile.songs[curSelected][1] = iconInputText.text;
 			iconArray[curSelected].changeIcon(iconInputText.text);
+			// man, it was boring to understand that ;-;
+			// So it's already working - Bioxcis
+			var iconFrame:Int = weekFile.songs[curSelected][3];
+			if(iconFrame < 0 || iconFrame > 2) iconFrame = 0; // Prevent Crash
+			if(iconArray[curSelected].animation.frames != 3) { // Icon 2 Frames
+				if(iconFrame == 2) iconFrame = iconFrame - 1;
+			}
+			iconArray[curSelected].animation.curAnim.curFrame = iconFrame;
+			weekFile.songs[curSelected][3] = iconFrame;
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			if(sender == bgColorStepperR || sender == bgColorStepperG || sender == bgColorStepperB) {
 				updateBG();
+			// Fixing this for the button was messy and boring, damn it - Bioxcis
+			} else if(sender == iconFrame) {
+				var frameValue:Int = Std.int(iconFrame.value);
+				if(iconArray[curSelected].animation.frames != 3) { // Icon 2 Frames
+					if(frameValue == 2) frameValue = frameValue - 1;
+				}
+				iconArray[curSelected].animation.curAnim.curFrame = frameValue;
+				weekFile.songs[curSelected][3] = frameValue;
 			}
 		}
 	}
@@ -685,6 +716,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 	var bgColorStepperR:FlxUINumericStepper;
 	var bgColorStepperG:FlxUINumericStepper;
 	var bgColorStepperB:FlxUINumericStepper;
+	var iconFrame:FlxUINumericStepper;
 	var iconInputText:FlxUIInputText;
 	function addFreeplayUI() {
 		var tab_group = new FlxUI(null, UI_box);
@@ -721,6 +753,8 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 		iconInputText = new FlxUIInputText(10, bgColorStepperR.y + 70, 100, '', 8);
 
+		iconFrame = new FlxUINumericStepper(130, bgColorStepperR.y + 70, 1, 0, 0, 2, 0);
+
 		var hideFreeplayCheckbox:FlxUICheckBox = new FlxUICheckBox(10, iconInputText.y + 30, null, null, "Esconder semana no Modo Livre?", 100);
 		hideFreeplayCheckbox.checked = weekFile.hideFreeplay;
 		hideFreeplayCheckbox.callback = function()
@@ -729,10 +763,12 @@ class WeekEditorFreeplayState extends MusicBeatState
 		};
 		
 		tab_group.add(new FlxText(10, bgColorStepperR.y - 18, 0, 'Selecione cor de fundo RGB:'));
-		tab_group.add(new FlxText(10, iconInputText.y - 18, 0, 'Selecione icone:'));
+		tab_group.add(new FlxText(10, iconInputText.y - 18, 0, 'Selecione ícone:'));
+		tab_group.add(new FlxText(130, iconFrame.y - 18, 0, 'Frame do ícone:'));
 		tab_group.add(bgColorStepperR);
 		tab_group.add(bgColorStepperG);
 		tab_group.add(bgColorStepperB);
+		tab_group.add(iconFrame);
 		tab_group.add(copyColor);
 		tab_group.add(pasteColor);
 		tab_group.add(iconInputText);
@@ -759,14 +795,11 @@ class WeekEditorFreeplayState extends MusicBeatState
 
 		var bullShit:Int = 0;
 		for (i in 0...iconArray.length)
-		{
 			iconArray[i].alpha = 0.6;
-		}
 
 		iconArray[curSelected].alpha = 1;
 
-		for (item in grpSongs.members)
-		{
+		for (item in grpSongs.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
@@ -784,6 +817,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		bgColorStepperR.value = Math.round(weekFile.songs[curSelected][2][0]);
 		bgColorStepperG.value = Math.round(weekFile.songs[curSelected][2][1]);
 		bgColorStepperB.value = Math.round(weekFile.songs[curSelected][2][2]);
+		iconFrame.value = weekFile.songs[curSelected][3];
 		updateBG();
 	}
 
