@@ -16,19 +16,17 @@ class Boyfriend extends Character
 		super(x, y, char, true);
 	}
 
-	override function update(elapsed:Float)
-	{
-		if (!debugMode && animation.curAnim != null)
-		{
+	override function update(elapsed:Float) {
+		if (!debugMode && animation.curAnim != null) {
 			if(animation.curAnim.name.startsWith('sing')) {
 				holdTimer += elapsed;
 			} else { 
 				holdTimer = 0;
 			}
 
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode && lowHealth && animation.exists('idle-low')) {
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && lowHealth && animation.exists('idle-low')) {
 				playAnim('idle-low', true, false, 10);
-			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
+			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
 				playAnim('idle', true, false, 10);
 			}
 
