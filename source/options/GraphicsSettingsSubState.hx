@@ -36,24 +36,23 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		title = 'Graficos';
 		rpcTitle = 'Menu Ajustes de Graficos'; //for Discord Rich Presence
 
-		//I'd suggest using "Low Quality" as an example for making your own option since it is the simplest here
-		var option:Option = new Option('Baixa Qualidade', //Name
-			'Se marcada, desativa alguns detalhes dos cenários,\ndiminui o tempo de carregamento e melhora o desempenho.', //Description
-			'lowQuality', //Save data variable name
-			'bool', //Variable type
-			false); //Default value
+		var option:Option = new Option('Baixa Qualidade',
+			'Se marcado, desativa alguns detalhes dos cenários,\ndiminui o tempo de carregamento e melhora o desempenho.',
+			'lowQuality',
+			'bool',
+			false);
 		addOption(option);
 
 		var option:Option = new Option('Anti-Aliasing',
-			'Se marcado, ativa o anti-aliasing, criando visuais mais nitidos\na custo de desempenho da máquina.',
+			'Se marcado, será retirado os serrilhados dos gráficos do jogo\na custo do desempenho da máquina.',
 			'globalAntialiasing',
 			'bool',
 			true);
 		option.showBoyfriend = true;
-		option.onChange = onChangeAntiAliasing; //Changing onChange is only needed if you want to make a special interaction after it changes the value
+		option.onChange = onChangeAntiAliasing;
 		addOption(option);
 
-		#if !html5 //Apparently other framerates isn't correctly supported on Browser? Probably it has some V-Sync shit enabled by default, idk
+		#if !html5 //It appears that other frame rates are not supported correctly in the browser.
 		var option:Option = new Option('FPS',
 			"Define o FPS para o seu jogo.",
 			'framerate',
@@ -69,13 +68,29 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		#end
 
 		/*
+		-- -- Model -- --
+
+		//Name
 		var option:Option = new Option('Persistent Cached Data',
+		
+		//Description
 			'If checked, images loaded will stay in memory\nuntil the game is closed, this increases memory usage,\nbut basically makes reloading times instant.',
+		
+		//Save data variable name
 			'imagesPersist',
+		
+		//Variable type
 			'bool',
+		
+		//Default value
 			false);
+	
+		//Options (Consult 'BaseOptionsMenu')
 		option.onChange = onChangePersistentData; //Persistent Cached Data changes FlxGraphic.defaultPersist
+
+		//Add
 		addOption(option);
+		-- -- End -- --
 		*/
 
 		super();
