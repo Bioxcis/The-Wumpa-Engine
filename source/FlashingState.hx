@@ -9,6 +9,7 @@ import flixel.effects.FlxFlicker;
 import lime.app.Application;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.tweens.FlxTween;
+import flixel.tweens.FlxEase;
 import flixel.util.FlxTimer;
 
 class FlashingState extends MusicBeatState
@@ -20,16 +21,18 @@ class FlashingState extends MusicBeatState
 	{
 		super.create();
 
+		ClientPrefs.flashWarning = true;
+		ClientPrefs.saveSettings();
+
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		add(bg);
 
 		warnText = new FlxText(0, 0, FlxG.width,
 			"Ei, veja esse aviso!\n
 			Esse modo contem luzes piscantes!\n
-			Press ENTER para desativar ou veja isso nos Ajustes.\n
+			Press ENTER para desativar agora ou va aos Ajustes.\n
 			Press ESCAPE para ignorar essa mensagem.\n
-			Voce foi avisado!\n
-			Divirta-se!!!",
+			Divirta-se!",
 			32);
 		warnText.setFormat("CCZoinks Regular", 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
