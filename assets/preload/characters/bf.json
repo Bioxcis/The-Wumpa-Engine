@@ -19,7 +19,23 @@
 			"loop": false,
 			"fps": 24,
 			"anim": "singLEFT",
-			"indices": [],
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12
+			],
 			"name": "BF NOTE LEFT0"
 		},
 		{
@@ -30,7 +46,25 @@
 			"loop": false,
 			"fps": 24,
 			"anim": "singDOWN",
-			"indices": [],
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
 			"name": "BF NOTE DOWN0"
 		},
 		{
@@ -41,7 +75,23 @@
 			"loop": false,
 			"fps": 24,
 			"anim": "singUP",
-			"indices": [],
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12
+			],
 			"name": "BF NOTE UP0"
 		},
 		{
@@ -52,7 +102,25 @@
 			"loop": false,
 			"fps": 24,
 			"anim": "singRIGHT",
-			"indices": [],
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14
+			],
 			"name": "BF NOTE RIGHT0"
 		},
 		{
@@ -151,8 +219,173 @@
 			"loop": false,
 			"fps": 24,
 			"anim": "scared",
-			"indices": [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3],
+			"indices": [
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3
+			],
 			"name": "BF idle shaking"
+		},
+		{
+			"offsets": [
+				-5,
+				0
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "idle-low",
+			"indices": [
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3,
+				0,
+				1,
+				2,
+				3
+			],
+			"name": "BF idle shaking"
+		},
+		{
+			"offsets": [
+				-20,
+				-51
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWN-low",
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			],
+			"name": "BF NOTE DOWN HEALTH"
+		},
+		{
+			"offsets": [
+				-46,
+				27
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singUP-low",
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			],
+			"name": "BF NOTE UP HEALTH"
+		},
+		{
+			"offsets": [
+				5,
+				-7
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFT-low",
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			],
+			"name": "BF NOTE LEFT HEALTH"
+		},
+		{
+			"offsets": [
+				-48,
+				-7
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHT-low",
+			"indices": [
+				0,
+				1,
+				1,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			],
+			"name": "BF NOTE RIGHT HEALTH"
 		},
 		{
 			"offsets": [
@@ -213,8 +446,8 @@
 		209
 	],
 	"camera_position": [
-		230,
-		-120
+		210,
+		-80
 	],
 	"sing_duration": 4,
 	"scale": 1
