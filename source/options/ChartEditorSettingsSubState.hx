@@ -35,14 +35,14 @@ class ChartEditorSettingsSubState extends BaseOptionsMenu
 		rpcTitle = 'Menu Config Editor de Notas'; //for Discord Rich Presence
 
 		var option:Option = new Option('Autosave',
-			'Se marcado, permite salvar notas automaticamente no editor de notas.',
+			'Se marcado, ativa o salvamento automático no editor de notas.',
 			'autosavecharts',
 			'bool',
 			true);
 		addOption(option);
 
 		var option:Option = new Option('Intervalo Autosave',
-			'Intervalo do salvamento automatico do editor de notas em minutos.',
+			'Intervalo do salvamento automático do editor de notas em minutos.',
 			'autosaveInterval',
 			'int',
 			5);
