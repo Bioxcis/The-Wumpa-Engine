@@ -86,10 +86,16 @@ class CreditsState extends MusicBeatState
 		#end
 
 		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
+			['Crash Night Funkin - Wumpa Engine'],
+			['Bioxcis-dono',		'bios', 			'Programmer, Artist/Designer/Animator, Composer, Translator', 	'https://twitter.com/Bioxcis_dono', 	'00FF99'],
+			[''],
+			['Crash Bandicoot Modder'],
+			['Airumu',				'aircrash', 		'Crash Bandicoot modder', 										'https://twitter.com/airumuu', 			'A584AB'],
+			[''],
 			['OS Engine Team'],
-			['notweuz_', 'weuz', 'Main Programmer of OS Engine', 'https://twitter.com/notweuz_', '8633F2'],
-			['nelifs', 'nelifs', 'Second Programmer and Designer of OS Engine', 'https://github.com/nelifs', '1C1C1C'],
-			['Cooljer', 'cooljer', 'Main Artist of OS Engine', 'https://twitter.com/cooljer_', '3360F2'],
+			['notweuz_',			'weuz', 			'Main Programmer of OS Engine', 								'https://twitter.com/notweuz_', 		'8633F2'],
+			['nelifs', 				'nelifs', 			'Second Programmer and Designer of OS Engine',					'https://github.com/nelifs', 			'1C1C1C'],
+			['Cooljer', 			'cooljer', 			'Main Artist of OS Engine',										'https://twitter.com/cooljer_', 		'3360F2'],
 			[''],
 			['Psych Engine Team'],
 			['Shadow Mario',		'shadowmario',		'Main Programmer of Psych Engine',								'https://twitter.com/Shadow_Mario_',	'444444'],
@@ -112,7 +118,12 @@ class CreditsState extends MusicBeatState
 			['ninjamuffin99',		'ninjamuffin99',	"Programmer of Friday Night Funkin'",							'https://twitter.com/ninja_muffin99',	'CF2D2D'],
 			['PhantomArcade',		'phantomarcade',	"Animator of Friday Night Funkin'",								'https://twitter.com/PhantomArcade3K',	'FADC45'],
 			['evilsk8r',			'evilsk8r',			"Artist of Friday Night Funkin'",								'https://twitter.com/evilsk8r',			'5ABD4B'],
-			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',		'378FC7']
+			['kawaisprite',			'kawaisprite',		"Composer of Friday Night Funkin'",								'https://twitter.com/kawaisprite',		'378FC7'],
+			[''],
+			['Extra Keys'],
+			['Actitud Positiva', 	'tposejank',	   	"Owner of Psych Engine Extra Keys +", 							'https://twitter.com/tpose_jank', 		'4C4C4C'],
+			['srPerez', 			'perez', 			'1-9 keys art', 												'https://twitter.com/NewSrPerez', 		'FF9E00'],
+			['']
 		];
 		
 		for(i in pisspoop){
