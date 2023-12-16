@@ -13,6 +13,8 @@ class NoteSplash extends FlxSprite
 	private var idleAnim:String;
 	private var textureLoaded:String = null;
 
+	var sc:Array<Float> = Note.noteSplashScales;
+
 	public function new(x:Float = 0, y:Float = 0, ?note:Int = 0) {
 		super(x, y);
 
@@ -35,6 +37,8 @@ class NoteSplash extends FlxSprite
 
 	public function setupNoteSplash(x:Float, y:Float, note:Int = 0, texture:String = null, hueColor:Float = 0, satColor:Float = 0, brtColor:Float = 0) {
 		setPosition(x - Note.swagWidth * 0.95, y - Note.swagWidth);
+		setGraphicSize(Std.int(width * sc[PlayState.mania]));
+
 		alpha = 0.6;
 
 		if(texture == null) {
@@ -53,20 +57,35 @@ class NoteSplash extends FlxSprite
 		colorSwap.hue = hueColor;
 		colorSwap.saturation = satColor;
 		colorSwap.brightness = brtColor;
-		offset.set(10, 10);
+		//offset.set(10, 10);
+		var offsets:Array<Int> = [10, 10];
+		var mania:Int = PlayState.mania;
+		if(Note.noteSplashOffsets.exists(mania)){
+			var oA = Note.noteSplashOffsets.get(mania);
+			offsets = [oA[0], oA[1]];
+		}
+
+		offset.set(offsets[0], offsets[1]);
 
 		var animNum:Int = FlxG.random.int(1, 2);
-		animation.play('note' + note + '-' + animNum, true);
+		//animation.play('note' + note + '-' + animNum, true);
+		var animIndex:Int = Math.floor(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[note] % (Note.xmlMax + 1));
+		var animToPlay:String = 'note' + animIndex + '-' + animNum;
+		animation.play(animToPlay, true);
 		if(animation.curAnim != null)animation.curAnim.frameRate = 24 + FlxG.random.int(-2, 2);
 	}
 
 	function loadAnims(skin:String) {
 		frames = Paths.getSparrowAtlas(skin);
 		for (i in 1...3) {
-			animation.addByPrefix("note1-" + i, "note splash blue " + i, 24, false);
-			animation.addByPrefix("note2-" + i, "note splash green " + i, 24, false);
-			animation.addByPrefix("note0-" + i, "note splash purple " + i, 24, false);
-			animation.addByPrefix("note3-" + i, "note splash red " + i, 24, false);
+			// animation.addByPrefix("note1-" + i, "note splash blue " + i, 24, false);
+			// animation.addByPrefix("note2-" + i, "note splash green " + i, 24, false);
+			// animation.addByPrefix("note0-" + i, "note splash purple " + i, 24, false);
+			// animation.addByPrefix("note3-" + i, "note splash red " + i, 24, false);
+			for (j in 0...Note.gfxLetter.length) {
+				var splashLetter:String = Note.gfxLetter[j];
+				animation.addByPrefix('note$j-' + i, 'note splash $splashLetter ' + i, 24, false);
+			}
 		}
 	}
 
