@@ -51,8 +51,9 @@ class LoadingState extends MusicBeatState
 
 	override function create()
 	{
-		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xff000000); //Laranja '0xffff7011'
+		var bg:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xff000000);
 		add(bg);
+
 		/*funkay = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/funkay.png', IMAGE)); //PARA ALEATORIO, PÔR ENTRE O NOME E O .PNG = '+FlxG.ramdom.int(1,5)+'
 		funkay.setGraphicSize(0, FlxG.height);
 		funkay.updateHitbox();
@@ -72,7 +73,7 @@ class LoadingState extends MusicBeatState
 		loadingCrashito.antialiasing = ClientPrefs.globalAntialiasing;
 		add(loadingCrashito);
 
-		loadText = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/loading/carregando.png', IMAGE)); //PARA ALEATORIO, PÔR ENTRE O NOME E O .PNG = '+FlxG.ramdom.int(1,5)+'
+		loadText = new FlxSprite(0, 0).loadGraphic(Paths.getPath('images/loading/carregando.png', IMAGE)); //Antigo aleatório: 'images/loading/carregando'+FlxG.ramdom.int(1,5)+'.png'
 		loadText.setGraphicSize(0, FlxG.height);
 		loadText.updateHitbox();
 		loadText.antialiasing = ClientPrefs.globalAntialiasing;
