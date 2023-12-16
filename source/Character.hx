@@ -61,6 +61,7 @@ class Character extends FlxSprite
 	public var singDuration:Float = 4; //Multiplier of how long a character holds the sing pose
 	public var idleSuffix:String = '';
 	public var danceIdle:Bool = false; //Character use "danceLeft" and "danceRight" instead of "idle"
+	public var lowHealth:Bool = false;
 	public var skipDance:Bool = false;
 
 	public var healthIcon:String = 'face';
@@ -330,7 +331,7 @@ class Character extends FlxSprite
 				else
 					playAnim('danceLeft' + idleSuffix);
 			} 
-			else if(animation.getByName('idle-low') != null && PlayState.instance.health <= 0.6 && isPlayer) {
+			else if(animation.getByName('idle-low') != null && lowHealth && isPlayer) {
 				playAnim('idle-low');
 			}
 			else if(animation.getByName('idle' + idleSuffix) != null) {
