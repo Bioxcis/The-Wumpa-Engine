@@ -34,33 +34,34 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var defaultKey:String = 'Resete para Notas Padrao';
 	private var bindLength:Int = 0;
 
-	var optionShit:Array<Dynamic> = [
-		['NOTAS'],
-		['Esquerda', 'note_left'],
-		['Baixo', 'note_down'],
-		['Cima', 'note_up'],
-		['Direita', 'note_right'],
-		[''],
-		['UI'],
-		['Esquerda', 'ui_left'],
-		['Baixo', 'ui_down'],
-		['Cima', 'ui_up'],
-		['Direita', 'ui_right'],
-		[''],
-		['Resetar', 'reset'],
-		['Enter', 'accept'],
-		['Voltar', 'back'],
-		['Pausar', 'pause'],
-		[''],
-		['VOLUME'],
-		['Mutar', 'volume_mute'],
-		['Aumt', 'volume_up'],
-		['Dimn', 'volume_down'],
-		[''],
-		['DEBUG'],
-		['Tecla 1', 'debug_1'],
-		['Tecla 2', 'debug_2']
-	];
+	// var optionShit:Array<Dynamic> = [
+	// 	['NOTAS'],
+	// 	['Esquerda', 'note_left'],
+	// 	['Baixo', 'note_down'],
+	// 	['Cima', 'note_up'],
+	// 	['Direita', 'note_right'],
+	// 	[''],
+	// 	['UI'],
+	// 	['Esquerda', 'ui_left'],
+	// 	['Baixo', 'ui_down'],
+	// 	['Cima', 'ui_up'],
+	// 	['Direita', 'ui_right'],
+	// 	[''],
+	// 	['Resetar', 'reset'],
+	// 	['Enter', 'accept'],
+	// 	['Voltar', 'back'],
+	// 	['Pausar', 'pause'],
+	// 	[''],
+	// 	['VOLUME'],
+	// 	['Mutar', 'volume_mute'],
+	// 	['Aumt', 'volume_up'],
+	// 	['Dimn', 'volume_down'],
+	// 	[''],
+	// 	['DEBUG'],
+	// 	['Tecla 1', 'debug_1'],
+	// 	['Tecla 2', 'debug_2']
+	// ];
+	var optionShit:Array<Dynamic> = [];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var grpInputs:Array<AttachedText> = [];
@@ -68,7 +69,9 @@ class ControlsSubState extends MusicBeatSubstate {
 	var rebindingKey:Bool = false;
 	var nextAccept:Int = 5;
 
-	var backEngine:FlxSprite;
+	var pages:Array<Dynamic> = [];
+	var curPage:Int = 0;
+
 	var frontEngine:FlxSprite;
 
 	public function new() {
@@ -83,37 +86,33 @@ class ControlsSubState extends MusicBeatSubstate {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		optionShit.push(['']);
-		optionShit.push([defaultKey]);
+		// optionShit.push(['']);
+		// optionShit.push([defaultKey]);
+		optionShit = EKData.Keybinds.optionShit();
 
+		var currentPage:String = "";
+		var generatedPage:Dynamic = [];
 		for (i in 0...optionShit.length) {
-			var isCentered:Bool = false;
-			var isDefaultKey:Bool = (optionShit[i][0] == defaultKey);
-			if(unselectableCheck(i, true)) {
-				isCentered = true;
-			}
+			if (optionShit[i][0] != "" && optionShit[i].length < 2 && currentPage == "") { //It's the first page title
+				generatedPage.push(optionShit[i]);
+				currentPage = optionShit[i][0];
+			} else if (optionShit[i][0] != "" && optionShit[i].length < 2 && currentPage != "") { // It's a new page title.
+				generatedPage.push(['']);
+				generatedPage.push([defaultKey]);
+				pages.push(generatedPage);
 
-			var optionText:Alphabet = new Alphabet(0, (10 * i), optionShit[i][0], (!isCentered || isDefaultKey), false);
-			optionText.isMenuItem = true;
-			if(isCentered) {
-				optionText.screenCenter(X);
-				optionText.forceX = optionText.x;
-				optionText.yAdd = -55;
-			} else {
-				optionText.forceX = 200;
-			}
-			optionText.yMult = 60;
-			optionText.targetY = i;
-			grpOptions.add(optionText);
+				generatedPage = [];
 
-			if(!isCentered) {
-				addBindTexts(optionText, i);
-				bindLength++;
-				if(curSelected < 0) curSelected = i;
+				generatedPage.push(optionShit[i]);
+				currentPage = optionShit[i][0];
+			} else if (optionShit[i].length > 1) { // It's an input
+				generatedPage.push(optionShit[i]);
+			} else if (optionShit[i][0] == "" && optionShit[i].length < 2) { // It's blank!
+				generatedPage.push(optionShit[i]);
 			}
 		}
 
-		backEngine = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
+		var backEngine:FlxSprite = new FlxSprite().loadGraphic(Paths.image('mainmenu/menuEngine'));
         backEngine.scrollFactor.set(0, 0);
         backEngine.setGraphicSize(Std.int(backEngine.width * 1));
         backEngine.screenCenter();
@@ -130,40 +129,128 @@ class ControlsSubState extends MusicBeatSubstate {
 		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
 		add(frontEngine);
 
+		optionShit = pages[curPage];
+		reloadTexts();
 		changeSelection();
+	}
+
+	function reloadTexts() {
+		for (i in 0...grpOptions.members.length) {
+			var obj = grpOptions.members[0];
+			obj.kill();
+			grpOptions.remove(obj, true);
+			obj.destroy();
+		}
+
+		for (text in grpInputs) {
+			text.kill();
+			remove(text);
+		}
+		grpInputs = [];
+
+		for (text in grpInputsAlt) {
+			text.kill();
+			remove(text);
+		}
+		grpInputsAlt = [];
+
+		//trace(grpInputs.length, '\n' + grpInputsAlt.length);
+
+		for (i in 0...optionShit.length) {
+			var isCentered:Bool = false;
+			var isDefaultKey:Bool = (optionShit[i][0] == defaultKey);
+			if(unselectableCheck(i, true)) {
+				isCentered = true;
+			}
+
+			var isFirst:Bool = i == 0;
+			var text:String = optionShit[i][0];
+			if (isFirst) text = '< ' + text + ' >';
+
+			var optionText:Alphabet = new Alphabet(0, 300, text, (!isCentered || isDefaultKey));
+			optionText.isMenuItem = true;
+			if(isCentered) {
+				optionText.screenCenter(X);
+				optionText.forceX = optionText.x;
+				optionText.yAdd = -55;
+				optionText.xAdd = 800;
+				optionText.y -= 55;
+			}
+			optionText.targetY = i - curSelected;
+			optionText.xAdd = 50;
+			optionText.yMult = 80;
+			optionText.ID = 0;
+			if (isFirst) optionText.ID = 1;
+			grpOptions.add(optionText);
+
+			if(!isCentered) {
+				addBindTexts(optionText, i);
+				bindLength++;
+				if(curSelected < 0) curSelected = i;
+			}
+		}
 	}
 
 	var leaving:Bool = false;
 	var bindingTime:Float = 0;
+	var holdTime:Float = 0;
 	override function update(elapsed:Float) {
 		if(!rebindingKey) {
+			var shiftMult:Int = FlxG.keys.pressed.SHIFT ? 3 : 1;
+
+			if(controls.UI_DOWN || controls.UI_UP) {
+				var checkLastHold:Int = Math.floor((holdTime - 0.5) * 10);
+				holdTime += elapsed;
+				var checkNewHold:Int = Math.floor((holdTime - 0.5) * 10);
+				if(holdTime > 0.5 && checkNewHold - checkLastHold > 0) {
+					changeSelection((checkNewHold - checkLastHold) * (controls.UI_UP ? -shiftMult : shiftMult));
+				}
+			}
+
+			// if (controls.UI_UP_P) {
+			// 	frontEngine.animation.play('engineSpin', true, false);
+			// 	changeSelection(-1);
+			// }
+			// if (controls.UI_DOWN_P) {
+			// 	frontEngine.animation.play('engineSpin', true, false);
+			// 	changeSelection(1);
+			// }
+			// if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+			// 	frontEngine.animation.play('engineSpin', true, false);
+			// 	changeAlt();
+			// }
+
 			if (controls.UI_UP_P) {
+				changeSelection(-shiftMult);
+				holdTime = 0;
 				frontEngine.animation.play('engineSpin', true, false);
-				changeSelection(-1);
 			}
 			if (controls.UI_DOWN_P) {
+				changeSelection(shiftMult);
+				holdTime = 0;
 				frontEngine.animation.play('engineSpin', true, false);
-				changeSelection(1);
 			}
 			if (controls.UI_LEFT_P || controls.UI_RIGHT_P) {
+				if (grpOptions.members[curSelected].ID == 1) {
+					changePage(controls.UI_LEFT_P ? -1 : 1);
+				} else changeAlt();
 				frontEngine.animation.play('engineSpin', true, false);
-				changeAlt();
 			}
 
 			if (controls.BACK) {
 				ClientPrefs.reloadControls();
 				close();
-				frontEngine.animation.play('engineSpin', true, false);
 				FlxG.sound.play(Paths.sound('cancelMenu'));
+				frontEngine.animation.play('engineSpin', true, false);
 			}
 
 			if(controls.ACCEPT && nextAccept <= 0) {
 				if(optionShit[curSelected][0] == defaultKey) {
 					ClientPrefs.keyBinds = ClientPrefs.defaultKeys.copy();
 					reloadKeys();
+					reloadTexts();
 					changeSelection();
 					FlxG.sound.play(Paths.sound('confirmMenu'));
-					frontEngine.animation.play('engineSpin', true, false);
 				} else if(!unselectableCheck(curSelected)) {
 					bindingTime = 0;
 					rebindingKey = true;
@@ -173,8 +260,8 @@ class ControlsSubState extends MusicBeatSubstate {
 						grpInputs[getInputTextNum()].alpha = 0;
 					}
 					FlxG.sound.play(Paths.sound('scrollMenu'));
-					frontEngine.animation.play('engineSpin', true, false);
 				}
+				frontEngine.animation.play('engineSpin', true, false);
 			}
 		} else {
 			var keyPressed:Int = FlxG.keys.firstJustPressed();
@@ -197,15 +284,20 @@ class ControlsSubState extends MusicBeatSubstate {
 			bindingTime += elapsed;
 			if(bindingTime > 5) {
 				if (curAlt) {
-					grpInputsAlt[curSelected].alpha = 1;
+					//grpInputsAlt[curSelected].alpha = 1;
+					if (grpInputsAlt[curSelected] != null)
+						grpInputsAlt[curSelected].alpha = 1;
 				} else {
-					grpInputs[curSelected].alpha = 1;
+					//grpInputs[curSelected].alpha = 1;
+					if (grpInputs[curSelected] != null)
+						grpInputs[curSelected].alpha = 1;
 				}
+				reloadTexts();
 				FlxG.sound.play(Paths.sound('scrollMenu'));
-				frontEngine.animation.play('engineSpin', true, false);
 				rebindingKey = false;
 				bindingTime = 0;
 			}
+			frontEngine.animation.play('engineSpin', true, false);
 		}
 
 		if(nextAccept > 0) {
@@ -223,15 +315,40 @@ class ControlsSubState extends MusicBeatSubstate {
 		}
 		return num;
 	}
+
+	function changePage(change:Int = 0) {
+		curPage += change;
+
+		if (curPage < 0)
+			curPage = pages.length - 1;
+		if (curPage >= pages.length)
+			curPage = 0;
+
+		optionShit = pages[curPage];
+
+		reloadTexts();
+		changeSelection();
+	}
 	
 	function changeSelection(change:Int = 0) {
-		do {
-			curSelected += change;
-			if (curSelected < 0)
-				curSelected = optionShit.length - 1;
-			if (curSelected >= optionShit.length)
-				curSelected = 0;
-		} while(unselectableCheck(curSelected));
+		// do {
+		// 	curSelected += change;
+		// 	if (curSelected < 0)
+		// 		curSelected = optionShit.length - 1;
+		// 	if (curSelected >= optionShit.length)
+		// 		curSelected = 0;
+		// } while(unselectableCheck(curSelected));
+		curSelected += change;
+
+		if (curSelected < 0)
+			curSelected = optionShit.length - 1;
+		if (curSelected >= optionShit.length)
+			curSelected = 0;
+
+		if ((unselectableCheck(curSelected) && grpOptions.members[curSelected].ID != 1) && change != 0) {
+			changeSelection(change);
+			return;
+		}
 
 		var bullShit:Int = 0;
 
@@ -246,22 +363,25 @@ class ControlsSubState extends MusicBeatSubstate {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
-			if(!unselectableCheck(bullShit-1)) {
+			//if(!unselectableCheck(bullShit-1)) {
+			if(!unselectableCheck(bullShit-1) || item.ID == 1) {
 				item.alpha = 0.6;
 				if (item.targetY == 0) {
 					item.alpha = 1;
-					if(curAlt) {
-						for (i in 0...grpInputsAlt.length) {
-							if(grpInputsAlt[i].sprTracker == item) {
-								grpInputsAlt[i].alpha = 1;
-								break;
+					if (item.ID != 1) {
+						if(curAlt) {
+							for (i in 0...grpInputsAlt.length) {
+								if(grpInputsAlt[i].sprTracker == item) {
+									grpInputsAlt[i].alpha = 1;
+									break;
+								}
 							}
-						}
-					} else {
-						for (i in 0...grpInputs.length) {
-							if(grpInputs[i].sprTracker == item) {
-								grpInputs[i].alpha = 1;
-								break;
+						} else {
+							for (i in 0...grpInputs.length) {
+								if(grpInputs[i].sprTracker == item) {
+									grpInputs[i].alpha = 1;
+									break;
+								}
 							}
 						}
 					}
@@ -330,7 +450,7 @@ class ControlsSubState extends MusicBeatSubstate {
 			item.destroy();
 		}
 
-		trace('Notas Recarregadas: ' + ClientPrefs.keyBinds);
+		//trace('Notas Recarregadas: ' + ClientPrefs.keyBinds);
 
 		for (i in 0...grpOptions.length) {
 			if(!unselectableCheck(i, true)) {
