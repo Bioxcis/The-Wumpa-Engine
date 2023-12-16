@@ -36,6 +36,7 @@ class FreeplayState extends MusicBeatState
 	var scoreBG:FlxSprite;
 	var scoreText:FlxText;
 	var diffText:FlxText;
+	var nsaneRelic:FlxSprite;
 	var lerpScore:Int = 0;
 	var lerpRating:Float = 0;
 	var intendedScore:Int = 0;
@@ -83,25 +84,13 @@ class FreeplayState extends MusicBeatState
 			for (song in leWeek.songs)
 			{
 				var colors:Array<Int> = song[2];
-				if(colors == null || colors.length < 3)
-				{
-					colors = [146, 113, 253];
-				}
-				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]));
+				if(colors == null || colors.length < 3) colors = [146, 113, 253];
+				var iconFrame:Int = song[3];
+				if(iconFrame < 0 || iconFrame > 2) iconFrame = 0; // Prevent Crash
+				addSong(song[0], i, song[1], FlxColor.fromRGB(colors[0], colors[1], colors[2]), iconFrame);
 			}
 		}
 		WeekData.loadTheFirstEnabledMod();
-
-		/*		//KIND OF BROKEN NOW AND ALSO PRETTY USELESS//
-
-		var initSonglist = CoolUtil.coolTextFile(Paths.txt('freeplaySonglist'));
-		for (i in 0...initSonglist.length)
-		{
-			if(initSonglist[i] != null && initSonglist[i].length > 0) {
-				var songArray:Array<String> = initSonglist[i].split(":");
-				addSong(songArray[0], 0, songArray[1], Std.parseInt(songArray[2]));
-			}
-		}*/
 
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
@@ -135,6 +124,13 @@ class FreeplayState extends MusicBeatState
 			var icon:HealthIcon = new HealthIcon(songs[i].songCharacter);
 			icon.sprTracker = songText;
 
+			var iconFrame:Int = songs[i].frameIcon;
+			if(icon.animation.frames == 3) icon.animation.curAnim.curFrame = iconFrame;
+			else {
+				if(iconFrame < 2) icon.animation.curAnim.curFrame = iconFrame; // Prevent Crash
+				else icon.animation.curAnim.curFrame = 0;
+			}
+
 			// using a FlxGroup is too much fuss!
 			iconArray.push(icon);
 			add(icon);
@@ -164,13 +160,19 @@ class FreeplayState extends MusicBeatState
 		add(frontEngine);
 
 		scoreText = new FlxText(FlxG.width * 0.7, 5, 0, "", 32);
-		scoreText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, RIGHT);
+		scoreText.setFormat(Paths.font("crash.ttf"), 32, FlxColor.WHITE, CENTER);
 
-		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 66, 0xFF000000);
+		scoreBG = new FlxSprite(scoreText.x - 6, 0).makeGraphic(1, 86, 0xFF000000);
 		scoreBG.alpha = 0.6;
 		add(scoreBG);
 
-		diffText = new FlxText(scoreText.x, scoreText.y + 36, 0, "", 24);
+		nsaneRelic = new FlxSprite(scoreBG.x + 220, 65).loadGraphic(Paths.image('nsaneRelic'));
+		nsaneRelic.scale.set(0.8, 0.8);
+		nsaneRelic.antialiasing = ClientPrefs.globalAntialiasing;
+		nsaneRelic.visible = false;
+		add(nsaneRelic);
+
+		diffText = new FlxText(scoreText.x, scoreText.y + 56, 0, "", 24);
 		diffText.font = scoreText.font;
 		add(diffText);
 
@@ -191,38 +193,26 @@ class FreeplayState extends MusicBeatState
 
 		var swag:Alphabet = new Alphabet(1, 0, "swag");
 
-		// JUST DOIN THIS SHIT FOR TESTING!!!
-		/* 
-			var md:String = Markdown.markdownToHtml(Assets.getText('CHANGELOG.md'));
-
-			var texFel:TextField = new TextField();
-			texFel.width = FlxG.width;
-			texFel.height = FlxG.height;
-			// texFel.
-			texFel.htmlText = md;
-
-			FlxG.stage.addChild(texFel);
-
-			// scoreText.textField.htmlText = md;
-
-			trace(md);
-		 */
-
 		var textBG:FlxSprite = new FlxSprite(0, FlxG.height - 26).makeGraphic(FlxG.width, 26, 0xFF000000);
 		textBG.alpha = 0.6;
 		add(textBG);
 
 		#if PRELOAD_ALL
-		var leText:String = "Press SPACE para prévia da música                     Press RESET para redefinir pontuação e precisão";
-		var size:Int = 22;
+		var leText1:String = "Press SPACE para prévia da música";
+		var leText2:String = "Press RESET para redefinir pontuação e precisão";
 		#else
-		var leText:String = "Press CTRL para abrir Menu Ajuste Gameplay / Press RESET para redefinir Pontuação e Precisão.";
-		var size:Int = 22;
+		var leText1:String = "Press RESET para redefinir pontuação e precisão";
+		var leText2:String = "";
 		#end
-		var text:FlxText = new FlxText(textBG.x - 6, textBG.y, FlxG.width, leText, size);
-		text.setFormat(Paths.font("nsane.ttf"), size, FlxColor.WHITE, RIGHT);
-		text.scrollFactor.set();
-		add(text);
+		var text1:FlxText = new FlxText(textBG.x + 10, textBG.y + 2, FlxG.width, leText1, 22);
+		text1.setFormat(Paths.font("nsane.ttf"), 22, FlxColor.WHITE, LEFT);
+		text1.scrollFactor.set();
+		add(text1);
+
+		var text2:FlxText = new FlxText(textBG.x - 10, textBG.y + 2, FlxG.width, leText2, 22);
+		text2.setFormat(Paths.font("nsane.ttf"), 22, FlxColor.WHITE, RIGHT);
+		text2.scrollFactor.set();
+		add(text2);
 		super.create();
 	}
 
@@ -232,9 +222,9 @@ class FreeplayState extends MusicBeatState
 		super.closeSubState();
 	}
 
-	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int)
+	public function addSong(songName:String, weekNum:Int, songCharacter:String, color:Int, frame:Int)
 	{
-		songs.push(new SongMetadata(songName, weekNum, songCharacter, color));
+		songs.push(new SongMetadata(songName, weekNum, songCharacter, color, frame));
 	}
 
 	function weekIsLocked(name:String):Bool {
@@ -263,8 +253,7 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (FlxG.sound.music.volume < 0.7)
-		{
+		if (FlxG.sound.music.volume < 0.7) {
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
 
@@ -285,8 +274,11 @@ class FreeplayState extends MusicBeatState
 			ratingSplit[1] += '0';
 		}
 
-		scoreText.text = 'MELHOR RITMO: ' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
+		scoreText.text = 'MELHOR PONTUAÇÃO\n' + lerpScore + ' (' + ratingSplit.join('.') + '%)';
 		positionHighscore();
+
+		if(intendedRating >= 1) nsaneRelic.visible = true;
+		else nsaneRelic.visible = false;
 
 		var upP = controls.UI_UP_P;
 		var downP = controls.UI_DOWN_P;
@@ -571,14 +563,16 @@ class SongMetadata
 	public var week:Int = 0;
 	public var songCharacter:String = "";
 	public var color:Int = -7179779;
+	public var frameIcon:Int = 0;
 	public var folder:String = "";
 
-	public function new(song:String, week:Int, songCharacter:String, color:Int)
+	public function new(song:String, week:Int, songCharacter:String, color:Int, frame:Int)
 	{
 		this.songName = song;
 		this.week = week;
 		this.songCharacter = songCharacter;
 		this.color = color;
+		this.frameIcon = frame;
 		this.folder = Paths.currentModDirectory;
 		if(this.folder == null) this.folder = '';
 	}
