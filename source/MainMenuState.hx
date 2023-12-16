@@ -16,6 +16,7 @@ import flixel.math.FlxMath;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
 import ColorblindFilters;
 #if MODS_ALLOWED
 import sys.FileSystem;
@@ -252,14 +253,14 @@ class MainMenuState extends MusicBeatState
 		version2Box.updateHitbox();
 		add(version2Box);
 
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 21, 0, "Wumpa Engine v" + wumpaEngineVersion + " - por Bioxcis-dono", 24);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
-		var versionShit:FlxText = new FlxText(FlxG.width * 0.82, FlxG.height - 21, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 24);
-		versionShit.scrollFactor.set();
-		versionShit.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
-		add(versionShit);
+		var versionWumpa:FlxText = new FlxText(FlxG.width * 0.01, FlxG.height - 21, 0, "Wumpa Engine v" + wumpaEngineVersion + " - por Bioxcis-dono", 24);
+		versionWumpa.scrollFactor.set();
+		versionWumpa.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionWumpa);
+		var versionFNF:FlxText = new FlxText(FlxG.width * 0.82, FlxG.height - 21, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 24);
+		versionFNF.scrollFactor.set();
+		versionFNF.setFormat("CCZoinks Regular", 20, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionFNF);
 		// NG.core.calls.event.logEvent('swag').send();
 
 		changeItem();
