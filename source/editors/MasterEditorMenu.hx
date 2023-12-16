@@ -21,12 +21,12 @@ using StringTools;
 class MasterEditorMenu extends MusicBeatState
 {
 	var options:Array<String> = [
+		'Editor Notas',
 		'Editor Semana',
-		'Editor Personagem Menu',
 		'Editor Dialogo',
-		//'Editor Notas',
-		'Editor Figura Dialogo',
 		'Editor Personagem',
+		'Editor Figura Dialogo',
+		'Editor Personagem Menu',
 		'Editor Estagio'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
@@ -149,8 +149,8 @@ class MasterEditorMenu extends MusicBeatState
 					LoadingState.loadAndSwitchState(new DialogueCharacterEditorState(), false);
 				case 'Editor Dialogo':
 					LoadingState.loadAndSwitchState(new DialogueEditorState(), false);
-				//case 'Editor Notas'://felt it would be cool maybe				//isso não é legal se o jogo não salva direito a edição e perde todo o trabalho das notas ao sair, não pretendo arrumar essa engine.
-					//LoadingState.loadAndSwitchState(new ChartingState(), false);
+				case 'Editor Notas': //Finally fixed...
+					LoadingState.loadAndSwitchState(new ChartingState(), false);
 				case 'Editor Estagio':
 					LoadingState.loadAndSwitchState(new StageEditorState(), false);
 			}
