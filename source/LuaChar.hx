@@ -22,6 +22,11 @@ class LuaChar extends Character
 	 */
 	public var arrowArray:Array<String> = [];
 
+	/**
+	 * Whether or not the character will do the 'Hey!' animation of the 'Hey!' notes.
+	 */
+	public var luaCharHey:Bool = false;
+
 	public function new(x:Float, y:Float, ?char:String = 'bf', ?isPlayer:Bool = false, arrows:Array<String>) {
 		super(x, y, char, isPlayer);
 		if(arrows != null) {
@@ -43,15 +48,9 @@ class LuaChar extends Character
 				holdTimer = 0;
 			}
 
-			if (PlayState.instance.daTaeb % danceEveryNumBeats == 0 && animation.curAnim != null && !animation.curAnim.name.startsWith('sing') && !stunned) {
-				dance();
-			}
-
-			if(animation.curAnim != null && holdTimer > Conductor.stepCrochet * 0.0011 * singDuration && animation.curAnim.name.startsWith('sing') && !animation.curAnim.name.endsWith('miss')) {
-				dance();
-			}
-
-			if(animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && !debugMode) {
+			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && lowHealth && animation.exists('idle-low')) {
+				playAnim('idle-low', true, false, 10);
+			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
 				playAnim('idle', true, false, 10);
 			}
 
