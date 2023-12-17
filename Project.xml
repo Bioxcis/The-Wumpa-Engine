@@ -2,7 +2,7 @@
 <project>
 	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="Crash Bandicoot: Night Funkin" file="Crash Night Funkin" packageName="com.naughty.cat" package="com.naughty.cat" main="Main" version="1.2.9" company="NaughtyCats" />
+	<app title="Crash Bandicoot: Night Funkin" file="Wumpa Engine" packageName="com.naughty.cat" package="com.naughty.cat" main="Main" version="1.2.9" company="Naughty Cats" />
 
 	<!--Switch Export with Unique ApplicationID and Icon-->
 	<set name="APP_ID" value="0x0100f6c013bbc000" />
