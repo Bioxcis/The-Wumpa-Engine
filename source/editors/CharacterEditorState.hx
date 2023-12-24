@@ -40,9 +40,6 @@ import sys.FileSystem;
 
 using StringTools;
 
-/**
-	*DEBUG MODE
- */
 class CharacterEditorState extends MusicBeatState
 {
 	var char:Character;
@@ -80,8 +77,7 @@ class CharacterEditorState extends MusicBeatState
 	var cameraFollowPointer:FlxSprite;
 	var healthBarBG:FlxSprite;
 
-	override function create()
-	{
+	override function create() {
 		FlxG.sound.playMusic(Paths.music('breakfast'), 0.5);
 
 		camEditor = new FlxCamera();
@@ -171,7 +167,7 @@ class CharacterEditorState extends MusicBeatState
 		for (i in 0...tipTextArray1.length-1) {
 			var tipText1:FlxText = new FlxText(FlxG.width - 360, FlxG.height - 15 - 16 * (tipTextArray1.length - i), 0, tipTextArray1[i], 12);
 			tipText1.cameras = [camHUD];
-			tipText1.setFormat(Paths.font("nsane.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+			tipText1.setFormat(Paths.font("nsane.ttf"), 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 			tipText1.scrollFactor.set();
 			tipText1.borderSize = 1;
 			add(tipText1);
@@ -179,7 +175,7 @@ class CharacterEditorState extends MusicBeatState
 			var tipText2:FlxText = new FlxText(FlxG.width - 360, FlxG.height - 15 - 16 * (tipTextArray2.length - i), 0, tipTextArray2[i], 12);
 			tipText2.cameras = [camHUD];
 			tipText2.x += 80;
-			tipText2.setFormat(Paths.font("nsane.ttf"), 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
+			tipText2.setFormat(Paths.font("nsane.ttf"), 18, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE_FAST, FlxColor.BLACK);
 			tipText2.scrollFactor.set();
 			tipText2.borderSize = 1;
 			add(tipText2);
@@ -452,8 +448,7 @@ class CharacterEditorState extends MusicBeatState
 			ghostChar.flipX = char.flipX;
 		};
 
-		charDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String)
-		{
+		charDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String) {
 			daAnim = characterList[Std.parseInt(character)];
 			check_player.checked = daAnim.startsWith('bf');
 			loadChar(!check_player.checked);
@@ -922,7 +917,7 @@ class CharacterEditorState extends MusicBeatState
 				largestWidth = animation.width;
 			}
 
-			var offset:FlxText = new FlxText(10, 20 + (20 * daLoop), 0, "" + offsets, 15);
+			var offset:FlxText = new FlxText(10, 20 + (24 * daLoop), 0, "" + offsets, 15);
 			offset.setFormat(Paths.font("nsane.ttf"), 24, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 			offset.scrollFactor.set();
 			offset.borderSize = 1;
