@@ -3,13 +3,10 @@ package stages.objects;
 import flixel.group.FlxSpriteGroup;
 import flixel.FlxG;
 
-class DadBattleFog extends FlxSpriteGroup
-{
-	public function new()
-	{
+class DadBattleFog extends FlxSpriteGroup {
+	public function new() {
 		super();
-		
-		//alpha = 0;
+
 		blend = ADD;
 
 		var offsetX = 200;
