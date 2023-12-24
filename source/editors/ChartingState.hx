@@ -1326,8 +1326,7 @@ class ChartingState extends MusicBeatState
 
 		waveformUseInstrumental = new FlxUICheckBox(10, 90, null, null, "Waveform Inst", 100);
 		waveformUseInstrumental.checked = FlxG.save.data.chart_waveformInst;
-		waveformUseInstrumental.callback = function()
-		{
+		waveformUseInstrumental.callback = function() {
 			waveformUseVoices.checked = false;
 			FlxG.save.data.chart_waveformVoices = false;
 			FlxG.save.data.chart_waveformInst = waveformUseInstrumental.checked;
@@ -1336,8 +1335,7 @@ class ChartingState extends MusicBeatState
 
 		waveformUseVoices = new FlxUICheckBox(waveformUseInstrumental.x + 140, waveformUseInstrumental.y, null, null, "Waveform Vozes", 100);
 		waveformUseVoices.checked = FlxG.save.data.chart_waveformVoices;
-		waveformUseVoices.callback = function()
-		{
+		waveformUseVoices.callback = function() {
 			waveformUseInstrumental.checked = false;
 			FlxG.save.data.chart_waveformInst = false;
 			FlxG.save.data.chart_waveformVoices = waveformUseVoices.checked;
