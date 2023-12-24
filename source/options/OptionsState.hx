@@ -40,16 +40,16 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.NotesSubState());
 			case 'Controles':
 				openSubState(new options.ControlsSubState());
+			case 'Gameplay':
+				openSubState(new options.GameplaySettingsSubState());
 			case 'Graficos':
 				openSubState(new options.GraphicsSettingsSubState());
 			case 'Visual e UI':
 				openSubState(new options.VisualsUISubState());
-			case 'Gameplay':
-				openSubState(new options.GameplaySettingsSubState());
-			case 'Ajustar Delay e Combo':
-				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 			case 'Editor de Nota':
 				openSubState(new options.ChartEditorSettingsSubState());
+			case 'Ajustar Delay e Combo':
+				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
 		}
 	}
 
@@ -177,12 +177,16 @@ class OptionsState extends MusicBeatState
 		}
 
 		if (controls.ACCEPT) {
-			openSelectedSubstate(options[curSelected]);
-			frontEngine.animation.play('engineSpin', true, false);
-			FlxG.sound.play(Paths.sound('confirmOption'));
+			if(PauseSubState.wasinsongbeforethenwenttooptions && options[curSelected] == 'Ajustar Delay e Combo') {
+				FlxG.sound.play(Paths.sound('optionLocked'));
+			} else {
+				openSelectedSubstate(options[curSelected]);
+				frontEngine.animation.play('engineSpin', true, false);
+				FlxG.sound.play(Paths.sound('confirmOption'));
+			}
 		}
 	}
-	
+
 	function changeSelection(change:Int = 0) {
 		curSelected += change;
 		if (curSelected < 0)
