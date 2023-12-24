@@ -7,6 +7,8 @@ import sys.thread.Thread;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.effects.particles.FlxParticle;
+import flixel.effects.particles.FlxEmitter;
 import flixel.input.keyboard.FlxKey;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.addons.transition.FlxTransitionSprite.GraphicTransTileDiamond;
@@ -420,6 +422,11 @@ class TitleState extends MusicBeatState
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
+		new FlxTimer().start(90, function(_) {
+			FlxG.sound.play(Paths.sound('wumpaEasterEgg'), 1);
+			makeTitleEmitter();
+		});
+
 		if (initialized)
 			skipIntro();
 		else
@@ -596,6 +603,27 @@ class TitleState extends MusicBeatState
 		super.update(elapsed);
 	}
 
+	function makeTitleEmitter() {
+		var titleEmitter:FlxEmitter = new FlxEmitter(0, -100, 100);
+		for (i in 0...100) {
+			var particle = new FlxParticle();
+			particle.loadGraphic(Paths.image('wumpaParticle'));
+			particle.exists = false;
+			titleEmitter.add(particle);
+		}
+		titleEmitter.setSize(1300, 0);
+		titleEmitter.speed.set(0, 20, 0, 20);
+		titleEmitter.launchMode = CIRCLE;
+		titleEmitter.launchAngle.set(90, 90);
+		titleEmitter.angularVelocity.set(100, -100, 360, -360);
+		titleEmitter.lifespan.set(0, 0);
+		titleEmitter.scale.set(0.3, 0.3, 0.6, 0.6);
+		titleEmitter.acceleration.set(0, 150, 0, 200);
+		titleEmitter.keepScaleRatio = true;
+		add(titleEmitter);
+		titleEmitter.start(false, 0.05);
+	}
+
 	function createCoolText(textArray:Array<String>, ?offset:Float = 0)
 	{
 		for (i in 0...textArray.length)
@@ -716,7 +744,7 @@ class TitleState extends MusicBeatState
 	{
 		if (!skippedIntro)
 		{
-			if (playJingle) //Ignore deez
+			if (playJingle)
 			{
 				var easteregg:String = FlxG.save.data.psychDevsEasterEgg;
 				if (easteregg == null) easteregg = '';
@@ -734,10 +762,11 @@ class TitleState extends MusicBeatState
 					case 'BBPANZU':
 						sound = FlxG.sound.play(Paths.sound('JingleBB'));
 
-					default: //Go back to normal ugly ass boring GF
+					default:
 						remove(ngSpr);
 						remove(credGroup);
 						FlxG.camera.flash(FlxColor.WHITE, 2);
+
 						skippedIntro = true;
 						playJingle = false;
 
