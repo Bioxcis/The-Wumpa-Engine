@@ -3302,7 +3302,7 @@
 		],
 		"player2": "spirit",
 		"player3": null,
-		"healthdrain": 2,
+		"healthdrain": 4,
 		"cameraMoveOnNotes": false,
 		"song": "Thorns",
 		"characterTrails": true,
