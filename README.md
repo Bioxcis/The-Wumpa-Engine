@@ -1,6 +1,6 @@
 # Crash Bandicoot Night Funkin' - Wumpa Engine - Modded OS Engine 
 
-![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/d07d8cc8de600a080965a575f149261c5285a272/art/CBNF_Logo.png)
+![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/34f9d3d74019d5cdf0ca5dda69526c6dffff733f/art/CBNF_wumpaEngine.png)
 
 ## Compilação:
 Necessário ter [a versão mais atualizada do Haxe](https://haxe.org/download/), não use outras versões.
