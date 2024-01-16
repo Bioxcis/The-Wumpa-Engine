@@ -65,50 +65,91 @@ _____________________________________
 
 ## Sobre a Wumpa Engine
 
-Wumpa Engine é uma modificação da OS Engine em conjunto com a Psych Engine, então você pode usar quase todos os recursos da Psych Engine aqui!
+Wumpa Engine é uma modificação da OS Engine em conjunto com a Psych Engine, então você pode usar quase todos os recursos da Psych Engine 0.7 aqui!
 Compatível com Scripts Lua atuais (Psych v0.5.2+ / OS v1.5.1).
 
 ## Caracteristicas
 
 ### Design dos menus
-O Design e as animações dos menus do jogo foram editados e adicionados com características semelhantes aos jogos da franquia Crash Bandicoot.
-
-### Traduções
-Wumpa Engine está disponível em 3 linguas por padrão, traduzindo todos os menus e editores do jogo.
-Languages: Português, Español, English.
+O Design e as animações dos menus do jogo foram editados e adicionados com características semelhantes aos jogos da franquia Crash Bandicoot. Os menus são customizáveis com arquivos json.
 
 ![](https://github.com/Bioxcis/Crash-Bandicoot-Night-Funkin-Mod/blob/aad2dcdba91e0cf3523d9448a91b391f77406be4/art/CBNF_Menus.png)
 
-### Novo Tamanho de HUD do jogo
-Altera o zoom da HUD do jogo em uma escala um pouco menor para encaixar e adaptar melhor os ícones/contadores flutuantes das partidas.
-Isso é funcional por meio dos Scripts em Lua!!! Não altera em nada o andamento do jogo no caso de ausência do Script.
 
-![](https://media.discordapp.net/attachments/969211146412363828/969212761605296198/unknown.png?width=465&height=676)
+## Novos Modos de Jogo
+Está disponível 3 novos modos de jogo para o Modo Livre:
 
-### Novas músicas disponíveis
-Novas músicas para o Menu Principal e para o Pause do jogo na temática de Crash Bandicoot.
-Adaptação da música do menu Ajuste Delay de Nota e Combo Offset.
+### Jogo Solo
+Partidas de um jogador padrão.
 
-### Conquistas
+### Modo Versus
+Partidas de multijogadores onde ambos batalham pela vitória por pontuação ou até a morte.
+
+### Estilo Dueto
+Partidas de multijogadores onde ambos cantam juntos sem penalidades de morte.
+
+
+## Novas configurações
+Novas configurações disponíveis como: Novo Tamanho padrão da HUD do jogo, Habilitar movimentos de camera, Mostrar teclas configuradas das notas, Mostrar julgamento, etc.
+
+
+## Criação de Notas em Músicas
+Novas opções para criação de notas como:
+
+### Movimentação da camera
+Movimentos suaves ou intensos na camera quando o oponente/jogador acertar uma nota, sendo sua intensidade alterada em Lua.
+
+### Drenagem de vida
+Quando o oponente acertar uma nota a vida é drenada em uma determinada porcentagem, podendo matar ou não.
+
+### Desativar Ghost Tapping
+Desativa o Ghost Tapping para essa música e dificuldade específica.
+
+### Desativar Ghost Tapping
+Desativa o Ghost Tapping para essa música e dificuldade específica.
+
+### Desativar Botões de Debug
+Desativa os botões do Editor de Notas e Editor de Personagens para essa música e dificuldade específica.
+
+### Trocar Linhas de lugar
+Altera as linhas de notas dos personagens para caso você troque o Boyfriend de lugar com o Oponente.
+
+### Habilitar trilhas
+Habilita trilhas de sprites em cada um dos 3 personagens separadamente (Oponente, Girfriend e Boyfriend).
+
+### Alterar Mania
+Define a quantidade de notas/tipo de mania para sua música, que suporta de 1 a 18 teclas (o valor 4 notas padrão é 3).
+
+
+## Novo Criador de Estágios
+Crie seus estágios de forma mais simples e rápida!
+
+* Utilize suas próprias imagens ou as disponíveis no jogo.
+* Configure a posição dos elementos do cenário junto dos personagens padrão da música de forma livre.
+* Ajuste o tamanho, rolagem, escala e alfa dos elementos do cenário.
+* Copie determinadas informações de cada elemento ou exporte como um objeto (ver "setupStageSprite" em Lua).
+* Altere as configurações do seu cenário e exporte para usa-lo na pasta `stages` do seu mod.
+
+
+## Novas Notas Jogáveis
+Novas notas criadas em dificuldades mais avançadas para as músicas padrão do jogo usando as novas configurações, sendo a principal o valor de Mania (5k, 6k, 7k, 8k e 9k).
+
+
+## Conquistas
 Leve Modificação no sistema de Conquistas e adição de novas Conquistas do Mod vistas no menu Missões.
 
-# Novas Mecânicas de Jogo
-*Aviso: Diversas funcionalidades especiais do mod estão disponíveis apenas com o uso dos Scripts Lua*
 
-## Notas Especiais
+## Funções Lua
+Há diversas novas funções disponíveis em Lua para enriquecer mais as músicas.
 
-### Caixas
-São 8 novas notas na forma de caixas que oferecem um desafio a mais ao jogo, possibilitando a coleta de certos itens do jogo.
-Um item clássico e marcante que não pode faltar em um jogo do Crash.
+Algumas delas são:
 
-### Wumpas
-Uma nota especial e deliciosa que auxilia na saúde do jogador e necessária para obter itens especiais em determinado estilo de nível.
-A comida favorita do nosso querido marsupial laranja.
+* Barras de Progresso
+* Emissores de Partículas
+* Personagens em Lua
+* Novas Interpolações
+* Criação de Flickers
+* Criação de Trilhas de Rastro
+* Iniciar Contagens Regressivas e muito mais!
 
-## Eventos
-Novos eventos disponíveis para uso.
-* O evento 'Set CamZoom' é uma adaptação do evento de zoom original do jogo, porém dividido entre Game e HUD.
-* O evento 'Text Event' permite você criar um texto com a fonte geral do jogo.
-* O evento 'Dadbattle Spotlight' simula o efeito de holofotes visto em Dadbattle.
-
-![](https://media.discordapp.net/attachments/969211146412363828/969218236950397038/unknown.png)
+Veja mais sobre as Funções Lua aqui na Wiki da Wumpa Engine!
