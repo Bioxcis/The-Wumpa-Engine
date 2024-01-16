@@ -105,9 +105,6 @@ Quando o oponente acertar uma nota a vida é drenada em uma determinada porcenta
 ### Desativar Ghost Tapping
 Desativa o Ghost Tapping para essa música e dificuldade específica.
 
-### Desativar Ghost Tapping
-Desativa o Ghost Tapping para essa música e dificuldade específica.
-
 ### Desativar Botões de Debug
 Desativa os botões do Editor de Notas e Editor de Personagens para essa música e dificuldade específica.
 
