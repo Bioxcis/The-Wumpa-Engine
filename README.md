@@ -79,7 +79,7 @@ O Design e as animações dos menus do jogo foram editados e adicionados com car
 ## Novos Modos de Jogo
 Está disponível 3 novos modos de jogo para o Modo Livre:
 
-### Jogo Solo
+### Partida Solo
 Partidas de um jogador padrão.
 
 ### Modo Versus
@@ -116,6 +116,18 @@ Habilita trilhas de sprites em cada um dos 3 personagens separadamente (Oponente
 
 ### Alterar Mania
 Define a quantidade de notas/tipo de mania para sua música, que suporta de 1 a 18 teclas (o valor 4 notas padrão é 3).
+
+### Separação de lados
+Copie, limpe, espelhe e mude o tipo das notas para os cada lado individualmente.
+
+### Notas Aleatórias
+Faça um sorteio nas notas de forma aleatória para uma seção ou para a musica inteira.
+
+### Tema Escuro
+Altere entre Tema Claro e Tema Escuro enquanto configura sua música.
+
+### Mais atalhos de teclado
+Confira o índice de atalhos no canto inferior.
 
 
 ## Novo Criador de Estágios
