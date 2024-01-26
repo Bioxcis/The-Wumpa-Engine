@@ -93,6 +93,11 @@ Partidas de multijogadores onde ambos cantam juntos sem penalidades de morte.
 Novas configurações disponíveis como: Novo Tamanho padrão da HUD do jogo, Habilitar movimentos de camera, Mostrar teclas configuradas das notas, Mostrar julgamento, etc.
 
 
+## Suporte Total a Mania
+Valores de Mania para setas além de 4 foram implementadas.
+Novas notas foram criadas para a dificuldade 'Nsano' nas músicas padrão do jogo usando as novas configurações de Mania (5/6/7/8/9k), Trilhas nos personagens e movimentação de camera, o padrão do Editor de Notas.
+
+
 ## Criação de Notas em Músicas
 Novas opções para criação de notas como:
 
@@ -117,8 +122,11 @@ Habilita trilhas de sprites em cada um dos 3 personagens separadamente (Oponente
 ### Alterar Mania
 Define a quantidade de notas/tipo de mania para sua música, que suporta de 1 a 18 teclas (o valor 4 notas padrão é 3).
 
+### Limpar
+Limpa as notas que estão fora das linhas dos personagens.
+
 ### Separação de lados
-Copie, limpe, espelhe e mude o tipo das notas para os cada lado individualmente.
+Copie, limpe, espelhe e mude o tipo das notas para cada lado individualmente.
 
 ### Notas Aleatórias
 Faça um sorteio nas notas de forma aleatória para uma seção ou para a musica inteira.
@@ -140,10 +148,6 @@ Crie seus estágios de forma mais simples e rápida!
 * Altere as configurações do seu cenário e exporte para usa-lo na pasta `stages` do seu mod.
 
 
-## Novas Notas Jogáveis
-Novas notas criadas em dificuldades mais avançadas para as músicas padrão do jogo usando as novas configurações, sendo a principal o valor de Mania (5k, 6k, 7k, 8k e 9k).
-
-
 ## Conquistas
 Leve Modificação no sistema de Conquistas e adição de novas Conquistas do Mod vistas no menu Missões.
 
@@ -155,7 +159,7 @@ Algumas delas são:
 
 * Barras de Progresso
 * Emissores de Partículas
-* Personagens em Lua
+* Personagens Extras
 * Novas Interpolações
 * Criação de Flickers
 * Criação de Trilhas de Rastro
