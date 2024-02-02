@@ -1,59 +1,59 @@
 {
 	"animations": [
 		{
+			"loop": false,
 			"offsets": [
 				2,
 				0
 			],
-			"loop": false,
+			"fps": 24,
 			"anim": "idle",
-			"fps": 24,
-			"name": "Angry Senpai Idle",
-			"indices": []
+			"indices": [],
+			"name": "Angry Senpai Idle"
 		},
 		{
-			"offsets": [
-				5,
-				37
-			],
 			"loop": false,
+			"offsets": [
+				8,
+				36
+			],
+			"fps": 24,
 			"anim": "singUP",
-			"fps": 24,
-			"name": "Angry Senpai UP NOTE",
-			"indices": []
+			"indices": [],
+			"name": "Angry Senpai UP NOTE"
 		},
 		{
-			"offsets": [
-				40,
-				0
-			],
 			"loop": false,
+			"offsets": [
+				26,
+				6
+			],
+			"fps": 24,
 			"anim": "singLEFT",
-			"fps": 24,
-			"name": "Angry Senpai LEFT NOTE",
-			"indices": []
+			"indices": [],
+			"name": "Angry Senpai LEFT NOTE"
 		},
 		{
+			"loop": false,
 			"offsets": [
-				0,
+				2,
 				0
 			],
-			"loop": false,
+			"fps": 24,
 			"anim": "singRIGHT",
-			"fps": 24,
-			"name": "Angry Senpai RIGHT NOTE",
-			"indices": []
+			"indices": [],
+			"name": "Angry Senpai RIGHT NOTE"
 		},
 		{
-			"offsets": [
-				14,
-				0
-			],
 			"loop": false,
-			"anim": "singDOWN",
+			"offsets": [
+				8,
+				6
+			],
 			"fps": 24,
-			"name": "Angry Senpai DOWN NOTE",
-			"indices": []
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "Angry Senpai DOWN NOTE"
 		}
 	],
 	"no_antialiasing": true,

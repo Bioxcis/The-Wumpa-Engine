@@ -1,90 +1,134 @@
 {
 	"animations": [
 		{
-			"loop": false,
 			"offsets": [
 				59,
 				-20
 			],
-			"anim": "hey",
+			"loop": false,
 			"fps": 24,
-			"name": "spooky kids YEAH!!",
-			"indices": []
+			"anim": "hey",
+			"indices": [],
+			"name": "spookyHey"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				130,
 				-10
 			],
-			"anim": "singLEFT",
+			"loop": false,
 			"fps": 24,
-			"name": "note sing left",
-			"indices": []
+			"anim": "singLEFT",
+			"indices": [],
+			"name": "spookyLeft"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-130,
 				-14
 			],
-			"anim": "singRIGHT",
+			"loop": false,
 			"fps": 24,
-			"name": "spooky sing right",
-			"indices": []
+			"anim": "singRIGHT",
+			"indices": [],
+			"name": "spookyRight"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-50,
-				-130
+				-138
 			],
-			"anim": "singDOWN",
+			"loop": false,
 			"fps": 24,
-			"name": "spooky DOWN note",
-			"indices": []
+			"anim": "singDOWN",
+			"indices": [],
+			"name": "spookyDown"
 		},
 		{
-			"loop": false,
 			"offsets": [
 				0,
 				0
 			],
-			"fps": 12,
+			"loop": false,
 			"anim": "danceLeft",
+			"fps": 12,
+			"name": "spooky dance idle",
 			"indices": [
 				0,
 				2,
 				6
-			],
-			"name": "spooky dance idle"
+			]
 		},
 		{
-			"loop": false,
 			"offsets": [
 				0,
 				0
 			],
-			"fps": 12,
+			"loop": false,
 			"anim": "danceRight",
+			"fps": 12,
+			"name": "spooky dance idle",
 			"indices": [
 				8,
 				10,
 				12,
 				14
-			],
-			"name": "spooky dance idle"
+			]
 		},
 		{
-			"loop": false,
 			"offsets": [
 				-20,
 				26
 			],
-			"fps": 24,
+			"loop": false,
 			"anim": "singUP",
+			"fps": 24,
+			"name": "spookyUp",
+			"indices": []
+		},
+		{
+			"offsets": [
+				130,
+				-9
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singLEFTmiss",
 			"indices": [],
-			"name": "spooky UP NOTE"
+			"name": "spookyMissLeft"
+		},
+		{
+			"offsets": [
+				-130,
+				-14
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singRIGHTmiss",
+			"indices": [],
+			"name": "spookyMissRight"
+		},
+		{
+			"offsets": [
+				-50,
+				-141
+			],
+			"loop": false,
+			"fps": 24,
+			"anim": "singDOWNmiss",
+			"indices": [],
+			"name": "spookyMissDown"
+		},
+		{
+			"offsets": [
+				39,
+				26
+			],
+			"loop": false,
+			"anim": "singUPmiss",
+			"fps": 24,
+			"name": "spookyMissUP",
+			"indices": []
 		}
 	],
 	"no_antialiasing": false,
