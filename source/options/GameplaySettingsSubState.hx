@@ -29,8 +29,7 @@ using StringTools;
 
 class GameplaySettingsSubState extends BaseOptionsMenu
 {
-	public function new()
-	{
+	public function new() {
 		title = 'Ajustes de Gameplay';
 		rpcTitle = 'Menu Ajustes de Jogo'; //for Discord Rich Presence
 
@@ -83,7 +82,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Volume do Tick de Nota',
+		var option:Option = new Option('Volume do Tick de Nota:',
 			'Cada nota acertada vai fazer um \"Tick!\" quando acertada.',
 			'hitsoundVolume',
 			'percent',
@@ -96,7 +95,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		option.onChange = onChangeHitsoundVolume;
 
-		var option:Option = new Option('Visibilidade das Caldas',
+		var option:Option = new Option('Visibilidade das Caldas:',
 			'As caldas das notas serão mostradas com a visibilidade selecionada',
 			'holdNoteVisibility',
 			'percent',
@@ -108,7 +107,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.maxValue = 1;
 		option.decimals = 1;
 
-		var option:Option = new Option('Visibilidade da Pista Oponente',
+		var option:Option = new Option('Visibilidade da Pista Oponente:',
 			'Define a visibilidade da base da pista do oponente.',
 			'opponentUnderlaneVisibility',
 			'percent',
@@ -120,7 +119,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		option.changeValue = 0.1;
 		option.decimals = 1;
 
-		var option:Option = new Option('Visibilidade da Pista Atual',
+		var option:Option = new Option('Visibilidade da Pista Jogador:',
 			'Define a visibilidade da base da sua pista.',
 			'underlaneVisibility',
 			'percent',
@@ -221,6 +220,7 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		addOption(option);
 		*/
 		super();
+		changeBgColor(0x5829FF);
 	}
 
 	function onChangeHitsoundVolume()
