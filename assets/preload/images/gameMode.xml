@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<TextureAtlas imagePath="gameMode.png">
+<SubTexture name="solo0000" x="0" y="179" width="567" height="178" frameX="-64" frameY="-117" frameWidth="700" frameHeight="400" />
+<SubTexture name="versus0000" x="0" y="0" width="567" height="179" frameX="-64" frameY="-117" frameWidth="700" frameHeight="400" />
+<SubTexture name="duet0000" x="0" y="357" width="567" height="177" frameX="-64" frameY="-117" frameWidth="700" frameHeight="400" />
+</TextureAtlas>
