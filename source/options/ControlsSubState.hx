@@ -34,7 +34,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	private static var defaultKey:String = 'Resete para Notas Padrao';
 	private var bindLength:Int = 0;
 
-	// var optionShit:Array<Dynamic> = [
+	// var optionsAssets:Array<Dynamic> = [
 	// 	['NOTAS'],
 	// 	['Esquerda', 'note_left'],
 	// 	['Baixo', 'note_down'],
@@ -61,7 +61,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	// 	['Tecla 1', 'debug_1'],
 	// 	['Tecla 2', 'debug_2']
 	// ];
-	var optionShit:Array<Dynamic> = [];
+	var optionsAssets:Array<Dynamic> = [];
 
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private var grpInputs:Array<AttachedText> = [];
@@ -72,13 +72,22 @@ class ControlsSubState extends MusicBeatSubstate {
 	var pages:Array<Dynamic> = [];
 	var curPage:Int = 0;
 
+	var bg:FlxSprite;
 	var frontEngine:FlxSprite;
+
+	var bgColors:Array<FlxColor> = [
+		0xffc4c4c4, 0xffc07af8, 0xff9a3be8, 0xff6d38e9, 0xff1f0fff,
+		0xff2b6eff, 0xff2a8aff, 0xff39e5ff, 0xff19f09d, 0xff19dc5d,
+		0xff22f313, 0xff82f120, 0xffe3e019, 0xffe3a319, 0xffe36d19,
+		0xffff4d00, 0xffff0000, 0xffff004c, 0xffff4ba2, 0xffff5fad,
+		0xffff7aba, 0xffff8ec5, 0xffffb9db, 0xffffb9db, 0xff000000
+	];
 
 	public function new() {
 		super();
 
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xffbf35ff;
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg.color = bgColors[0];
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
@@ -86,29 +95,29 @@ class ControlsSubState extends MusicBeatSubstate {
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		// optionShit.push(['']);
-		// optionShit.push([defaultKey]);
-		optionShit = EKData.Keybinds.optionShit();
+		// optionsAssets.push(['']);
+		// optionsAssets.push([defaultKey]);
+		optionsAssets = EKData.Keybinds.optionsAssets();
 
 		var currentPage:String = "";
 		var generatedPage:Dynamic = [];
-		for (i in 0...optionShit.length) {
-			if (optionShit[i][0] != "" && optionShit[i].length < 2 && currentPage == "") { //It's the first page title
-				generatedPage.push(optionShit[i]);
-				currentPage = optionShit[i][0];
-			} else if (optionShit[i][0] != "" && optionShit[i].length < 2 && currentPage != "") { // It's a new page title.
+		for (i in 0...optionsAssets.length) {
+			if(optionsAssets[i][0] != "" && optionsAssets[i].length < 2 && currentPage == "") { //It's the first page title
+				generatedPage.push(optionsAssets[i]);
+				currentPage = optionsAssets[i][0];
+			} else if(optionsAssets[i][0] != "" && optionsAssets[i].length < 2 && currentPage != "") { // It's a new page title.
 				generatedPage.push(['']);
 				generatedPage.push([defaultKey]);
 				pages.push(generatedPage);
 
 				generatedPage = [];
 
-				generatedPage.push(optionShit[i]);
-				currentPage = optionShit[i][0];
-			} else if (optionShit[i].length > 1) { // It's an input
-				generatedPage.push(optionShit[i]);
-			} else if (optionShit[i][0] == "" && optionShit[i].length < 2) { // It's blank!
-				generatedPage.push(optionShit[i]);
+				generatedPage.push(optionsAssets[i]);
+				currentPage = optionsAssets[i][0];
+			} else if(optionsAssets[i].length > 1) { // It's an input
+				generatedPage.push(optionsAssets[i]);
+			} else if(optionsAssets[i][0] == "" && optionsAssets[i].length < 2) { // It's blank!
+				generatedPage.push(optionsAssets[i]);
 			}
 		}
 
@@ -129,7 +138,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		frontEngine.antialiasing = ClientPrefs.globalAntialiasing;
 		add(frontEngine);
 
-		optionShit = pages[curPage];
+		optionsAssets = pages[curPage];
 		reloadTexts();
 		changeSelection();
 	}
@@ -156,15 +165,15 @@ class ControlsSubState extends MusicBeatSubstate {
 
 		//trace(grpInputs.length, '\n' + grpInputsAlt.length);
 
-		for (i in 0...optionShit.length) {
+		for (i in 0...optionsAssets.length) {
 			var isCentered:Bool = false;
-			var isDefaultKey:Bool = (optionShit[i][0] == defaultKey);
+			var isDefaultKey:Bool = (optionsAssets[i][0] == defaultKey);
 			if(unselectableCheck(i, true)) {
 				isCentered = true;
 			}
 
 			var isFirst:Bool = i == 0;
-			var text:String = optionShit[i][0];
+			var text:String = optionsAssets[i][0];
 			if (isFirst) text = '< ' + text + ' >';
 
 			var optionText:Alphabet = new Alphabet(0, 300, text, (!isCentered || isDefaultKey));
@@ -245,12 +254,21 @@ class ControlsSubState extends MusicBeatSubstate {
 			}
 
 			if(controls.ACCEPT && nextAccept <= 0) {
-				if(optionShit[curSelected][0] == defaultKey) {
-					ClientPrefs.keyBinds = ClientPrefs.defaultKeys.copy();
+				if(optionsAssets[curSelected][0] == defaultKey) {
+					// ClientPrefs.keyBinds = ClientPrefs.defaultKeys.copy();
+					// reloadKeys();
+					// reloadTexts();
+					// changeSelection();
+					// FlxG.sound.play(Paths.sound('confirmMenu'));
+
+					ClientPrefs.resetKeys();
+					ClientPrefs.reloadControls();
 					reloadKeys();
 					reloadTexts();
 					changeSelection();
-					FlxG.sound.play(Paths.sound('confirmMenu'));
+					FlxG.sound.play(Paths.sound('letterDel'));
+
+
 				} else if(!unselectableCheck(curSelected)) {
 					bindingTime = 0;
 					rebindingKey = true;
@@ -259,24 +277,24 @@ class ControlsSubState extends MusicBeatSubstate {
 					} else {
 						grpInputs[getInputTextNum()].alpha = 0;
 					}
-					FlxG.sound.play(Paths.sound('scrollMenu'));
+					FlxG.sound.play(Paths.sound('tuff'));
+					frontEngine.animation.play('engineSpin', true, false);
 				}
-				frontEngine.animation.play('engineSpin', true, false);
 			}
 		} else {
 			var keyPressed:Int = FlxG.keys.firstJustPressed();
 			if (keyPressed > -1) {
-				var keysArray:Array<FlxKey> = ClientPrefs.keyBinds.get(optionShit[curSelected][1]);
+				var keysArray:Array<FlxKey> = ClientPrefs.keyBinds.get(optionsAssets[curSelected][1]);
 				keysArray[curAlt ? 1 : 0] = keyPressed;
 
 				var opposite:Int = (curAlt ? 0 : 1);
 				if(keysArray[opposite] == keysArray[1 - opposite]) {
 					keysArray[opposite] = NONE;
 				}
-				ClientPrefs.keyBinds.set(optionShit[curSelected][1], keysArray);
+				ClientPrefs.keyBinds.set(optionsAssets[curSelected][1], keysArray);
 
 				reloadKeys();
-				FlxG.sound.play(Paths.sound('confirmMenu'));
+				FlxG.sound.play(Paths.sound('letterPick'));
 				frontEngine.animation.play('engineSpin', true, false);
 				rebindingKey = false;
 			}
@@ -309,7 +327,7 @@ class ControlsSubState extends MusicBeatSubstate {
 	function getInputTextNum() {
 		var num:Int = 0;
 		for (i in 0...curSelected) {
-			if(optionShit[i].length > 1) {
+			if(optionsAssets[i].length > 1) {
 				num++;
 			}
 		}
@@ -324,7 +342,8 @@ class ControlsSubState extends MusicBeatSubstate {
 		if (curPage >= pages.length)
 			curPage = 0;
 
-		optionShit = pages[curPage];
+		optionsAssets = pages[curPage];
+		bg.color = bgColors[curPage];
 
 		reloadTexts();
 		changeSelection();
@@ -334,15 +353,15 @@ class ControlsSubState extends MusicBeatSubstate {
 		// do {
 		// 	curSelected += change;
 		// 	if (curSelected < 0)
-		// 		curSelected = optionShit.length - 1;
-		// 	if (curSelected >= optionShit.length)
+		// 		curSelected = optionsAssets.length - 1;
+		// 	if (curSelected >= optionsAssets.length)
 		// 		curSelected = 0;
 		// } while(unselectableCheck(curSelected));
 		curSelected += change;
 
 		if (curSelected < 0)
-			curSelected = optionShit.length - 1;
-		if (curSelected >= optionShit.length)
+			curSelected = optionsAssets.length - 1;
+		if (curSelected >= optionsAssets.length)
 			curSelected = 0;
 
 		if ((unselectableCheck(curSelected) && grpOptions.members[curSelected].ID != 1) && change != 0) {
@@ -411,18 +430,18 @@ class ControlsSubState extends MusicBeatSubstate {
 				break;
 			}
 		}
-		FlxG.sound.play(Paths.sound('scrollMenu'));
+		FlxG.sound.play(Paths.sound('tuff'));
 	}
 
 	private function unselectableCheck(num:Int, ?checkDefaultKey:Bool = false):Bool {
-		if(optionShit[num][0] == defaultKey) {
+		if(optionsAssets[num][0] == defaultKey) {
 			return checkDefaultKey;
 		}
-		return optionShit[num].length < 2 && optionShit[num][0] != defaultKey;
+		return optionsAssets[num].length < 2 && optionsAssets[num][0] != defaultKey;
 	}
 
 	private function addBindTexts(optionText:Alphabet, num:Int) {
-		var keys:Array<Dynamic> = ClientPrefs.keyBinds.get(optionShit[num][1]);
+		var keys:Array<Dynamic> = ClientPrefs.keyBinds.get(optionsAssets[num][1]);
 		var text1 = new AttachedText(InputFormatter.getKeyName(keys[0]), 400, -55);
 		text1.setPosition(optionText.x + 400, optionText.y - 55);
 		text1.sprTracker = optionText;
