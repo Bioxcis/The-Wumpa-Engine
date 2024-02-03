@@ -1,5 +1,5 @@
 class EKData {
-    public static var keysShit:Map<Int, Map<String, Dynamic>> = [
+    public static var keysAssets:Map<Int, Map<String, Dynamic>> = [
 		0 => [
                 "letters" => ["E"], 
                 "anims" => ["UP"], 
@@ -112,7 +112,6 @@ class EKData {
                 "pixelAnimIndex" => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]
         ],
 	];
-
     
     public static var scales:Array<Float> = [
 		0.9,    //1k
@@ -133,7 +132,8 @@ class EKData {
         0.26,   //16k
         0.26,   //17k
         0.22    //18k
-    ]; 
+    ];
+
 	public static var lessX:Array<Int> = [
 		0,      //1k
 		0,      //2k
@@ -197,18 +197,18 @@ class EKData {
     ];
 
     public static var gun:Array<Int> = [
-        1, 
-        2, 
-        3, 
-        4, 
-        5, 
-        6, 
-        7, 
-        8, 
-        9, 
-        10, 
-        11, 
-        12, 
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
         13,
         14,
         15,
@@ -300,11 +300,31 @@ class EKData {
         0.38,   //17k
         0.32    //18k
     ];
+
+    public static var underlayLane:Array<Int> = [
+        140,    //1k
+        260,    //2k
+        370,    //3k
+        440,    //4k
+        505,    //5k
+        510,    //6k
+        545,    //7k
+        560,    //8k
+        565,    //9k
+        535,    //10k
+        545,    //11k
+        520,    //12k
+        515,    //13k
+        565,    //14k
+        605,    //15k
+        535,    //16k
+        585,    //17k
+        490     //18k
+    ];
 }
 
-class Keybinds
-{
-    public static function optionShit():Array<Dynamic> {
+class Keybinds {
+    public static function optionsAssets():Array<Dynamic> {
         return [
             ['1 NOTA'],
             ['Centro',      'note_one1'],
@@ -518,6 +538,7 @@ class Keybinds
             ['Cima',        'ui_up'],
             ['Diret',       'ui_right'],
             [''],
+            ['ENTRADAS'],
             ['Resetar',     'reset'],
             ['Enter',       'accept'],
             ['Voltar',      'back'],
@@ -534,8 +555,7 @@ class Keybinds
         ];
     }
 
-    public static function fill():Array<Array<Dynamic>>
-    {
+    public static function fill():Array<Array<Dynamic>>{
         return [
 			[
 				ClientPrefs.copyKey(ClientPrefs.keyBinds.get('note_one1'))
