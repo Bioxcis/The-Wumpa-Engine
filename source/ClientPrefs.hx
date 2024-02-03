@@ -64,21 +64,33 @@ class ClientPrefs {
 	public static var cameramoveonnotes:Bool = true;
 	public static var removePerfects:Bool = false;
 	public static var characterTrail:Bool = false;
-	public static var checkForUpdates:Bool = true;
+	public static var checkForUpdates:Bool = false;
+	public static var healthColorTween:Bool = true;
+	public static var healthZoomTween:Bool = true;
+	public static var drainColorTween:Bool = false;
+	public static var comboOffset:Array<Int> = [130, -130, 70, -80];
+	public static var comboOffsetMultiplayer:Array<Int> = [430, -200, 555, -250, -220, -200, -100, -250];
+	public static var ratingOffset:Int = 0;
+	public static var perfectWindow:Int = 15;
+	public static var sickWindow:Int = 45;
+	public static var goodWindow:Int = 90;
+	public static var badWindow:Int = 135;
+	public static var safeFrames:Float = 10;
 	public static var convertEK:Bool = true;
 	public static var showKeybindsOnStart:Bool = true;
+
+	// anyone reading this, amod is Multiplicative Speed Mod, cmod is constant speed mod, and xmod is bpm based speed mod.
+	// an amod example would be chartSpeed * multiplier
+	// cmod would just be constantSpeed = chartSpeed
+	// and xmod basically works by basing the speed on the bpm.
+	// iirc (beatsPerSecond * (conductorToNoteDifference / 1000)) * noteSize (110 or something like that depending on it, prolly just use note.height)
+	// bps is calculated by bpm / 60
+	// oh yeah and you'd have to actually convert the difference to seconds which I already do, because this is based on beats and stuff. but it should work
+	// just fine. but I wont implement it because I don't know how you handle sustains and other stuff like that.
+	// oh yeah when you calculate the bps divide it by the songSpeed or rate because it wont scroll correctly when speeds exist.
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
-		'scrolltype' => 'multiplicativo', 
-		// anyone reading this, amod is multiplicative speed mod, cmod is constant speed mod, and xmod is bpm based speed mod.
-		// an amod example would be chartSpeed * multiplier
-		// cmod would just be constantSpeed = chartSpeed
-		// and xmod basically works by basing the speed on the bpm.
-		// iirc (beatsPerSecond * (conductorToNoteDifference / 1000)) * noteSize (110 or something like that depending on it, prolly just use note.height)
-		// bps is calculated by bpm / 60
-		// oh yeah and you'd have to actually convert the difference to seconds which I already do, because this is based on beats and stuff. but it should work
-		// just fine. but I wont implement it because I don't know how you handle sustains and other stuff like that.
-		// oh yeah when you calculate the bps divide it by the songSpeed or rate because it wont scroll correctly when speeds exist.
+		'scrolltype' => 'multiplicativo',
 		'songspeed' => 1.0,
 		'healthgain' => 1.0,
 		'healthloss' => 1.0,
@@ -88,36 +100,28 @@ class ClientPrefs {
 		'opponentplay' => false
 	];
 
-	public static var comboOffset:Array<Int> = [64, -123, 185, -90];
-	public static var ratingOffset:Int = 0;
-	public static var perfectWindow:Int = 15;
-	public static var sickWindow:Int = 45;
-	public static var goodWindow:Int = 90;
-	public static var badWindow:Int = 135;
-	public static var safeFrames:Float = 10;
-
 	// Every key has two bindings, add your default key binding here.
 	public static var keyBinds:Map<String, Array<FlxKey>> = [
 		// 1K
-		'note_one1'		=> [SPACE, G],
+		'note_one1'		=> [SPACE, V],
 		// 2K
-		'note_two1'		=> [D, LEFT],
-		'note_two2'		=> [L, RIGHT],
+		'note_two1'		=> [A, Q],
+		'note_two2'		=> [L, P],
 		// 3K
-		'note_three1'	=> [D, LEFT],
-		'note_three2'	=> [SPACE, NONE],
-		'note_three3'	=> [L, RIGHT],
+		'note_three1'	=> [A, Q],
+		'note_three2'	=> [SPACE, V],
+		'note_three3'	=> [L, P],
 		// 4K
 		'note_left'		=> [A, LEFT],
 		'note_down'		=> [S, DOWN],
 		'note_up'		=> [W, UP],
 		'note_right'	=> [D, RIGHT],
 		// 5K
-		'note_five1'	=> [A, LEFT],
-		'note_five2'	=> [S, DOWN],
-		'note_five3'	=> [SPACE, G],
-		'note_five4'	=> [K, UP],
-		'note_five5'	=> [L, RIGHT],
+		'note_five1'	=> [A, Q],
+		'note_five2'	=> [S, W],
+		'note_five3'	=> [SPACE, V],
+		'note_five4'	=> [K, O],
+		'note_five5'	=> [L, P],
 		// 6K
 		'note_six1'		=> [A, Q],
 		'note_six2'		=> [S, W],
@@ -129,7 +133,7 @@ class ClientPrefs {
 		'note_seven1'	=> [A, Q],
 		'note_seven2'	=> [S, W],
 		'note_seven3'	=> [D, E],
-		'note_seven4'	=> [SPACE, G],
+		'note_seven4'	=> [SPACE, V],
 		'note_seven5'	=> [J, I],
 		'note_seven6'	=> [K, O],
 		'note_seven7'	=> [L, P],
@@ -147,7 +151,7 @@ class ClientPrefs {
 		'note_nine2'	=> [S, W],
 		'note_nine3'	=> [D, E],
 		'note_nine4'	=> [F, R],
-		'note_nine5'	=> [SPACE, G],
+		'note_nine5'	=> [SPACE, V],
 		'note_nine6'	=> [H, U],
 		'note_nine7'	=> [J, I],
 		'note_nine8'	=> [K, O],
@@ -157,23 +161,23 @@ class ClientPrefs {
 		'note_ten2'		=> [S, W],
 		'note_ten3'		=> [D, E],
 		'note_ten4'		=> [F, R],
-		'note_ten5'		=> [G, T],
-		'note_ten6'		=> [SPACE, Y],
+		'note_ten5'		=> [G, V],
+		'note_ten6'		=> [SPACE, B],
 		'note_ten7'		=> [H, U],
 		'note_ten8'     => [J, I],
 		'note_ten9'		=> [K, O],
 		'note_ten10'	=> [L, P],
 		// 11K
-		'note_elev1'	=> [A, Q],
-		'note_elev2'	=> [S, W],
-		'note_elev3'	=> [D, E],
-		'note_elev4'	=> [F, R],
-		'note_elev5'	=> [G, T],
+		'note_elev1'	=> [A, NONE],
+		'note_elev2'	=> [S, NONE],
+		'note_elev3'	=> [D, NONE],
+		'note_elev4'	=> [F, NONE],
+		'note_elev5'	=> [G, NONE],
 		'note_elev6'	=> [SPACE, NONE],
-		'note_elev7'	=> [H, Y],
-		'note_elev8'    => [J, U],
-		'note_elev9'	=> [K, I],
-		'note_elev10'	=> [L, O],
+		'note_elev7'	=> [H, NONE],
+		'note_elev8'    => [J, NONE],
+		'note_elev9'	=> [K, NONE],
+		'note_elev10'	=> [L, NONE],
 		'note_elev11'	=> [PERIOD, P],
 		// 12K
 		'note_twel1'	=> [A, NONE],
@@ -308,10 +312,10 @@ class ClientPrefs {
 	//public static var defaultKeys:Map<String, Array<FlxKey>> = null;
 	public static var defaultKeys:Map<String, Array<FlxKey>> = keyBinds;
 
-	// public static function loadDefaultKeys() {
-	// 	defaultKeys = keyBinds.copy();
-	// 	//trace(defaultKeys);
-	// }
+	public static function loadDefaultKeys() {
+		defaultKeys = keyBinds.copy();
+		//trace(defaultKeys);
+	}
 
 	public static function saveSettings() {
 		FlxG.save.data.downScroll = downScroll;
@@ -347,6 +351,7 @@ class ClientPrefs {
 		FlxG.save.data.holdNoteVisibility = holdNoteVisibility;
 		FlxG.save.data.healthBarAlpha = healthBarAlpha;
 		FlxG.save.data.comboOffset = comboOffset;
+		FlxG.save.data.comboOffsetMultiplayer = comboOffsetMultiplayer;
 		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
 		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
 		FlxG.save.data.autosaveInterval = autosaveInterval;
@@ -370,6 +375,9 @@ class ClientPrefs {
 		FlxG.save.data.pauseMusic = pauseMusic;
 		FlxG.save.data.noteSkinSettings = noteSkinSettings;
 		FlxG.save.data.checkForUpdates = checkForUpdates;
+		FlxG.save.data.healthColorTween = healthColorTween;
+		FlxG.save.data.healthZoomTween = healthZoomTween;
+		FlxG.save.data.drainColorTween = drainColorTween;
 		FlxG.save.data.convertEK = convertEK;
 		FlxG.save.data.showKeybindsOnStart = showKeybindsOnStart;
 	
@@ -435,6 +443,7 @@ class ClientPrefs {
 		if(FlxG.save.data.showMsText != null) showMsText = FlxG.save.data.showMsText;
 		if(FlxG.save.data.healthBarAlpha != null) healthBarAlpha = FlxG.save.data.healthBarAlpha;
 		if(FlxG.save.data.comboOffset != null) comboOffset = FlxG.save.data.comboOffset;
+		if(FlxG.save.data.comboOffsetMultiplayer != null) comboOffsetMultiplayer = FlxG.save.data.comboOffsetMultiplayer;
 		if(FlxG.save.data.ratingOffset != null) ratingOffset = FlxG.save.data.ratingOffset;
 		if(FlxG.save.data.perfectWindow != null) perfectWindow = FlxG.save.data.perfectWindow;
 		if(FlxG.save.data.sickWindow != null) sickWindow = FlxG.save.data.sickWindow;
@@ -444,12 +453,15 @@ class ClientPrefs {
 		if(FlxG.save.data.controllerMode != null) controllerMode = FlxG.save.data.controllerMode;
 		if(FlxG.save.data.hitsoundVolume != null) hitsoundVolume = FlxG.save.data.hitsoundVolume;
 		if(FlxG.save.data.cameramoveonnotes != null) cameramoveonnotes = FlxG.save.data.cameramoveonnotes;
-		if (FlxG.save.data.convertEK != null) convertEK = FlxG.save.data.convertEK;
-		if (FlxG.save.data.showKeybindsOnStart != null) showKeybindsOnStart = FlxG.save.data.showKeybindsOnStart;
+		if(FlxG.save.data.convertEK != null) convertEK = FlxG.save.data.convertEK;
+		if(FlxG.save.data.showKeybindsOnStart != null) showKeybindsOnStart = FlxG.save.data.showKeybindsOnStart;
 		if(FlxG.save.data.underlaneVisibility != null) underlaneVisibility = FlxG.save.data.underlaneVisibility;
 		if(FlxG.save.data.OpponentUnderlaneVisibility != null) opponentUnderlaneVisibility = FlxG.save.data.OpponentUnderlaneVisibility;
 		if(FlxG.save.data.pauseMusic != null) pauseMusic = FlxG.save.data.pauseMusic;
-		if(FlxG.save.data.pauseMusic != null) noteSkinSettings = FlxG.save.data.noteSkinSettings;
+		if(FlxG.save.data.noteSkinSettings != null) noteSkinSettings = FlxG.save.data.noteSkinSettings;
+		if(FlxG.save.data.healthColorTween != null) healthColorTween = FlxG.save.data.healthColorTween;
+		if(FlxG.save.data.healthZoomTween != null) healthZoomTween = FlxG.save.data.healthZoomTween;
+		if(FlxG.save.data.drainColorTween != null) drainColorTween = FlxG.save.data.drainColorTween;
 		if(FlxG.save.data.gameplaySettings != null) {
 			var savedMap:Map<String, Dynamic> = FlxG.save.data.gameplaySettings;
 			for (name => value in savedMap) {
@@ -459,8 +471,8 @@ class ClientPrefs {
 		
 		// flixel automatically saves your volume!
 		if(FlxG.save.data.volume != null) FlxG.sound.volume = FlxG.save.data.volume;
-		if (FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
-		if (FlxG.save.data.checkForUpdates != null) checkForUpdates = FlxG.save.data.checkForUpdates;
+		if(FlxG.save.data.mute != null) FlxG.sound.muted = FlxG.save.data.mute;
+		if(FlxG.save.data.checkForUpdates != null) checkForUpdates = FlxG.save.data.checkForUpdates;
 
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v4', 'wumpaControls');
@@ -477,9 +489,14 @@ class ClientPrefs {
 		return /*PlayState.isStoryMode ? defaultValue : */ (gameplaySettings.exists(name) ? gameplaySettings.get(name) : defaultValue);
 	}
 
+	public static function resetKeys() {
+		for(key in keyBinds.keys())
+			if(defaultKeys.exists(key))
+				keyBinds.set(key, defaultKeys.get(key).copy());
+	}
+
 	public static function reloadControls() {
 		PlayerSettings.player1.controls.setKeyboardScheme(KeyboardScheme.Solo);
-
 		TitleState.muteKeys = copyKey(keyBinds.get('volume_mute'));
 		TitleState.volumeDownKeys = copyKey(keyBinds.get('volume_down'));
 		TitleState.volumeUpKeys = copyKey(keyBinds.get('volume_up'));
