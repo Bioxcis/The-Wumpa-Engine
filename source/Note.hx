@@ -23,6 +23,7 @@ class Note extends FlxSprite
 	public static var gfxLetter:Array<String> = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I',
 												'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R'];
 	public static var ammo:Array<Int> = EKData.gun;
+	public static var unLay:Array<Int> = EKData.underlayLane;
 	public static var minMania:Int = 0;
 	public static var maxMania:Int = 17;
 
@@ -45,11 +46,13 @@ class Note extends FlxSprite
 
 	public static var defaultMania:Int = 3;
 
+	public var sustainNoteIgnore:Int = 3;
+
 	// pixel notes
 	public static var pixelNotesDivisionValue:Int = 18;
 	public static var pixelScales:Array<Float> = EKData.pixelScales;
 
-	public static var keysShit:Map<Int, Map<String, Dynamic>> = EKData.keysShit;
+	public static var keysAssets:Map<Int, Map<String, Dynamic>> = EKData.keysAssets;
 
 	public var extraData:Map<String,Dynamic> = [];
 	public var strumTime:Float = 0;
@@ -119,8 +122,9 @@ class Note extends FlxSprite
 	public var hitHealth:Float = 0.023;
 	public var missHealth:Float = 0.0475;
 	public var rating:String = 'unknown';
-	public var ratingMod:Float = 0; //9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
+	public var ratingMod:Float = 0; // 0 = shit, 0.4 = bad, 0.7 = good, 1 = sick, 1.005 = perfect, else => unknown
 	public var ratingDisabled:Bool = false;
+	public var scoreDisabled:Bool = false;
 
 	public var texture(default, set):String = null;
 
@@ -132,6 +136,7 @@ class Note extends FlxSprite
 	public var hitsoundDisabled:Bool = false;
 	public var changeAnim:Bool = true;
 	public var changeColSwap:Bool = true;
+	public var noteId:Int = 0;
 
 	public function resizeByRatio(ratio:Float) {
 		if(isSustainNote && !animation.curAnim.name.endsWith('tail')) {
@@ -148,6 +153,7 @@ class Note extends FlxSprite
 	}
 
 	public var mania:Int = 1;
+	public var gameMode:Int = 0;
 
 	var ogW:Float;
 	var ogH:Float;
@@ -169,9 +175,9 @@ class Note extends FlxSprite
 			// colorSwap.hue = ClientPrefs.arrowHSV[noteData][0] / 360;
 			// colorSwap.saturation = ClientPrefs.arrowHSV[noteData][1] / 100;
 			// colorSwap.brightness = ClientPrefs.arrowHSV[noteData][2] / 100;
-			colorSwap.hue = ClientPrefs.arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][0] / 360;
-			colorSwap.saturation = ClientPrefs.arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][1] / 100;
-			colorSwap.brightness = ClientPrefs.arrowHSV[Std.int(Note.keysShit.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][2] / 100;
+			colorSwap.hue = ClientPrefs.arrowHSV[Std.int(Note.keysAssets.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][0] / 360;
+			colorSwap.saturation = ClientPrefs.arrowHSV[Std.int(Note.keysAssets.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][1] / 100;
+			colorSwap.brightness = ClientPrefs.arrowHSV[Std.int(Note.keysAssets.get(mania).get('pixelAnimIndex')[noteData] % Note.ammo[mania])][2] / 100;
 		}
 
 		if(noteData > -1 && noteType != value) {
@@ -207,8 +213,7 @@ class Note extends FlxSprite
 		return value;
 	}
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?charSkin:String = null)
-	{
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inEditor:Bool = false, ?charSkin:String = null) {
 		super();
 
 		if (!inEditor && ClientPrefs.getGameplaySetting('randomcharts', false)) {
@@ -261,7 +266,7 @@ class Note extends FlxSprite
 				// 		animToPlay = 'red';
 				// }
 				// animation.play(animToPlay + 'Scroll');
-				animToPlay = Note.keysShit.get(mania).get('letters')[noteData];
+				animToPlay = Note.keysAssets.get(mania).get('letters')[noteData];
 				animation.play(animToPlay);
 			}
 		}
@@ -292,7 +297,7 @@ class Note extends FlxSprite
 			// 	case 3:
 			// 		animation.play('redholdend');
 			// }
-			animation.play(Note.keysShit.get(mania).get('letters')[noteData] + ' tail');
+			animation.play(Note.keysAssets.get(mania).get('letters')[noteData] + ' tail');
 
 			updateHitbox();
 
@@ -313,13 +318,11 @@ class Note extends FlxSprite
 				// 	case 3:
 				// 		prevNote.animation.play('redhold');
 				// }
-				prevNote.animation.play(Note.keysShit.get(mania).get('letters')[prevNote.noteData] + ' hold');
+				prevNote.animation.play(Note.keysAssets.get(mania).get('letters')[prevNote.noteData] + ' hold');
 
 				prevNote.scale.y *= Conductor.stepCrochet / 100 * 1.05;
 				if(PlayState.instance != null)
-				{
 					prevNote.scale.y *= PlayState.instance.songSpeed;
-				}
 
 				if(PlayState.isPixelStage) {
 					prevNote.scale.y *= 1.19;
@@ -508,27 +511,37 @@ class Note extends FlxSprite
 		super.update(elapsed);
 
 		mania = PlayState.mania;
+		gameMode = PlayState.gameMode;
 
-		if (mustPress) {
-			if (strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult)
-				&& strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
+		if(mustPress) {
+			if(strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult)
+			  && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
 				canBeHit = true;
-			else
-				canBeHit = false;
+			else canBeHit = false;
 
-			if (strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
+			if(strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !wasGoodHit)
 				tooLate = true;
+
+		} else if(!mustPress && gameMode != 0) {
+			if(strumTime > Conductor.songPosition - (Conductor.safeZoneOffset * lateHitMult)
+			  && strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult))
+				canBeHit = true;
+			else canBeHit = false;
+
+			if(strumTime < Conductor.songPosition - Conductor.safeZoneOffset && !hitByOpponent)
+				tooLate = true;
+
 		} else {
 			canBeHit = false;
 
-			if (strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
+			if(strumTime < Conductor.songPosition + (Conductor.safeZoneOffset * earlyHitMult)) {
 				if((isSustainNote && prevNote.wasGoodHit) || strumTime <= Conductor.songPosition)
 					wasGoodHit = true;
 			}
 		}
 
-		if (tooLate && !inEditor) {
-			if (alpha > 0.3)
+		if(tooLate && !inEditor) {
+			if(alpha > 0.3)
 				alpha = 0.3;
 		}
 	}
