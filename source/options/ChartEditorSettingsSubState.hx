@@ -29,8 +29,7 @@ using StringTools;
 
 class ChartEditorSettingsSubState extends BaseOptionsMenu
 {
-	public function new()
-	{
+	public function new() {
 		title = 'Config Editor de Notas';
 		rpcTitle = 'Menu Config Editor de Notas'; //for Discord Rich Presence
 
@@ -41,7 +40,7 @@ class ChartEditorSettingsSubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Intervalo Autosave',
+		var option:Option = new Option('Intervalo Autosave:',
 			'Intervalo do salvamento automático do editor de notas em minutos.',
 			'autosaveInterval',
 			'int',
@@ -54,5 +53,6 @@ class ChartEditorSettingsSubState extends BaseOptionsMenu
 		addOption(option);
 
 		super();
+		changeBgColor(0xB431B4);
 	}
 }
