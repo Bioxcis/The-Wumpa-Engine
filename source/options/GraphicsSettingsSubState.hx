@@ -31,8 +31,7 @@ using StringTools;
 
 class GraphicsSettingsSubState extends BaseOptionsMenu
 {
-	public function new()
-	{
+	public function new() {
 		title = 'Graficos';
 		rpcTitle = 'Menu Ajustes de Graficos'; //for Discord Rich Presence
 
@@ -53,7 +52,7 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		addOption(option);
 
 		#if !html5 //It appears that other frame rates are not supported correctly in the browser.
-		var option:Option = new Option('FPS',
+		var option:Option = new Option('FPS:',
 			"Define o FPS para o seu jogo.",
 			'framerate',
 			'int',
@@ -66,34 +65,8 @@ class GraphicsSettingsSubState extends BaseOptionsMenu
 		option.displayFormat = '%v FPS';
 		option.onChange = onChangeFramerate;
 		#end
-
-		/*
-		-- -- Model -- --
-
-		//Name
-		var option:Option = new Option('Persistent Cached Data',
-		
-		//Description
-			'If checked, images loaded will stay in memory\nuntil the game is closed, this increases memory usage,\nbut basically makes reloading times instant.',
-		
-		//Save data variable name
-			'imagesPersist',
-		
-		//Variable type
-			'bool',
-		
-		//Default value
-			false);
-	
-		//Options (Consult 'BaseOptionsMenu')
-		option.onChange = onChangePersistentData; //Persistent Cached Data changes FlxGraphic.defaultPersist
-
-		//Add
-		addOption(option);
-		-- -- End -- --
-		*/
-
 		super();
+		changeBgColor(0x1485E2);
 	}
 
 	function onChangeAntiAliasing()
