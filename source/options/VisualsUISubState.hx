@@ -42,6 +42,20 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
+		var option:Option = new Option('Tamanho da Hud',
+			"Se marcado, a HUD do jogo será alterada\npara um tamanho menor.",
+			'hudSize',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option("Modo Exibicao",
+			'Se marcado, oculta todo o HUD e ativa o Botplay,\nentrando no modo de exibição de músicas e cinemáticas',
+			'showcaseMode',
+			'bool',
+			false);
+		addOption(option);
+
 		var option:Option = new Option('Splash da Nota',
 			"Se marcado, as notas \"Whoa!\" e \"Nsano!\" vão mostrar\nefeitos de splash ao serem acertadas.",
 			'noteSplashes',
@@ -63,16 +77,23 @@ class VisualsUISubState extends BaseOptionsMenu
 			true);
 		addOption(option);
 
-		var option:Option = new Option('Tamanho da Hud',
-			"Se marcado, a HUD do jogo será alterada\npara um tamanho menor.",
-			'hudSize',
+		var option:Option = new Option('Zoom na Barra de Vida',
+			'Se marcado, ativa o zoom na Barra de Vida\nsempre que você ganha vida.',
+			'healthZoomTween',
 			'bool',
 			true);
 		addOption(option);
 
-		var option:Option = new Option("Modo Exibicao",
-			'Se marcado, oculta todo o HUD e ativa o Botplay,\nentrando no modo de exibição de músicas e cinemáticas',
-			'showcaseMode',
+		var option:Option = new Option('Cor na Barra de Vida',
+			'Se marcado, pinta a Barra de Vida de vermelho\nsempre que você perde vida.',
+			'healthColorTween',
+			'bool',
+			true);
+		addOption(option);
+
+		var option:Option = new Option('Cor na Drenagem de Vida',
+			'Se marcado, pinta a Barra de Vida de vermelho\nsempre que o oponente drenar sua vida.',
+			'drainColorTween',
 			'bool',
 			false);
 		addOption(option);
@@ -94,12 +115,22 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = onChangeFPSCounter;
 		#end
 
-		var option:Option = new Option('Movimento dos Icones',
+		var option:Option = new Option('Movimento dos Icones:',
 			'Clássico será igual aos ícones do FNF original\nEspecial terá uma animação da Wumpa Engine.',
 			'iconbops',
 			'string',
 			'OS',
 			['Especial', 'Classico']);
+		addOption(option);
+
+		// Custom Musics added
+		var option:Option = new Option('Musica do Pause:',
+			"Altere a música que vai tocar no menu Pause.",
+			'pauseMusic',
+			'string',
+			'Crash Time',
+			['Nada', 'Breakfast', 'Tea Time', 'Crash Time']);
+		option.onChange = onChangePauseMusic;
 		addOption(option);
 
 		var option:Option = new Option('Barra de Tempo:',
@@ -110,7 +141,7 @@ class VisualsUISubState extends BaseOptionsMenu
 			['Tempo Restante', 'Tempo Recorrido', 'Nome da Musica', 'Desativado']);
 		addOption(option);
 
-		var option:Option = new Option('Filtro Daltonico',
+		var option:Option = new Option('Filtro Daltonico:',
 			'Define um filtro daltônico no jogo\n(torna o jogo mais acessível para pessoas daltônicas).',
 			'colorblindMode',
 			'string',
@@ -119,7 +150,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		option.onChange = ColorblindFilters.applyFiltersOnGame;
 		addOption(option);
 
-		var option:Option = new Option('Transparencia da Vida',
+		var option:Option = new Option('Transparencia da Vida:',
 			'Altera a transparência da barra de vida e os ícones.',
 			'healthBarAlpha',
 			'percent',
@@ -132,7 +163,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		addOption(option);
 
 		var option:Option = new Option('Mostrar Teclas das Notas',
-			"Se marcado, as teclas correspondentes serão mostradas abaixo das notas no inicio da música.",
+			"Se marcado, as teclas correspondentes serão exibidas abaixo\ndas correspondenters notas no inicio da música.",
 			'showKeybindsOnStart',
 			'bool',
 			true);
@@ -214,16 +245,6 @@ class VisualsUISubState extends BaseOptionsMenu
 			'Classico',
 			['Classico', 'Novo']);
 		addOption(option);
-
-		// Custom Musics added
-		var option:Option = new Option('Musica do Pause:',
-			"Que música você prefere que toque ao pausar?",
-			'pauseMusic',
-			'string',
-			'Crash Time',
-			['Nada', 'Breakfast', 'Tea Time', 'Crash Time']);
-		addOption(option);
-		option.onChange = onChangePauseMusic;
 		*/
 		#if CHECK_FOR_UPDATES
 		var option:Option = new Option('Checar Updates',
@@ -235,6 +256,7 @@ class VisualsUISubState extends BaseOptionsMenu
 		#end
 
 		super();
+		changeBgColor(0x9A27E7);
 	}
 
 	var changedMusic:Bool = false;
