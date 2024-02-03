@@ -44,6 +44,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 	public var title:String;
 	public var rpcTitle:String;
 
+	var bg:FlxSprite;
 	var backEngine:FlxSprite;
 	var frontEngine:FlxSprite;
 
@@ -58,7 +59,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		DiscordClient.changePresence(rpcTitle, null);
 		#end
 		
-		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
+		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
 		bg.color = 0xff2d50c2;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
@@ -377,4 +378,34 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			checkbox.daValue = (optionsArray[checkbox.ID].getValue() == true);
 		}
 	}
+
+	public function changeBgColor(color:Int):Void {
+        bg.color = color;
+    }
+
+	/*
+	-- -- Options Model -- --
+
+	//Name
+	var option:Option = new Option('Persistent Cached Data',
+	
+	//Description
+		'If checked, images loaded will stay in memory\nuntil the game is closed, this increases memory usage,\nbut basically makes reloading times instant.',
+	
+	//Save data variable name
+		'imagesPersist',
+	
+	//Variable type
+		'bool',
+	
+	//Default value
+		false);
+
+	//Options
+	option.onChange = onChangePersistentData; //Persistent Cached Data changes FlxGraphic.defaultPersist
+
+	//Add
+	addOption(option);
+	-- -- End -- --
+	*/
 }
