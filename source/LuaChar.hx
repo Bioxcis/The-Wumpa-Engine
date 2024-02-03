@@ -30,33 +30,28 @@ class LuaChar extends Character
 	public function new(x:Float, y:Float, ?char:String = 'bf', ?isPlayer:Bool = false, arrows:Array<String>) {
 		super(x, y, char, isPlayer);
 		if(arrows != null) {
-			for (ar in arrows) {
+			for(ar in arrows) {
 				arrowArray.push(ar);
 			}
 		} else {
-			for (er in defaultArrows) {
+			for(er in defaultArrows) {
 				arrowArray.push(er);
 			}
 		}
 	}
 
 	override function update(elapsed:Float) {
-		if (!debugMode && animation.curAnim != null) {
-			if(animation.curAnim.name.startsWith('sing')) {
-				holdTimer += elapsed;
-			} else { 
-				holdTimer = 0;
-			}
+		if(!debugMode && animation.curAnim != null) {
+			if(animation.curAnim.name.startsWith('sing')) holdTimer += elapsed;
+			else holdTimer = 0;
 
-			if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && lowHealth && animation.exists('idle-low')) {
+			if(animation.curAnim.name.endsWith('miss') && animation.curAnim.finished && lowHealth && animation.exists('idle-low'))
 				playAnim('idle-low', true, false, 10);
-			} else if (animation.curAnim.name.endsWith('miss') && animation.curAnim.finished) {
+			else if(animation.curAnim.name.endsWith('miss') && animation.curAnim.finished)
 				playAnim('idle', true, false, 10);
-			}
 
-			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && GameOverSubstate.instance.startedDeathToCustom) {
+			if (animation.curAnim.name == 'firstDeath' && animation.curAnim.finished && GameOverSubstate.instance.startedDeathToCustom)
 				playAnim('deathLoop');
-			}
 		}
 		super.update(elapsed);
 	}
@@ -69,9 +64,8 @@ class LuaChar extends Character
 			if(resetArrows)
 				arrowArray = [];
 
-			for (news in newArrows) {
+			for (news in newArrows)
 				arrowArray.push(news);
-			}
 		}
 	}
 
@@ -79,11 +73,9 @@ class LuaChar extends Character
 	 * Checks if the note is the same type as the character's notes.
 	 */
 	public function testNote(noteType:String) {
-		for (press in arrowArray) {
-			if(press == noteType) {
+		for(press in arrowArray)
+			if(press == noteType)
 				return true;
-			}
-		}
 		return false;
 	}
 }
