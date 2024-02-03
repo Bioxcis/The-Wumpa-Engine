@@ -29,7 +29,7 @@ using StringTools;
 
 class OptionsState extends MusicBeatState
 {
-	var options:Array<String> = ['Cor Nota', 'Controles', 'Gameplay', 'Graficos', 'Visual e UI', 'Editor de Nota', 'Ajustar Delay e Combo'];
+	var options:Array<String> = ['Cor Nota', 'Controles', 'Graficos', 'Gameplay', 'Visual e UI', 'Editor de Nota', 'Ajustar Delay e Combo'];
 	private var grpOptions:FlxTypedGroup<Alphabet>;
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
@@ -40,16 +40,16 @@ class OptionsState extends MusicBeatState
 				openSubState(new options.NotesSubState());
 			case 'Controles':
 				openSubState(new options.ControlsSubState());
-			case 'Gameplay':
-				openSubState(new options.GameplaySettingsSubState());
 			case 'Graficos':
 				openSubState(new options.GraphicsSettingsSubState());
+			case 'Gameplay':
+				openSubState(new options.GameplaySettingsSubState());
 			case 'Visual e UI':
 				openSubState(new options.VisualsUISubState());
 			case 'Editor de Nota':
 				openSubState(new options.ChartEditorSettingsSubState());
 			case 'Ajustar Delay e Combo':
-				LoadingState.loadAndSwitchState(new options.NoteOffsetState());
+				LoadingState.loadAndSwitchState(new options.NoteOffsetState(), false, false);
 		}
 	}
 
@@ -63,14 +63,15 @@ class OptionsState extends MusicBeatState
 		DiscordClient.changePresence("Options Menu", null);
 		#end
 
-		if (FlxG.sound.music == null) {
+		if(FlxG.sound.music == null) {
 			FlxG.sound.playMusic(Paths.music('freakyOptions'), 0);
-			FlxG.sound.music.fadeIn(0.2, 0, 1);
+			FlxG.sound.music.fadeIn(0.1, 0, 1);
 		} else {
-			FlxG.sound.music.fadeOut(0.2, 0,
-				function(fadeOut: FlxTween) {
+			FlxG.sound.play(Paths.sound('tiss'), 0.7);
+			FlxG.sound.music.fadeOut(0.1, 0,
+				function(fadeOut:FlxTween) {
 				FlxG.sound.playMusic(Paths.music('freakyOptions'), 0);
-				FlxG.sound.music.fadeIn(0.2, 0, 1);
+				FlxG.sound.music.fadeIn(0.1, 0, 1);
 			});
 		}
 
@@ -103,15 +104,14 @@ class OptionsState extends MusicBeatState
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
 
-		for (i in 0...options.length)
-		{
+		for (i in 0...options.length) {
 			var optionText:Alphabet = new Alphabet(0, 0, options[i], true, false);
 			optionText.screenCenter();
 			optionText.ID = i;
 			optionText.y += (100 * (i - (options.length / 2))) + 50;
 			grpOptions.add(optionText);
 
-			switch (i)//POSIÇÕES DOS ITENS DO MENU OPÇÕES (espaçamento de texto = 87).
+			switch (i) // POSIÇÕES DOS ITENS DO MENU OPÇÕES (espaçamento do texto = 87).
 			{
 				case 0:					
 					optionText.y = 64;
@@ -162,15 +162,16 @@ class OptionsState extends MusicBeatState
 
 		if (controls.BACK) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			if (PauseSubState.wasinsongbeforethenwenttooptions) {
+			if(PauseSubState.wasinsongbeforethenwenttooptions) {
 				MusicBeatState.switchState(new PlayState());
 				PauseSubState.wasinsongbeforethenwenttooptions = false;
 				FlxG.sound.music.fadeOut(0.2, 0);
 			} else {
-				FlxG.sound.music.fadeOut(0.2, 0,
+				FlxG.sound.play(Paths.sound('tiss'), 0.7);
+				FlxG.sound.music.fadeOut(0.1, 0,
 					function(fadeOut: FlxTween) {
-						FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
-						FlxG.sound.music.fadeIn(0.2, 0, 1);
+					FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+					FlxG.sound.music.fadeIn(0.1, 0, 1);
 				});
 				MusicBeatState.switchState(new MainMenuState());
 			}
