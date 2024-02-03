@@ -11,7 +11,7 @@ using StringTools;
 
 class Achievements {
 	public static var achievementsStuff:Array<Dynamic> = [ //Name, Description, Achievement save tag, Hidden achievement
-		["Cante Comigo, Muito Nsano!", 		"Inicie sua aventura nas Ilhas Wumpas!!!",				'friday_night_play',	 true],
+		["Cante Comigo, Muito Nsano!", 		"Tenha uma aventura em uma Sexta a Noite!!!",			'friday_night_play',	 true],
 /***/	["Nenhum Lugar como Wumpa!",		"Termine a Semana 1 no NSano sem erros.",				'week1_nomiss',			 true],
 		["Girl Power!",						"Termine a Semana 2 no NSano sem erros.",				'week2_nomiss',			 true],
 		["Nao recicle!", 		     		"Termine a Semana 3 no NSano sem erros.",				'week3_nomiss',			 true],
