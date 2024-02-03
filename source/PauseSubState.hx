@@ -288,9 +288,9 @@ class PauseSubState extends MusicBeatSubstate
 					case 'Botplay':
 						PlayState.instance.cpuControlled = !PlayState.instance.cpuControlled;
 						PlayState.changedDifficulty = true;
-						PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
-						PlayState.instance.botplayTxt.alpha = 1;
-						PlayState.instance.botplaySine = 0;
+						//PlayState.instance.botplayTxt.visible = PlayState.instance.cpuControlled;
+						//PlayState.instance.botplayTxt.alpha = 1;
+						//PlayState.instance.botplaySine = 0;
 						selectedEffect();
 					case 'Ajustes':
 						optionAccepted = true;
@@ -301,7 +301,8 @@ class PauseSubState extends MusicBeatSubstate
 								PlayState.restartSkipCountdown = false;
 								PlayState.seenCutscene = false;
 								MusicBeatState.switchState(new options.OptionsState());
-								//FlxG.sound.playMusic(Paths.music('freakyOptions'));
+								//FlxG.sound.playMusic(Paths.music('freakyOptions'), 0);
+								//FlxG.sound.music.fadeIn(0.2, 0, 1);
 							}
 						});
 						selectedEffect();
@@ -339,10 +340,8 @@ class PauseSubState extends MusicBeatSubstate
 		}
 	}
 
-	function deleteSkipTimeText()
-	{
-		if(skipTimeText != null)
-		{
+	function deleteSkipTimeText() {
+		if(skipTimeText != null) {
 			skipTimeText.kill();
 			remove(skipTimeText);
 			skipTimeText.destroy();
@@ -365,32 +364,25 @@ class PauseSubState extends MusicBeatSubstate
 		});
 	}
 
-	public static function restartSong(noTrans:Bool = false)
-	{
+	public static function restartSong(noTrans:Bool = false) {
 		PlayState.instance.paused = true; // For lua
 		FlxG.sound.music.volume = 0;
 		PlayState.instance.vocals.volume = 0;
 
-		if(noTrans)
-		{
+		if(noTrans) {
 			FlxTransitionableState.skipNextTransOut = true;
 			FlxG.resetState();
-		}
-		else
-		{
+		} else {
 			MusicBeatState.resetState();
 		}
 	}
 
-	override function destroy()
-	{
+	override function destroy() {
 		pauseMusic.destroy();
-
 		super.destroy();
 	}
 
-	function changeSelection(change:Int = 0):Void
-	{
+	function changeSelection(change:Int = 0):Void {
 		curSelected += change;
 
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
@@ -402,16 +394,14 @@ class PauseSubState extends MusicBeatSubstate
 
 		var bullShit:Int = 0;
 
-		for (item in grpMenuShit.members)
-		{
+		for (item in grpMenuShit.members) {
 			item.targetY = bullShit - curSelected;
 			bullShit++;
 
 			item.alpha = 0.6;
 			// item.setGraphicSize(Std.int(item.width * 0.8));
 
-			if (item.targetY == 0)
-			{
+			if (item.targetY == 0) {
 				item.alpha = 1;
 				// item.setGraphicSize(Std.int(item.width));
 
