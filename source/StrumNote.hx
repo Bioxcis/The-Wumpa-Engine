@@ -14,8 +14,8 @@ class StrumNote extends FlxSprite
 	private var colorSwap:ColorSwap;
 	public var resetAnim:Float = 0;
 	private var noteData:Int = 0;
-	public var direction:Float = 90;//plan on doing scroll directions soon -bb
-	public var downScroll:Bool = false;//plan on doing scroll directions soon -bb
+	public var direction:Float = 90;	//plan on doing scroll directions soon -bb
+	public var downScroll:Bool = false;	//plan on doing scroll directions soon -bb
 	public var sustainReduce:Bool = true;
 
 	public var animationArray:Array<String> = ['static', 'pressed', 'confirm'];
@@ -85,9 +85,9 @@ class StrumNote extends FlxSprite
 		this.noteData = leData;
 		super(x, y);
 
-		animationArray[0] = Note.keysShit.get(PlayState.mania).get('strumAnims')[leData];
-		animationArray[1] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
-		animationArray[2] = Note.keysShit.get(PlayState.mania).get('letters')[leData];
+		animationArray[0] = Note.keysAssets.get(PlayState.mania).get('strumAnims')[leData];
+		animationArray[1] = Note.keysAssets.get(PlayState.mania).get('letters')[leData];
+		animationArray[2] = Note.keysAssets.get(PlayState.mania).get('letters')[leData];
 
 		var skin:String = 'NOTE_assets';
 		// if (PlayState.SONG.arrowSkin == null || PlayState.SONG.arrowSkin.length <= 1) {
@@ -191,7 +191,7 @@ class StrumNote extends FlxSprite
 			height = height / 5;
 			antialiasing = false;
 			loadGraphic(Paths.image('pixelUI/' + texture), true, Math.floor(width), Math.floor(height));
-			var daFrames:Array<Int> = Note.keysShit.get(PlayState.mania).get('pixelAnimIndex');
+			var daFrames:Array<Int> = Note.keysAssets.get(PlayState.mania).get('pixelAnimIndex');
 
 			setGraphicSize(Std.int(width * PlayState.daPixelZoom * Note.pixelScales[PlayState.mania]));
 			updateHitbox();
@@ -264,9 +264,9 @@ class StrumNote extends FlxSprite
 				// colorSwap.hue = ClientPrefs.arrowHSV[noteData][0] / 360;
 				// colorSwap.saturation = ClientPrefs.arrowHSV[noteData][1] / 100;
 				// colorSwap.brightness = ClientPrefs.arrowHSV[noteData][2] / 100;
-				colorSwap.hue = ClientPrefs.arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][0] / 360;
-				colorSwap.saturation = ClientPrefs.arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][1] / 100;
-				colorSwap.brightness = ClientPrefs.arrowHSV[Std.int(Note.keysShit.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][2] / 100;
+				colorSwap.hue = ClientPrefs.arrowHSV[Std.int(Note.keysAssets.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][0] / 360;
+				colorSwap.saturation = ClientPrefs.arrowHSV[Std.int(Note.keysAssets.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][1] / 100;
+				colorSwap.brightness = ClientPrefs.arrowHSV[Std.int(Note.keysAssets.get(PlayState.mania).get('pixelAnimIndex')[noteData] % Note.ammo[PlayState.mania])][2] / 100;
 			}
 
 			if(animation.curAnim.name == 'confirm' && !PlayState.isPixelStage) {
