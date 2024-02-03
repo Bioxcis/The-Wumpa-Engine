@@ -12,8 +12,7 @@ class HealthIcon extends FlxSprite
 	private var isPlayer:Bool = false;
 	private var char:String = '';
 
-	public function new(char:String = 'bf', isPlayer:Bool = false)
-	{
+	public function new(char:String = 'bf', isPlayer:Bool = false) {
 		super();
 		isOldIcon = (char == 'bf-old');
 		this.isPlayer = isPlayer;
@@ -21,11 +20,10 @@ class HealthIcon extends FlxSprite
 		scrollFactor.set();
 	}
 
-	override function update(elapsed:Float)
-	{
+	override function update(elapsed:Float) {
 		super.update(elapsed);
 
-		if (sprTracker != null)
+		if(sprTracker != null)
 			setPosition(sprTracker.x + sprTracker.width + 10, sprTracker.y - 30);
 	}
 
@@ -42,9 +40,9 @@ class HealthIcon extends FlxSprite
 			if(!Paths.fileExists('images/' + name + '.png', IMAGE)) name = 'icons/icon-face'; //Prevents crash from missing icon
 			var file:Dynamic = Paths.image(name);
 
-			loadGraphic(file); //Load stupidly first for getting the file size
+			loadGraphic(file); //Load first for getting the file size
 			var width2 = width;
-			if (width == 450) {
+			if(width == 450) {
 				loadGraphic(file, true, Math.floor(width / 3), Math.floor(height)); //Then load it fr // winning icons go br
 				iconOffsets[0] = (width - 150) / 3;
 				iconOffsets[1] = (width - 150) / 3;
@@ -56,7 +54,7 @@ class HealthIcon extends FlxSprite
 			}
 			
 			updateHitbox();
-			if (width2 == 450) {
+			if(width2 == 450) {
 				animation.add(char, [0, 1, 2], 0, false, isPlayer);
 			} else {
 				animation.add(char, [0, 1], 0, false, isPlayer);
@@ -71,8 +69,7 @@ class HealthIcon extends FlxSprite
 		}
 	}
 
-	override function updateHitbox()
-	{
+	override function updateHitbox() {
 		super.updateHitbox();
 		offset.x = iconOffsets[0];
 		offset.y = iconOffsets[1];
