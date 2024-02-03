@@ -51,7 +51,7 @@ class NotesSubState extends MusicBeatSubstate
 		super();
 		
 		bg = new FlxSprite().loadGraphic(Paths.image('menuDesat'));
-		bg.color = 0xff5a35ff;
+		bg.color = 0xff6581b6;
 		bg.screenCenter();
 		bg.antialiasing = ClientPrefs.globalAntialiasing;
 		add(bg);
