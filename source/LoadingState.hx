@@ -171,11 +171,11 @@ class LoadingState extends MusicBeatState
 		return Paths.voices(PlayState.SONG.song);
 	}
 	
-	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false) {
-		MusicBeatState.switchState(getNextState(target, stopMusic));
+	inline static public function loadAndSwitchState(target:FlxState, stopMusic = false, load = true) {
+		MusicBeatState.switchState(getNextState(target, stopMusic, load));
 	}
 	
-	static function getNextState(target:FlxState, stopMusic = false):FlxState {
+	static function getNextState(target:FlxState, stopMusic = false, loading = true):FlxState {
 		var directory:String = 'shared';
 		var weekDir:String = StageData.forceNextDirectory;
 		StageData.forceNextDirectory = null;
@@ -186,13 +186,14 @@ class LoadingState extends MusicBeatState
 		trace('Setting asset folder to ' + directory);
 
 		//#if NO_PRELOAD_ALL
-		var loaded:Bool = false;
-		if (PlayState.SONG != null) {
-			loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
+		if(loading) {
+			var loaded:Bool = false;
+			if(PlayState.SONG != null)
+				loaded = isSoundLoaded(getSongPath()) && (!PlayState.SONG.needsVoices || isSoundLoaded(getVocalPath())) && isLibraryLoaded("shared") && isLibraryLoaded(directory);
+			
+			if(!loaded)
+				return new LoadingState(target, stopMusic, directory);
 		}
-		
-		if (!loaded)
-			return new LoadingState(target, stopMusic, directory);
 		//#end
 		if (stopMusic && FlxG.sound.music != null)
 			FlxG.sound.music.stop();
@@ -205,8 +206,7 @@ class LoadingState extends MusicBeatState
 		return Assets.cache.hasSound(path);
 	}
 	
-	static function isLibraryLoaded(library:String):Bool
-	{
+	static function isLibraryLoaded(library:String):Bool {
 		return Assets.getLibrary(library) != null;
 	}
 	//#end
