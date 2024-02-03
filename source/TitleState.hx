@@ -422,7 +422,7 @@ class TitleState extends MusicBeatState
 
 		FlxTween.tween(credTextShit, {y: credTextShit.y + 20}, 2.9, {ease: FlxEase.quadInOut, type: PINGPONG});
 
-		new FlxTimer().start(90, function(_) {
+		new FlxTimer().start(169, function(_) {
 			FlxG.sound.play(Paths.sound('wumpaEasterEgg'), 1);
 			makeTitleEmitter();
 		});
