@@ -2,11 +2,6 @@ package;
 
 import Song.SwagSong;
 
-/**
- * ...
- * @author
- */
-
 typedef BPMChangeEvent =
 {
 	var stepTime:Int;
@@ -28,15 +23,12 @@ class Conductor {
 
 	public static var bpmChangeMap:Array<BPMChangeEvent> = [];
 
-	public function new()
-	{
-	}
+	public function new() {}
 
-	public static function judgeNote(arr:Array<Rating>, diff:Float=0):Rating
-	{
+	public static function judgeNote(arr:Array<Rating>, diff:Float = 0):Rating {
 		var data:Array<Rating> = arr;
 		for(i in 0...data.length-1)
-			if (diff <= data[i].hitWindow)
+			if(diff <= data[i].hitWindow)
 				return data[i];
 
 		return data[data.length - 1];
@@ -54,9 +46,8 @@ class Conductor {
 			bpm: bpm,
 			stepCrochet: stepCrochet
 		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (time >= Conductor.bpmChangeMap[i].songTime)
+		for(i in 0...Conductor.bpmChangeMap.length) {
+			if(time >= Conductor.bpmChangeMap[i].songTime)
 				lastChange = Conductor.bpmChangeMap[i];
 		}
 
@@ -70,9 +61,8 @@ class Conductor {
 			bpm: bpm,
 			stepCrochet: stepCrochet
 		}
-		for (i in 0...Conductor.bpmChangeMap.length)
-		{
-			if (Conductor.bpmChangeMap[i].stepTime<=step)
+		for(i in 0...Conductor.bpmChangeMap.length) {
+			if(Conductor.bpmChangeMap[i].stepTime<=step)
 				lastChange = Conductor.bpmChangeMap[i];
 		}
 
@@ -103,17 +93,14 @@ class Conductor {
 		return Math.floor(getStepRounded(time)/4);
 	}
 
-	public static function mapBPMChanges(song:SwagSong)
-	{
+	public static function mapBPMChanges(song:SwagSong) {
 		bpmChangeMap = [];
 
 		var curBPM:Float = song.bpm;
 		var totalSteps:Int = 0;
 		var totalPos:Float = 0;
-		for (i in 0...song.notes.length)
-		{
-			if(song.notes[i].changeBPM && song.notes[i].bpm != curBPM)
-			{
+		for (i in 0...song.notes.length) {
+			if(song.notes[i].changeBPM && song.notes[i].bpm != curBPM) {
 				curBPM = song.notes[i].bpm;
 				var event:BPMChangeEvent = {
 					stepTime: totalSteps,
@@ -131,8 +118,7 @@ class Conductor {
 		trace("new BPM map BUDDY " + bpmChangeMap);
 	}
 
-	static function getSectionBeats(song:SwagSong, section:Int)
-	{
+	static function getSectionBeats(song:SwagSong, section:Int) {
 		var val:Null<Float> = null;
 		if(song.notes[section] != null) val = song.notes[section].sectionBeats;
 		return val != null ? val : 4;
@@ -142,36 +128,10 @@ class Conductor {
 		return (60/bpm)*1000;
 	}
 
-	public static function changeBPM(newBpm:Float)
-	{
+	public static function changeBPM(newBpm:Float){
 		bpm = newBpm;
 
 		crochet = calculateCrochet(bpm);
 		stepCrochet = crochet / 4;
-	}
-}
-
-class Rating {
-	public var name:String = '';
-	public var image:String = '';
-	public var counter:String = '';
-	public var hitWindow:Null<Int> = 0; //ms
-	public var ratingMod:Float = 1.004;
-	public var score:Int = 500;
-	public var noteSplash:Bool = true;
-	public var hits:Int = 0;
-
-	public function new(name:String) {
-		this.name = name;
-		this.image = name;
-		this.counter = name + 's';
-		this.hitWindow = Reflect.field(ClientPrefs, name + 'Window');
-		if(hitWindow == null) {
-			hitWindow = 0;
-		}
-	}
-
-	public function increase(blah:Int = 1) {
-		Reflect.setField(PlayState.instance, counter, Reflect.field(PlayState.instance, counter) + blah);
 	}
 }
