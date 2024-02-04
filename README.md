@@ -34,6 +34,8 @@ To Compile, use this on a Command prompt/PowerShell:
 
 ### Agradecimentos Especiais Wumpa Engine
 * [Airumu](https://x.com/airumuu?s=20) - Crash Bandicoot modder, instrumentos originais (musicas) de Crash Bandicoot - PlayStation One Series
+* [tposeJank](https://x.com/tpose_jank?s=20) - Psych Multikeys
+* [srPerez](https://x.com/NewSrPerez?s=20) - Shaggy Mod - Multikey Original
 
 ## Creditos OS Engine:
 * [weuz_](https://github.com/notweuz) - Codificação
