@@ -3951,7 +3951,7 @@ class FunkinLua {
 				}
 			}
 		});
-		// THIS IS BUGGED, FUCK THIS SHIT
+		// THIS IS BUGGED, FUNK THIS XEET
 		// Lua_helper.add_callback(lua, "getSoundPitch", function(tag:String) {
 		// 	if(tag != null && tag.length > 0 && PlayState.instance.modchartSounds.exists(tag)) {
 		// 		return PlayState.instance.modchartSounds.get(tag).pitch;
