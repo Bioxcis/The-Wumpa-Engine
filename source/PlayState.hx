@@ -262,6 +262,7 @@ class PlayState extends MusicBeatState {
 	// Camera
 	private var isCameraOnForcedPos:Bool = false;
 	public var cameraSpeed:Float = 1;
+	public var cameraFocusSection:Bool = false;
 
 	public var camFollow:FlxPoint;
 	public var camFollowPos:FlxObject;
@@ -390,6 +391,7 @@ class PlayState extends MusicBeatState {
 	private var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 	var dialogue:Array<String> = ['blah blah blah', 'coolswag'];
 	var dialogueJson:DialogueFile = null;
+	private var lastSection:Bool = false;
 
 	public static var daPixelZoom:Float = 6;
 	public var precacheList:Map<String, String> = new Map<String, String>();
@@ -1129,6 +1131,8 @@ class PlayState extends MusicBeatState {
 		}
 
 		startingSong = true;
+	
+		lastSection = SONG.notes[curSection].mustHitSection;
 
 		// SONG SPECIFIC SCRIPTS
 		#if LUA_ALLOWED
@@ -4471,7 +4475,7 @@ class PlayState extends MusicBeatState {
 			}
 
 		} else if(playerType) {
-			if((note != null && note.noteType != 'Lua Note') || (note == null)) {
+			if((note != null && note.noteType != 'Lua Note' && !note.noMissAnimation) || (note == null)) {
 				if(dad.animOffsets.exists('sing' + mainAnim + 'miss'))
 					dad.playAnim('sing' + mainAnim + 'miss' + altAnim, true);
 				else {
@@ -4485,7 +4489,7 @@ class PlayState extends MusicBeatState {
 			}
 
 		} else if(!playerType) {
-			if((note != null && note.noteType != 'Lua Note') || (note == null)) {
+			if((note != null && note.noteType != 'Lua Note' && !note.noMissAnimation) || (note == null)) {
 				if(boyfriend.animOffsets.exists('sing' + mainAnim + 'miss'))
 					boyfriend.playAnim('sing' + mainAnim + 'miss' + altAnim, true);
 				else {
@@ -5045,13 +5049,16 @@ class PlayState extends MusicBeatState {
 	override function sectionHit() {
 		super.sectionHit();
 
-		if (SONG.notes[curSection] != null) {
-			if (generatedMusic && !endingSong && !isCameraOnForcedPos)
-				moveCameraSection();
+		if(SONG.notes[curSection] != null) {
+			if(generatedMusic && !endingSong && !isCameraOnForcedPos)
+				if(SONG.notes[curSection].mustHitSection != lastSection && cameraFocusSection) {
+					lastSection = SONG.notes[curSection].mustHitSection;
+					moveCameraSection();
+				} else moveCameraSection();
 
 			daZooming(true, true, true, camZoomingMult);
 
-			if (SONG.notes[curSection].changeBPM) {
+			if(SONG.notes[curSection].changeBPM) {
 				Conductor.changeBPM(SONG.notes[curSection].bpm);
 				setOnLuas('curBpm', Conductor.bpm);
 				setOnLuas('crochet', Conductor.crochet);
