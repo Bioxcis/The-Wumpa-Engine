@@ -3952,7 +3952,7 @@ class FunkinLua {
 				}
 			}
 		});
-		// THIS IS BUGGED, FUCK THIS SHIT
+		// THIS IS BUGGED, FUNK THIS XEET
 		// Lua_helper.add_callback(lua, "getSoundPitch", function(tag:String) {
 		// 	if(tag != null && tag.length > 0 && PlayState.instance.modchartSounds.exists(tag)) {
 		// 		return PlayState.instance.modchartSounds.get(tag).pitch;
@@ -4382,7 +4382,7 @@ class FunkinLua {
 			} else
 				luaTrace("Effects table is empty or invalid", false, false, FlxColor.RED);
 		});
-		Lua_helper.add_callback(lua, "addSpriteEffect", function(tag:String, front:Bool = false/*, screenCopy:Bool = false*/) {
+		Lua_helper.add_callback(lua, "addSpriteEffect", function(tag:String, front:Bool = false) {
 			if(PlayState.instance.modchartEffectSprites.exists(tag)) {
 				var effectSprite:FlxEffectSprite = PlayState.instance.modchartEffectSprites.get(tag);
 				if(front)
@@ -4399,32 +4399,6 @@ class FunkinLua {
 						PlayState.instance.insert(position, effectSprite);
 					}
 				}
-				// TEST FAILED ;-;
-				// if(screenCopy) {
-				// 	var theSprite:FlxSprite = effectSprite.target;
-				// 	theSprite.drawFrame();
-				// 	var theSpritePixels = theSprite.framePixels;
-				// 	var cam:FlxCamera = theSprite.camera;
-				// 	if(FlxG.renderBlit) {
-				// 		if(cam == PlayState.instance.camGame)
-				// 			theSpritePixels.copyPixels(PlayState.instance.camGame.buffer, PlayState.instance.camGame.buffer.rect, new Point());
-				// 		else if(cam == PlayState.instance.camHUD)
-				// 			theSpritePixels.copyPixels(PlayState.instance.camHUD.buffer, PlayState.instance.camHUD.buffer.rect, new Point());
-				// 		else if(cam == PlayState.instance.camOther)
-				// 			theSpritePixels.copyPixels(PlayState.instance.camOther.buffer, PlayState.instance.camOther.buffer.rect, new Point());
-				// 	} else {
-				// 		if(cam == PlayState.instance.camGame)
-				// 			theSpritePixels.draw(PlayState.instance.camGame.canvas, new Matrix(1, 0, 0, 1, 0, 0));
-				// 		else if(cam == PlayState.instance.camHUD)
-				// 			theSpritePixels.draw(PlayState.instance.camHUD.canvas, new Matrix(1, 0, 0, 1, 0, 0));
-				// 		else if(cam == PlayState.instance.camOther)
-				// 			theSpritePixels.draw(PlayState.instance.camOther.canvas, new Matrix(1, 0, 0, 1, 0, 0));
-				// 	}
-				// 	var rc:Float = 1 / 3;
-				// 	var gc:Float = 1 / 2;
-				// 	var bc:Float = 1 / 6;
-				// 	theSpritePixels.applyFilter(theSpritePixels, theSpritePixels.rect, new Point(), new ColorMatrixFilter([rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, rc, gc, bc, 0, 0, 0, 0, 0, 1, 0]));
-				// }
 			} else
 				luaTrace("The sprite " + tag + " doesn't exist!", false, false, FlxColor.RED);
 		});
