@@ -23,11 +23,11 @@ class MasterEditorMenu extends MusicBeatState
 	var options:Array<String> = [
 		'Editor Notas',
 		'Editor Semana',
-		'Editor Dialogo',
 		'Editor Personagem',
+		'Editor Estagio',
+		'Editor Dialogo',
 		'Editor Figura Dialogo',
-		'Editor Personagem Menu',
-		'Editor Estagio'
+		'Editor Personagem Menu'
 	];
 	private var grpTexts:FlxTypedGroup<Alphabet>;
 	private var directories:Array<String> = [null];

@@ -85,7 +85,7 @@ class CreditsState extends MusicBeatState
 		}
 		#end
 
-		var pisspoop:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
+		var creditsp:Array<Array<String>> = [ //Name - Icon name - Description - Link - BG Color
 			['Crash Night Funkin - Wumpa Engine'],
 			['Bioxcis-dono',		'bios', 			'Programmer, Artist/Designer/Animator, Composer, Translator', 	'https://twitter.com/Bioxcis_dono', 	'00FF99'],
 			[''],
@@ -126,7 +126,7 @@ class CreditsState extends MusicBeatState
 			['']
 		];
 		
-		for(i in pisspoop){
+		for(i in creditsp){
 			creditsStuff.push(i);
 		}
 	
