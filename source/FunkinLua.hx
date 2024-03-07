@@ -2132,14 +2132,14 @@ class FunkinLua {
 			luaTrace('Couldnt find object: ' + tag, false, false, FlxColor.RED);
 			return 0;
 		});
-		Lua_helper.add_callback(lua, "makeSimpleText", function(tag:String, text:String, width:Int, xy:Array<Float>, size:Int, color:String = null, font:String = null, alignm:String) {
+		Lua_helper.add_callback(lua, "makeSimpleText", function(tag:String, text:String, width:Int, xy:Array<Float>, size:Int, color:String = '#FFFFFF', font:String, alignm:String) {
 			tag = tag.replace('.', '');
 			resetTextTag(tag);
 			var leText:FlxText = new FlxText(xy[0], xy[1], text, width);
-			leText.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			leText.setFormat(null, 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+			leText.font = font;
 			leText.size = size;
-			if(color != null) leText.color = returnColor(color);
-			if(font != null) leText.font = font;
+			leText.color = returnColor(color);
 			switch(alignm.trim().toLowerCase()) {
 				case 'right':
 					leText.alignment = RIGHT;
@@ -2150,6 +2150,7 @@ class FunkinLua {
 			leText.scrollFactor.set();
 			leText.borderSize = 2;
 			PlayState.instance.modchartTexts.set(tag, leText);
+			getInstance().add(leText);
 		});
 		Lua_helper.add_callback(lua, "addLuaText", function(tag:String) {
 			if(PlayState.instance.modchartTexts.exists(tag)) {
