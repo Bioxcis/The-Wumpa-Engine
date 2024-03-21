@@ -169,6 +169,7 @@ class GameOverSubstate extends MusicBeatSubstate
 					// });
 				} else {
 					endDeathIntro = true;
+					PlayState.instance.setOnLuas('deathChoose', true);
 					coolStartDeath();
 					PlayState.instance.setOnLuas('deathFinish', true);
 				}
@@ -183,6 +184,7 @@ class GameOverSubstate extends MusicBeatSubstate
 
 			if(versusGame && soundIsEnded && !coolStarted) {
 				endDeathIntro = true;
+				PlayState.instance.setOnLuas('deathChoose', true);
 				coolStartDeath();
 				PlayState.instance.setOnLuas('deathFinish', true);
 			}
@@ -207,7 +209,9 @@ class GameOverSubstate extends MusicBeatSubstate
 			isEnding = true;
 			endDeathIntro = false;
 
+			PlayState.instance.setOnLuas('deathChoose', false);
 			PlayState.instance.setOnLuas('deathFinish', false);
+
 			if(boyfriend.animOffsets.exists('deathConfirm'))
 				boyfriend.playAnim('deathConfirm', true);
 
@@ -227,7 +231,9 @@ class GameOverSubstate extends MusicBeatSubstate
 			isEnding = true;
 			endDeathIntro = false;
 
+			PlayState.instance.setOnLuas('deathChoose', false);
 			PlayState.instance.setOnLuas('deathFinish', false);
+
 			if(boyfriend.animOffsets.exists('deathQuit'))
 				boyfriend.playAnim('deathQuit', true);
 			else if(boyfriend.animOffsets.exists('deathConfirm'))
