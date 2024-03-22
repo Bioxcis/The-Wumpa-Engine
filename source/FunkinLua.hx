@@ -288,7 +288,7 @@ class FunkinLua {
 		#end
 
 
-		// Scripts Config
+		// Scripts Assets
 
 		Lua_helper.add_callback(lua, "getRunningScripts", function(){
 			var runningScripts:Array<String> = [];
