@@ -56,6 +56,7 @@ class GameOverSubstate extends MusicBeatSubstate
 	override function create() {
 		instance = this;
 		endDeathIntro = false;
+		PlayState.instance.setOnLuas('deathFinish', false);
 		PlayState.instance.callOnLuas('onGameOverStart', [isP2]);
 
 		super.create();
@@ -210,7 +211,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			endDeathIntro = false;
 
 			PlayState.instance.setOnLuas('deathChoose', false);
-			PlayState.instance.setOnLuas('deathFinish', false);
 
 			if(boyfriend.animOffsets.exists('deathConfirm'))
 				boyfriend.playAnim('deathConfirm', true);
@@ -232,7 +232,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			endDeathIntro = false;
 
 			PlayState.instance.setOnLuas('deathChoose', false);
-			PlayState.instance.setOnLuas('deathFinish', false);
 
 			if(boyfriend.animOffsets.exists('deathQuit'))
 				boyfriend.playAnim('deathQuit', true);
