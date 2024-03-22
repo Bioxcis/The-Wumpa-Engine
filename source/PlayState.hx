@@ -718,10 +718,15 @@ class PlayState extends MusicBeatState {
 		boyfriendGroup.add(boyfriend);
 		startCharacterLua(boyfriend.curCharacter);
 
-		var camPos:FlxPoint = new FlxPoint(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
+		var camPos:FlxPoint;
 		if(gf != null) {
+			camPos = new FlxPoint(girlfriendCameraOffset[0], girlfriendCameraOffset[1]);
 			camPos.x += gf.getGraphicMidpoint().x + gf.cameraPosition[0];
 			camPos.y += gf.getGraphicMidpoint().y + gf.cameraPosition[1];
+		} else {
+			camPos = new FlxPoint(opponentCameraOffset[0], opponentCameraOffset[1]);
+			camPos.x += dad.getGraphicMidpoint().x + dad.cameraPosition[0];
+			camPos.y += dad.getGraphicMidpoint().y + dad.cameraPosition[1];
 		}
 
 		if(dad.curCharacter.startsWith('gf')) {
@@ -1259,8 +1264,13 @@ class PlayState extends MusicBeatState {
 		setOnLuas('boyfriendCamY', boyfriend.getMidpoint().y - 100 + (boyfriend.cameraPosition[1] + boyfriendCameraOffset[1]));
 		setOnLuas('dadCamX', dad.getMidpoint().x + 150 + (dad.cameraPosition[0] + opponentCameraOffset[0]));
 		setOnLuas('dadCamY', dad.getMidpoint().y - 100 + (dad.cameraPosition[1] + opponentCameraOffset[1]));
-		setOnLuas('gfCamX', gf.getMidpoint().x + 80 + (gf.cameraPosition[0] + girlfriendCameraOffset[0]));
-		setOnLuas('gfCamY', gf.getMidpoint().y - 80 + (gf.cameraPosition[1] + girlfriendCameraOffset[1]));
+		if(gf != null) {
+			setOnLuas('gfCamX', gf.getMidpoint().x + 80 + (gf.cameraPosition[0] + girlfriendCameraOffset[0]));
+			setOnLuas('gfCamY', gf.getMidpoint().y - 80 + (gf.cameraPosition[1] + girlfriendCameraOffset[1]));
+		} else {
+			setOnLuas('gfCamX', 0);
+			setOnLuas('gfCamY', 0);
+		}
 	}
 
 	function changeTextPosition(width:Float):Float {
@@ -3199,8 +3209,13 @@ class PlayState extends MusicBeatState {
 		setOnLuas('curBfY', boyfriend.y);
 		setOnLuas('curDadX', dad.x);
 		setOnLuas('curDadY', dad.y);
-		setOnLuas('curGfX', gf.x);
-		setOnLuas('curGfY', gf.y);
+		if(gf != null) {
+			setOnLuas('curGfX', gf.x);
+			setOnLuas('curGfY', gf.y);
+		} else {
+			setOnLuas('curGfX', 0);
+			setOnLuas('curGfY', 0);
+		}
 
 		// Steps/Beats
 		setOnLuas('curDecStep', curDecStep);

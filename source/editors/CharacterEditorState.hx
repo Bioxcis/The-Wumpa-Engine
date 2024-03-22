@@ -464,7 +464,7 @@ class CharacterEditorState extends MusicBeatState
 			reloadCharacterDropDown();
 		});
 
-		var templateCharacter:FlxButton = new FlxButton(140, 50, "Default", function()
+		var templateCharacter:FlxButton = new FlxButton(140, 50, "Padrão", function()
 		{
 			var parsedJson:CharacterFile = cast Json.parse(TemplateCharacter);
 			var characters:Array<Character> = [char, ghostChar];
