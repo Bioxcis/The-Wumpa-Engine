@@ -68,9 +68,8 @@ class StageEditorState extends MusicBeatState
     var charAnimOffsets:Dynamic;
 
     // Characters
-    var charLayer:FlxTypedGroup<Character>;
-
     var characterList:Dynamic;
+    var charLayer:FlxTypedGroup<Character>;
 
     var bf:Character;
     var dad:Character;
@@ -86,23 +85,23 @@ class StageEditorState extends MusicBeatState
     var daCharAnim:String = 'bf';
 
     // Objects
-    var bgMapInfos:Map<BGSprite, Dynamic> = [];
-    var bgGroup:FlxTypedGroup<BGSprite>;
+    var bgMapInfos:Map<FlxSprite, Dynamic> = [];
+    var bgGroup:FlxTypedGroup<FlxSprite>;
     var spritesTag:Array<String> = [];
 
-    var bfSpr:BGSprite;
-    var gfSpr:BGSprite;
-    var dadSpr:BGSprite;
-
-    var selectedObj:BGSprite;
+    var selectedObj:FlxSprite;
     var objectName:String;
-    var prefixAnim:String;
     var tagName:String;
     var objectIndex:Int;
+    var loadingObj:String;
 
     var isFront:Bool = false;
     var isAnimated:Bool = false;
     var spriteAntialiasing:Bool = true;
+    var idleAnim:String = '';
+    var animFrames:Int = 24;
+    var isLooped:Bool = false;
+
     var daSpriteAnim:String = 'gf';
 
     // Texts
@@ -114,7 +113,7 @@ class StageEditorState extends MusicBeatState
     var cameraPosition:FlxText;
 
     // Others
-    var dummy:BGSprite;
+    var dummy:FlxSprite;
     var charactersOnStage:Array<String>;
     var charactersObjects:Array<Character>;
 
@@ -172,7 +171,8 @@ class StageEditorState extends MusicBeatState
 		\nW A S D
 		\nSetas
 		\nShift
-        \nCtrl\n".split('\n');
+        \nCtrl
+        \n1\n".split('\n');
 
 		var tipTextArray2:Array<String> =
 		"- Aumenta/Diminui Zoom
@@ -182,7 +182,8 @@ class StageEditorState extends MusicBeatState
 		\n- Move Camera
 		\n- Move Objeto
 		\n- Move 10x mais Rapido
-        \n- Move 100x mais Rapido\n".split('\n');
+        \n- Move 100x mais Rapido
+        \n- Altera visibilidade da Hud\n".split('\n');
 
         for (i in 0...tipTextArray1.length-1) {
 			var tipText1:FlxText = new FlxText(FlxG.width - 320, FlxG.height - 20 - (16 * (tipTextArray1.length - i)), 0, tipTextArray1[i], 12);
@@ -242,17 +243,14 @@ class StageEditorState extends MusicBeatState
         cameraPosition.borderSize = 1;
         add(cameraPosition);
 
-        // ORIGINALS CHARS
+        bgGroup = new FlxTypedGroup<FlxSprite>();
 		charLayer = new FlxTypedGroup<Character>();
+		add(bgGroup);
 		add(charLayer);
-        
+
         bf = new Character(1110, 300, "bf", true);
         gf = new Character(600, 0, "gf", false);
         dad = new Character(330, -50, "dad", false);
-
-        bf.visible = false;
-        gf.visible = false;
-        dad.visible = false;
 
         charLayer.add(gf);
         charLayer.add(dad);
@@ -260,56 +258,29 @@ class StageEditorState extends MusicBeatState
 
         charactersOnStage = ['bf', 'gf', 'dad'];
         charactersObjects = [bf, gf, dad];
-
-        for (i in charactersObjects)
+        for (i in charactersObjects) {
             i.updateHitbox();
+        }
 
-        // For layerin
-
-        bgGroup = new FlxTypedGroup<BGSprite>();
-		add(bgGroup);
-
-        // DUMMY SPRITE
-        dummy = new BGSprite('', 0, 0);
+        dummy = new FlxSprite(0, 0);
+        dummy.makeGraphic(2, 2, FlxColor.TRANSPARENT, false, 'dummy');
         dummy.updateHitbox();
-        dummy.visible = false;
-
-        var dmArr:Array<Dynamic> = makeObjArray('Escolha Imagem', 'dummy', dummy);
-        bgMapInfos.set(dummy, dmArr);
+        var objectArray:Array<Dynamic> = makeObjArray('Escolha Imagem', 'dummy', dummy);
+        bgMapInfos.set(dummy, objectArray);
         bgGroup.add(dummy);
-        spritesTag.push(dmArr[0]);
+        spritesTag = [objectArray[0]];
 
-        // GIRLFRIEND SPRITE
-        gfSpr = new BGSprite('characters/GF_assets', 600, 0, 1, 1, ['GF Dancing Beat'], false);
-        gfSpr.antialiasing = true;
-        gfSpr.updateHitbox();
+		add(UI_box);
+        selectedObj = bf;
 
-        var gfArr:Array<Dynamic> = makeObjArray('Girlfriend', 'gf', gfSpr);
-        bgMapInfos.set(gfSpr, gfArr);
-        bgGroup.add(gfSpr);
-        spritesTag.push(gfArr[0]);
+        var posX:Float = gf.getGraphicMidpoint().x;
+        var posY:Float = gf.getGraphicMidpoint().y;
+        camFollow = new FlxObject(posX, posY, 2, 2);
+		add(camFollow);
 
-        // DAD SPRITE
-        dadSpr = new BGSprite('characters/DADDY_DEAREST', 330, -50, 1, 1, ['Dad idle dance'], false);
-        dadSpr.antialiasing = true;
-        dadSpr.updateHitbox();
+		FlxG.camera.follow(camFollow);
+        FlxG.camera.zoom = 1;
 
-        var ddArr:Array<Dynamic> = makeObjArray('Opponent', 'dad', dadSpr);
-        bgMapInfos.set(dadSpr, ddArr);
-        bgGroup.add(dadSpr);
-        spritesTag.push(ddArr[0]);
-
-        // BOYFRIEND SPRITE
-        bfSpr = new BGSprite('characters/BOYFRIEND', 1110, 300, 1, 1, ['BF idle dance'], false);
-        bfSpr.antialiasing = true;
-        bfSpr.updateHitbox();
-
-        var bfArr:Array<Dynamic> = makeObjArray('Boyfriend', 'bf', bfSpr);
-        bgMapInfos.set(bfSpr, bfArr);
-        bgGroup.add(bfSpr);
-        spritesTag.push(bfArr[0]);
-
-        // Updates
         for (i in charactersOnStage) {
             var cjson:CharacterFile = characterjson(i);
             if (i == 'dad') {
@@ -324,19 +295,8 @@ class StageEditorState extends MusicBeatState
             }
         }
 
-        selectedObj = bfSpr;
-		add(UI_box);
-
-        var posX:Float = gf.getGraphicMidpoint().x;
-        var posY:Float = gf.getGraphicMidpoint().y;
-        camFollow = new FlxObject(posX, posY, 2, 2);
-		add(camFollow);
-
-		FlxG.camera.follow(camFollow);
-        FlxG.camera.zoom = 1;
-
         addSpritesUI();
-        spritesAssetsUI();
+        addAnimationsUI();
         addCharactersUI();
         addStageUI();
 
@@ -345,7 +305,7 @@ class StageEditorState extends MusicBeatState
 
         #if desktop
         // Updating Discord Rich Presence
-        DiscordClient.changePresence("In Stage Editor", "Criando Estagios...");
+        DiscordClient.changePresence("In Stage Editor", "Making a stage...");
         #end
 
         super.create();
@@ -354,9 +314,12 @@ class StageEditorState extends MusicBeatState
     var objectInputText:FlxUIInputText;
     var prefixInputText:FlxUIInputText;
     var check_isAnim:FlxUICheckBox;
+    var check_isLoop:FlxUICheckBox;
     var tagInputText:FlxUIInputText;
     var objectAdd:FlxButton;
     var stepper_frame:FlxUINumericStepper;
+    var objectLoadText:FlxUIInputText;
+    var loadedObjectAdd:FlxButton;
 
     function addSpritesUI() {
         var tab_group = new FlxUI(null, UI_box);
@@ -375,20 +338,23 @@ class StageEditorState extends MusicBeatState
 		check_isAnim.checked = isAnimated;
 		check_isAnim.callback = function() { isAnimated = check_isAnim.checked; };
 
-        stepper_frame = new FlxUINumericStepper(check_isAnim.x, check_isAnim.y + 40, 1, 24, 1, 360, 0);
-        stepper_frame.name = 'anim_frame';
+        check_isLoop = new FlxUICheckBox(check_isAnim.x, check_isAnim.y + 30, null, null, "Loop", 100);
+		check_isLoop.checked = isLooped;
+		check_isLoop.callback = function() { isLooped = check_isLoop.checked; };
 
         objectAdd = new FlxButton(tagInputText.x, tagInputText.y + 35, "Adicionar", function() {
             if(FileSystem.exists(Paths.modsImages(objectName))) {
-                var gfIndex:Int = bgGroup.members.indexOf(gfSpr);
-                var sprite:BGSprite = null;
-                if(isAnimated && (prefixAnim != '' || prefixAnim != null)) {
-                    var array:Array<String> = [prefixAnim];
-                    sprite = new BGSprite(objectName, 0, 0, 1, 1, array, true, framesValue);
+                var sprite:FlxSprite = new FlxSprite(0, 0);
+
+                if(isAnimated && (idleAnim != '' || idleAnim != null)) {
+                    sprite.frames = Paths.getSparrowAtlas(objectName);
+                    sprite.animation.addByPrefix(idleAnim + 'toPlay', idleAnim, animFrames, isLooped);
+                    sprite.animation.play(idleAnim + 'toPlay');
                 } else {
                     if(isAnimated) isAnimated = false;
-                    sprite = new BGSprite(objectName);
+                    sprite.loadGraphic(Paths.image(objectName), isAnimated, 0, 0, false, objectName);
                 }
+
                 sprite.antialiasing = true;
                 sprite.updateHitbox();
                 isFront = false;
@@ -396,20 +362,85 @@ class StageEditorState extends MusicBeatState
 
                 var obArr:Array<Dynamic> = makeObjArray(tagName, objectName, sprite);
                 bgMapInfos.set(sprite, obArr);
-                bgGroup.insert(gfIndex, sprite);
+                bgGroup.add(sprite);
                 spritesTag.push(obArr[0]);
 
                 emptyFields();
                 reloadSpritesDropdown();
-                makeWarningText("Confira a Lista de Imagens!");
+                makeWarningText("Imagem adicionada! Confira na Lista de Imagens!");
             } else
                 makeWarningText("Imagem não encontrada!");
         });
 
-        //updateValues();
+        stepper_frame = new FlxUINumericStepper(objectAdd.x + 100, objectAdd.y + 5, 1, 24, 1, 360, 0);
+        stepper_frame.name = 'anim_frame';
+
+        objectLoadText = new FlxUIInputText(10, objectAdd.y + 56, 160, "folder/obj", 8);
+        objectLoadText.focusGained = () -> FlxG.stage.window.textInputEnabled = true;
+
+        loadedObjectAdd = new FlxButton(objectLoadText.x + 180, objectLoadText.y - 3, "Carregar", function() {
+            if(FileSystem.exists(Paths.modsObjects(loadingObj))) {
+                var obJson:Dynamic = File.getContent(Paths.modsObjects(loadingObj)).trim();
+				obJson = Json.parse(obJson);
+				var objtag = obJson.tag;
+				var image = obJson.path;
+				var posx = obJson.x;
+				var posy = obJson.y;
+				var scalex = obJson.scalex;
+				var scaley = obJson.scaley;
+				var scrollx = obJson.scrollx;
+				var scrolly = obJson.scrolly;
+                var flipx = obJson.flipx;
+				var flipy = obJson.flipy;
+				var alpha = obJson.alpha;
+                var front = obJson.front;
+				var isanimated = obJson.animated;
+				var alias = obJson.antialiasing;
+                var idleAnim = obJson.idleAnim;
+				var frames = obJson.frames;
+				var isLoop = obJson.loop;
+
+                if(FileSystem.exists(Paths.modsImages(image))) {
+                    var sprite:FlxSprite = new FlxSprite(posx, posy);
+    
+                    if(isanimated && (idleAnim != '' || idleAnim != null)) {
+                        sprite.frames = Paths.getSparrowAtlas(image);
+                        sprite.animation.addByPrefix(idleAnim, idleAnim, frames, isLoop);
+                        sprite.animation.play(idleAnim);
+                    } else
+                        sprite.loadGraphic(Paths.image(image), false, 0, 0, false, image);
+    
+                    sprite.antialiasing = alias;
+                    sprite.scale.x = scalex;
+                    sprite.scale.y = scaley;
+                    sprite.scrollFactor.x = scrollx;
+                    sprite.scrollFactor.y = scrolly;
+                    sprite.flipX = flipx;
+                    sprite.flipY = flipy;
+                    sprite.alpha = alpha;
+                    sprite.updateHitbox();
+                    tagName = tagNameCheck(objtag);
+                    isFront = front;
+    
+                    var obArr:Array<Dynamic> = makeObjArray(tagName, image, sprite);
+                    bgMapInfos.set(sprite, obArr);
+                    bgGroup.add(sprite);
+                    spritesTag.push(obArr[0]);
+
+                    emptyFields();
+                    reloadSpritesDropdown();
+                    makeWarningText("Objeto carregado! Confira na Lista de Imagens!");
+                } else
+                    makeWarningText("Imagem do objeto não encontrada!");
+            } else
+                makeWarningText("Objeto não encontrado!");
+        });
+
+        updateValues();
         updateCoords();
         updateSize();
         updateScroll();
+        //reloadSpritesDropdown();
 
         tab_group.add(objectInputText);
 		tab_group.add(new FlxText(objectInputText.x, objectInputText.y - 18, 0, 'Local da imagem:'));
@@ -418,9 +449,13 @@ class StageEditorState extends MusicBeatState
         tab_group.add(tagInputText);
 		tab_group.add(new FlxText(tagInputText.x, tagInputText.y - 18, 0, 'Nome do Objeto:'));
         tab_group.add(check_isAnim);
+        tab_group.add(check_isLoop);
         tab_group.add(stepper_frame);
-		tab_group.add(new FlxText(stepper_frame.x, stepper_frame.y - 18, 0, 'Taxa de Quadros:'));
+		tab_group.add(new FlxText(stepper_frame.x, stepper_frame.y - 18, 0, 'Anim FPS:'));
         tab_group.add(objectAdd);
+        tab_group.add(objectLoadText);
+		tab_group.add(new FlxText(objectLoadText.x, objectLoadText.y - 18, 0, 'Carregar objeto:'));
+        tab_group.add(loadedObjectAdd);
         UI_box.addGroup(tab_group);
 	}
 
@@ -435,16 +470,26 @@ class StageEditorState extends MusicBeatState
     var objectBackward:FlxButton;
     var objectRemove:FlxButton;
     var objectDuplicate:FlxButton;
-
-    function spritesAssetsUI() {
+    
+    function addAnimationsUI() {
         var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "2 - Sprite Assets";
 
-        spritesDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(spriteTag:String) {        
+        spritesDropDown = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(spriteTag:String) {
             var index:Int = Std.parseInt(spriteTag);
             objectIndex = index;
+            bgGroup.update(1);
             selectedObj = bgGroup.members[index];
             selectedObj.updateHitbox();
+
+            updateValues();
+            updateCoords();
+            updateSize();
+            updateScroll();
+
+            characterOpponent.checked = false;
+            characterGirfriend.checked = false;
+			characterBoyfriend.checked = false;
 
             for(img in bgMapInfos.keys()) {
                 if (img == selectedObj) {
@@ -452,70 +497,63 @@ class StageEditorState extends MusicBeatState
                     else makeWarningText("Imagem selecionada: " + bgMapInfos[img][0]);
                 }
             }
-            updateValues();
-            updateCoords();
-            updateSize();
-            updateScroll();
-
             if(selectedObj == dummy) emptyFields();
-            if(selectedObj == bfSpr || selectedObj == gfSpr || selectedObj == dadSpr) changeGeneralStatus();
-
-            //bgGroup.update(1);
-            // characterOpponent.checked = false;
-            // characterGirfriend.checked = false;
-			// characterBoyfriend.checked = false;
 		});
 
-        check_Antialiasing = new FlxUICheckBox(spritesDropDown.x, spritesDropDown.y + 60, null, null, "Antialiasing", 100);
+        check_Antialiasing = new FlxUICheckBox(spritesDropDown.x + 160, spritesDropDown.y - 15, null, null, "Antialiasing", 100);
 		check_Antialiasing.checked = spriteAntialiasing;
 		check_Antialiasing.callback = function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 spriteAntialiasing = check_Antialiasing.checked;
                 changeSpriteAntialiasing();
             }
 		};
 
-        check_Layer = new FlxUICheckBox(check_Antialiasing.x, check_Antialiasing.y + 25, null, null, "Na Frente", 100);
+        check_Layer = new FlxUICheckBox(check_Antialiasing.x, check_Antialiasing.y + 24, null, null, "Na Frente", 100);
 		check_Layer.checked = isFront;
 		check_Layer.callback = function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 isFront = check_Layer.checked;
                 changeSpriteLayer();
             }
 		};
 
-        check_Visible = new FlxUICheckBox(check_Layer.x, check_Layer.y + 25, null, null, "Visivel", 100);
+        check_Visible = new FlxUICheckBox(check_Layer.x, check_Layer.y + 24, null, null, "Visivel", 100);
 		check_Visible.checked = visibility;
 		check_Visible.callback = function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 visibility = check_Visible.checked;
                 spriteVisibility();
             }
 		};
 
-        check_FlipX = new FlxUICheckBox(check_Visible.x, check_Visible.y + 25, null, null, "Inverter X", 100);
+        check_FlipX = new FlxUICheckBox(check_Visible.x, check_Visible.y + 24, null, null, "Inverter X", 100);
 		check_FlipX.checked = flipX;
 		check_FlipX.callback = function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
 			    flipX = check_FlipX.checked;
                 selectedObj.flipX = flipX;
                 spriteFlips();
             }
 		};
 
-        check_FlipY = new FlxUICheckBox(check_FlipX.x, check_FlipX.y + 25, null, null, "Inverter Y", 100);
+        check_FlipY = new FlxUICheckBox(check_FlipX.x, check_FlipX.y + 24, null, null, "Inverter Y", 100);
 		check_FlipY.checked = flipY;
 		check_FlipY.callback = function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 flipY = check_FlipY.checked;
                 selectedObj.flipY = flipY;
                 spriteFlips();
             }
 		};
 
-        objectDuplicate = new FlxButton(spritesDropDown.x + 140, spritesDropDown.y, "Duplicar", function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
-                var copySpr:BGSprite = new BGSprite(selectedObj.imagePath, selectedObj.x, selectedObj.y, 1, 1, selectedObj.allAnims, selectedObj.isLooped, selectedObj.animFrames);
+        stepper_Alpha = new FlxUINumericStepper(check_FlipY.x, check_FlipY.y + 38, 0.05, 1, 0, 1, 2);
+        stepper_Alpha.name = 'sprite_alpha';
+
+        objectDuplicate = new FlxButton(stepper_Alpha.x, stepper_Alpha.y + 25, "Duplicar Img", function() {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
+                var copySpr:FlxSprite = new FlxSprite(selectedObj.x, selectedObj.y);
+                copySpr.loadGraphicFromSprite(selectedObj);
                 copySpr.scale.x = selectedObj.scale.x;
                 copySpr.scale.y = selectedObj.scale.y;
                 copySpr.scrollFactor.x = selectedObj.scrollFactor.x;
@@ -525,7 +563,6 @@ class StageEditorState extends MusicBeatState
                 copySpr.alpha = selectedObj.alpha;
                 copySpr.updateHitbox();
 
-                // Avoids generating copy sprites with the same name
                 var newObjectArray:Array<Dynamic> = [];
                 for(theObj in bgMapInfos.keys()) {
                     if(theObj == selectedObj) {
@@ -545,9 +582,9 @@ class StageEditorState extends MusicBeatState
                             copySpr.flipX,
                             copySpr.flipY,
                             copySpr.alpha,
-                            copySpr.idleAnim,
-                            copySpr.animFrames,
-                            copySpr.isLooped,
+                            bgMapInfos[theObj][14],
+                            bgMapInfos[theObj][15],
+                            bgMapInfos[theObj][16],
                             copySpr
                         ];
                     }
@@ -562,8 +599,8 @@ class StageEditorState extends MusicBeatState
                 makeWarningText("Selecione uma imagem válida!");
         });
 
-        objectRemove = new FlxButton(objectDuplicate.x, objectDuplicate.y + 30, "Remover", function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+        objectRemove = new FlxButton(objectDuplicate.x, objectDuplicate.y + 25, "Remover Img", function() {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 bgGroup.remove(selectedObj, true);
                 for(img in bgMapInfos.keys())
                     if (img == selectedObj)
@@ -580,7 +617,7 @@ class StageEditorState extends MusicBeatState
                 updateScroll();
                 reloadSpritesDropdown();
 
-                //bgGroup.update(1);
+                bgGroup.update(1);
                 curTag.text = 'Nome: Vazio';
                 emptyFields();
                 makeWarningText("Imagem removida!");
@@ -590,67 +627,19 @@ class StageEditorState extends MusicBeatState
         objectRemove.color = 0xFFCE0000;
         objectRemove.label.color = FlxColor.WHITE;
 
-        stepper_Alpha = new FlxUINumericStepper(check_Layer.x + 80, check_Layer.y, 0.05, 1, 0, 1, 2);
-        stepper_Alpha.name = 'sprite_alpha';
-
-        objectForward = new FlxButton(stepper_Alpha.x, stepper_Alpha.y + 35, " + ", function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
-                var curIndex:Int = bgGroup.members.indexOf(selectedObj);
-                if(curIndex + 1 < bgGroup.length - 1) {
-                    var theTag:String = spritesTag[objectIndex];
-                    bgGroup.remove(selectedObj);
-                    spritesTag.splice(objectIndex, 1);
-                    bgGroup.insert(curIndex + 1, selectedObj);
-                    spritesTag.insert(objectIndex + 1, theTag);
-                    selectedObj.updateHitbox();
-                    updateValues();
-                    updateCoords();
-                    updateSize();
-                    updateScroll();
-                    reloadSpritesDropdown();
-                } else makeWarningText("Não é possivel mover para frente!");
-            } else makeWarningText("Selecione um objeto válido!");
-        });
-        objectForward.setGraphicSize(20, 20);
-        objectForward.updateHitbox();
-
-        objectBackward = new FlxButton(objectForward.x + 30, objectForward.y, " - ", function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
-                var curIndex:Int = bgGroup.members.indexOf(selectedObj);
-                if(curIndex - 1 > 0) {
-                    var theTag:String = spritesTag[objectIndex];
-                    bgGroup.remove(selectedObj);
-                    spritesTag.splice(objectIndex, 1);
-                    bgGroup.insert(curIndex - 1, selectedObj);
-                    spritesTag.insert(objectIndex - 1, theTag);
-                    selectedObj.updateHitbox();
-                    updateValues();
-                    updateCoords();
-                    updateSize();
-                    updateScroll();
-                    reloadSpritesDropdown();
-                } else makeWarningText("Não é possivel mover para trás!");
-            } else makeWarningText("Selecione um objeto válido!");
-        });
-        objectBackward.setGraphicSize(20, 20);
-        objectBackward.updateHitbox();
-
-        //updateValues();
+        updateValues();
         updateCoords();
         updateSize();
         updateScroll();
         reloadSpritesDropdown();
 
         tab_group.add(check_Antialiasing);
-        tab_group.add(stepper_Alpha);
-		tab_group.add(new FlxText(stepper_Alpha.x, stepper_Alpha.y - 18, 0, 'Valor de Alfa:'));
         tab_group.add(check_Layer);
         tab_group.add(check_FlipX);
         tab_group.add(check_FlipY);
         tab_group.add(check_Visible);
-        tab_group.add(objectForward);
-        tab_group.add(objectBackward);
-        tab_group.add(new FlxText(objectForward.x, objectForward.y - 12, 0, 'Alterar Camada:'));
+        tab_group.add(stepper_Alpha);
+		tab_group.add(new FlxText(stepper_Alpha.x, stepper_Alpha.y - 18, 0, 'Valor de Alfa:'));
         tab_group.add(objectDuplicate);
         tab_group.add(objectRemove);
         tab_group.add(spritesDropDown);
@@ -661,41 +650,25 @@ class StageEditorState extends MusicBeatState
     var dadSelect:FlxUIDropDownMenuCustom;
     var bfSelect:FlxUIDropDownMenuCustom;
     var gfSelect:FlxUIDropDownMenuCustom;
-    // var charDropDown:FlxUIDropDownMenuCustom;
-    // var characterBoyfriend:FlxUICheckBox;
-    // var characterOpponent:FlxUICheckBox;
-    // var characterGirfriend:FlxUICheckBox;
+    var characterBoyfriend:FlxUICheckBox;
+    var characterOpponent:FlxUICheckBox;
+    var characterGirfriend:FlxUICheckBox;
+    //var charDropDown:FlxUIDropDownMenuCustom;
     function addCharactersUI() {
         var tab_group = new FlxUI(null, UI_box);
 		tab_group.name = "3 - Characters";
         
         dadSelect = new FlxUIDropDownMenuCustom(10, 30, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(sprite:String) {
             charLayer.remove(dad);
-            dad = new Character(0, 0, characterList[Std.parseInt(sprite)], false);
+            dad = new Character(dad.x, dad.y, characterList[Std.parseInt(sprite)], false);
             daDadAnim = characterList[Std.parseInt(sprite)];
             charLayer.add(dad);
             dad.updateHitbox();
-            dad.visible = false;
             charactersObjects = [bf, gf, dad];
             var json:CharacterFile = characterjson(characterList[Std.parseInt(sprite)]);
             dadjson = json;
             dadidle = getIdleOffset(characterList[Std.parseInt(sprite)]);
             reloadCharDrops();
-
-            var position = bgGroup.members.indexOf(dadSpr);
-            var px:Float = dadSpr.x;
-            var py:Float = dadSpr.y;
-            bgGroup.remove(dadSpr);
-
-            dadSpr = new BGSprite(dad.imageFile, px, py, 1, 1, getIdlePrefix(characterList[Std.parseInt(sprite)]), false);            
-            dadSpr.x += dadjson.position[0];
-            dadSpr.y += dadjson.position[1];
-            dadSpr.antialiasing = !dadjson.no_antialiasing;
-            dadSpr.flipX = dadjson.flip_x;
-            dadSpr.setGraphicSize(Std.int(dad.width * dad.jsonScale));
-            dadSpr.updateHitbox();
-
-            bgGroup.insert(position, dadSpr);
         });
 
         bfSelect = new FlxUIDropDownMenuCustom(dadSelect.x + 130, dadSelect.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(sprite:String) {
@@ -709,21 +682,6 @@ class StageEditorState extends MusicBeatState
             bfjson = json;
             bfidle = getIdleOffset(characterList[Std.parseInt(sprite)]);
             reloadCharDrops();
-
-            var position = bgGroup.members.indexOf(bfSpr);
-            var px:Float = bfSpr.x;
-            var py:Float = bfSpr.y;
-            bgGroup.remove(bfSpr);
-
-            bfSpr = new BGSprite(bf.imageFile, px, py, 1, 1, getIdlePrefix(characterList[Std.parseInt(sprite)]), false);            
-            bfSpr.x += bfjson.position[0];
-            bfSpr.y += bfjson.position[1];
-            bfSpr.antialiasing = !bfjson.no_antialiasing;
-            bfSpr.flipX = !bfjson.flip_x;
-            bfSpr.setGraphicSize(Std.int(bf.width * bf.jsonScale));
-            bfSpr.updateHitbox();
-
-            bgGroup.insert(position, bfSpr);
         });
 
         gfSelect = new FlxUIDropDownMenuCustom(dadSelect.x, dadSelect.y + 80, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(sprite:String) {
@@ -737,26 +695,11 @@ class StageEditorState extends MusicBeatState
             gfjson = json;
             gfidle = getIdleOffset(characterList[Std.parseInt(sprite)]);
             reloadCharDrops();
-
-            var position = bgGroup.members.indexOf(gfSpr);
-            var px:Float = gfSpr.x;
-            var py:Float = gfSpr.y;
-            bgGroup.remove(gfSpr);
-
-            gfSpr = new BGSprite(gf.imageFile, px, py, 1, 1, getIdlePrefix(characterList[Std.parseInt(sprite)]), false);            
-            gfSpr.x += gfjson.position[0];
-            gfSpr.y += gfjson.position[1];
-            gfSpr.antialiasing = !gfjson.no_antialiasing;
-            gfSpr.flipX = gfjson.flip_x;
-            gfSpr.setGraphicSize(Std.int(gf.width * gf.jsonScale));
-            gfSpr.updateHitbox();
-
-            bgGroup.insert(position, gfSpr);
         });
 
         reloadCharDrops();
 
-        /*characterBoyfriend = new FlxUICheckBox(bfSelect.x + 20, gfSelect.y - 20, null, null, "Jogador", 100);
+        characterBoyfriend = new FlxUICheckBox(gfSelect.x + 140, gfSelect.y, null, null, "Jogador", 100);
 		characterBoyfriend.checked = true;
 		characterBoyfriend.callback = function() {
 			characterOpponent.checked = false;
@@ -767,7 +710,7 @@ class StageEditorState extends MusicBeatState
             changeGeneralStatus();
 		};
 
-		characterOpponent = new FlxUICheckBox(bfSelect.x + 20, gfSelect.y, null, null, "Oponente", 100);
+		characterOpponent = new FlxUICheckBox(characterBoyfriend.x, characterBoyfriend.y + 25, null, null, "Oponente", 100);
 		characterOpponent.checked = false;
 		characterOpponent.callback = function() {
 			characterBoyfriend.checked = false;
@@ -778,7 +721,7 @@ class StageEditorState extends MusicBeatState
             changeGeneralStatus();
 		};
 
-        characterGirfriend = new FlxUICheckBox(bfSelect.x + 20, gfSelect.y + 20, null, null, "Namorada", 100);
+        characterGirfriend = new FlxUICheckBox(characterOpponent.x, characterOpponent.y + 25, null, null, "Namorada", 100);
 		characterGirfriend.checked = false;
 		characterGirfriend.callback = function() {
 			characterOpponent.checked = false;
@@ -789,28 +732,26 @@ class StageEditorState extends MusicBeatState
             changeGeneralStatus();
 		};
         
-        charDropDown = new FlxUIDropDownMenuCustom(dadSelect.x + 130, dadSelect.y + 80, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String) {
-            selectedObj = charactersObjects[Std.parseInt(character)];
-            selectedObj.updateHitbox();
-            daCharAnim = charactersOnStage[Std.parseInt(character)];
-            reloadCharacterDropDown();
-		});
-		reloadCharacterDropDown();
-        */
+        // charDropDown = new FlxUIDropDownMenuCustom(dadSelect.x + 130, dadSelect.y + 80, FlxUIDropDownMenuCustom.makeStrIdLabelArray([''], true), function(character:String) {
+        //     selectedObj = charactersObjects[Std.parseInt(character)];
+        //     selectedObj.updateHitbox();
+        //     daCharAnim = charactersOnStage[Std.parseInt(character)];
+        //     reloadCharacterDropDown();
+		// });
+		//reloadCharacterDropDown();
+
 
         tab_group.add(new FlxText(dadSelect.x, dadSelect.y - 15, 0, 'Oponente:'));
         tab_group.add(new FlxText(bfSelect.x, bfSelect.y - 15, 0, 'Jogador:'));
         tab_group.add(new FlxText(gfSelect.x, gfSelect.y - 15, 0, 'Namorada:'));
+        tab_group.add(characterBoyfriend);
+        tab_group.add(characterOpponent);
+        tab_group.add(characterGirfriend);
+        tab_group.add(new FlxText(characterBoyfriend.x - 10, characterBoyfriend.y - 18, 0, 'Selecionar personagem:'));  
         tab_group.add(gfSelect);
         tab_group.add(dadSelect);
         tab_group.add(bfSelect);
-
-        // tab_group.add(characterBoyfriend);
-        // tab_group.add(characterOpponent);
-        // tab_group.add(characterGirfriend);
-        // tab_group.add(new FlxText(characterBoyfriend.x - 10, characterBoyfriend.y - 18, 0, 'Selecionar personagem:'));
-        // tab_group.add(charDropDown);
-
+        //tab_group.add(charDropDown);
         UI_box.addGroup(tab_group);
 	}
 
@@ -835,7 +776,7 @@ class StageEditorState extends MusicBeatState
                     objPath = bgMapInfos[img][1];
                 }
             }
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 Clipboard.text = "makeLuaSprite('"+ objTag + "', '" + objPath +"', " + selectedObj.x + ", " + selectedObj.y + ")";
                 makeWarningText("Coordenadas do objeto copiadas!");
             } else
@@ -848,7 +789,7 @@ class StageEditorState extends MusicBeatState
                 if (img == selectedObj)
                     objTag = bgMapInfos[img][0];
 
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 Clipboard.text = "scaleObject('"+ objTag + "', " + selectedObj.scale.x +", " + selectedObj.scale.y + ")";
                 makeWarningText("Tamanho do objeto copiado!");
             } else
@@ -861,7 +802,7 @@ class StageEditorState extends MusicBeatState
                 if (img == selectedObj)
                     objTag = bgMapInfos[img][0];
 
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 Clipboard.text = "setScrollFactor('"+ objTag + "', " + selectedObj.scrollFactor.x +", " + selectedObj.scrollFactor.y + ")";
                 makeWarningText("Rolagem do objeto copiada!");
             } else
@@ -874,7 +815,7 @@ class StageEditorState extends MusicBeatState
                 if (img == selectedObj)
                     objTag = bgMapInfos[img][0];
 
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 Clipboard.text = "setProperty('"+ objTag + ".flipX', " + selectedObj.flipX + ")\nsetProperty('"+ objTag + ".flipY', " + selectedObj.flipY + ")";
                 makeWarningText("Direções do objeto copiadas!");
             } else
@@ -887,7 +828,7 @@ class StageEditorState extends MusicBeatState
                 if (img == selectedObj)
                     objTag = bgMapInfos[img][0];
 
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr) {
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
                 Clipboard.text = "setProperty('"+ objTag + ".alpha', " + selectedObj.alpha + ")\nsetProperty('"+ objTag + ".antialiasing', " + selectedObj.antialiasing + ")";
                 makeWarningText("Visibilidade do objeto copiada!");
             } else
@@ -895,7 +836,7 @@ class StageEditorState extends MusicBeatState
         });
 
         saveObjectStage = new FlxButton(objCopyVisibility.x + 100, objCopyVisibility.y, 'Salvar Objeto', function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr)
+            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad)
                 saveAdvancedJson();
             else
                 makeWarningText("Objeto Inválido!");
@@ -904,7 +845,7 @@ class StageEditorState extends MusicBeatState
 
         objTitle = new FlxText(objCopyCoords.x, objCopyCoords.y - 20, 0, 'Objeto Selecionado: Inválido', 10);
 
-		var stepper_Zoom:FlxUINumericStepper = new FlxUINumericStepper(objCopyCoords.x, objCopyCoords.y + 90, 0.05, 1, 0.1, 3, 2);
+		var stepper_Zoom:FlxUINumericStepper = new FlxUINumericStepper(objCopyCoords.x, objCopyCoords.y + 90, 0.05, 1, 0.1, 10, 2);
 		stepper_Zoom.name = 'stage_zoom';
 
         var stepper_Speed:FlxUINumericStepper = new FlxUINumericStepper(stepper_Zoom.x + 160, stepper_Zoom.y, 0.05, 1, 0.1, 100, 2);
@@ -942,8 +883,6 @@ class StageEditorState extends MusicBeatState
         });
         saveStageSettings.color = 0xFFDBF3D8;
 
-        updateValues();
-
         tab_group.add(objCopyCoords);
         tab_group.add(objCopySize);
         tab_group.add(objCopyScroll);
@@ -971,7 +910,7 @@ class StageEditorState extends MusicBeatState
         UI_box.addGroup(tab_group);
 	}
 
-    function makeObjArray(tag:String, name:String, spr:BGSprite):Array<Dynamic> {
+    function makeObjArray(tag:String, name:String, spr:FlxSprite):Array<Dynamic> {
         var theArray:Array<Dynamic> = [
             tag,
             name,
@@ -987,9 +926,9 @@ class StageEditorState extends MusicBeatState
             spr.flipX,
             spr.flipY,
             spr.alpha,
-            spr.idleAnim,
-            spr.animFrames,
-            spr.isLooped,
+            idleAnim,
+            animFrames,
+            isLooped,
             spr
         ];
         return theArray;
@@ -1002,11 +941,13 @@ class StageEditorState extends MusicBeatState
 
     function emptyFields() {
         check_isAnim.checked = false;
+        check_isLoop.checked = false;
         objectInputText.text = '';
         tagInputText.text = '';
         prefixInputText.text = '';
         objectName = '';
         tagName = '';
+        objectLoadText.text = '';
     }
 
     function tagNameCheck(?tag:String):String {
@@ -1027,6 +968,7 @@ class StageEditorState extends MusicBeatState
         prefixInputText.text = '';
         objectName = '';
         tagName = '';
+        objectLoadText.text = '';
         updateCoords();
         updateSize();
         updateScroll();
@@ -1034,28 +976,27 @@ class StageEditorState extends MusicBeatState
 
     function updateValues() {
         for(img in bgMapInfos.keys()) {
-            if(img == selectedObj) {
+            if (img == selectedObj) {
                 curTag.text = 'Nome: ' + bgMapInfos[img][0];
                 if(img == dummy) objTitle.text = 'Objeto Selecionado: Inválido';
                 else objTitle.text = 'Objeto Selecionado: ' + bgMapInfos[img][0];
-                check_Layer.checked = bgMapInfos[img][9];
+                // tagInputText.text = bgMapInfos[img][0];
+                // objectInputText.text = bgMapInfos[img][1];
+                // check_Layer.checked = bgMapInfos[img][9];
                 check_Antialiasing.checked = bgMapInfos[img][10];
                 check_FlipX.checked = bgMapInfos[img][11];
                 check_FlipY.checked = bgMapInfos[img][12];
                 check_Visible.checked = img.visible;
                 stepper_Alpha.value = img.alpha;
                 daSpriteAnim = bgMapInfos[img][0];
-                // tagInputText.text = bgMapInfos[img][0];
-                // objectInputText.text = bgMapInfos[img][1];
-                // prefixInputText.text = '';
             }
         }
     }
 
-/*  function reloadCharacterDropDown() {
-	 	charDropDown.setData(FlxUIDropDownMenuCustom.makeStrIdLabelArray(charactersOnStage, true));
-        charDropDown.selectedLabel = daCharAnim;
-	}*/
+    // function reloadCharacterDropDown() {
+	// 	charDropDown.setData(FlxUIDropDownMenuCustom.makeStrIdLabelArray(charactersOnStage, true));
+    //     charDropDown.selectedLabel = daCharAnim;
+	// }
 
     function reloadSpritesDropdown() {
         bgGroup.update(1);
@@ -1126,7 +1067,7 @@ class StageEditorState extends MusicBeatState
     }
 
     function updateCoords() {
-        if (selectedObj == bfSpr || selectedObj == dadSpr || selectedObj == gfSpr) {
+        if (selectedObj == bf || selectedObj == dad) {
             var xobj = selectedObj.x;
             var yobj = selectedObj.y;
             objCoords.text = 'Coordenadas: [' + xobj + '; ' + yobj + ']';
@@ -1336,6 +1277,21 @@ class StageEditorState extends MusicBeatState
         }
     }
 
+    var menuVis:Bool = false;
+    var tableTab:String = '';
+    function menuChangeVisibility() {
+        menuVis = !menuVis;
+        tableTab = UI_box.selected_tab_id;
+        UI_box.visible = menuVis;
+        UI_box.selected_tab_id = tableTab;
+        curTag.visible = menuVis;
+        objCoords.visible = menuVis;
+        objSize.visible = menuVis;
+        objScroll.visible = menuVis;
+        cameraZoom.visible = menuVis;
+        cameraPosition.visible = menuVis;
+    }
+
 	var _file:FileReference;
 
     function onSaveComplete(_):Void {
@@ -1461,10 +1417,9 @@ class StageEditorState extends MusicBeatState
     }
 
     override function update(elapsed:Float) {
-        //cameraZoom.text = 'Camera Zoom: ' + Highscore.floorDecimal(FlxG.camera.zoom, 2); // Bruh
-        cameraZoom.text = 'Camera Zoom: ' + bgGroup.members.indexOf(selectedObj); // Bruh
+        cameraZoom.text = 'Camera Zoom: ' + Highscore.floorDecimal(FlxG.camera.zoom, 2); // Bruh
         cameraPosition.text = 'Camera Posição: [' + Highscore.floorDecimal(camFollow.x, 2) + ' : ' + Highscore.floorDecimal(camFollow.y, 2) + ']';
-        var inputTexts:Array<FlxUIInputText> = [objectInputText, tagInputText, prefixInputText];
+        var inputTexts:Array<FlxUIInputText> = [objectInputText, prefixInputText, tagInputText, objectLoadText];
 		for (i in 0...inputTexts.length) {
 			if(inputTexts[i].hasFocus) {
 				if(FlxG.keys.justPressed.ENTER) {
@@ -1493,6 +1448,11 @@ class StageEditorState extends MusicBeatState
             // Reset Zoom
             if(FlxG.keys.justPressed.R) {
                 FlxG.camera.zoom = 1;
+            }
+
+            // Change Visibility
+            if(FlxG.keys.justPressed.ONE) {
+                menuChangeVisibility();
             }
 
             // Zooming
@@ -1568,7 +1528,7 @@ class StageEditorState extends MusicBeatState
             }
 
             // Changing Size
-            if((FlxG.keys.justPressed.U || FlxG.keys.justPressed.I) && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr && selectedObj != dummy) {
+            if((FlxG.keys.justPressed.U || FlxG.keys.justPressed.I) && selectedObj != bf && selectedObj != gf && selectedObj != dad && selectedObj != dummy) {
                 if(FlxG.keys.justPressed.I) {
                     if(FlxG.keys.pressed.CONTROL) {
                         selectedObj.scale.x += 0.1;
@@ -1592,7 +1552,7 @@ class StageEditorState extends MusicBeatState
                         updateSize();
                     }
                 }
-            } else if((FlxG.keys.justPressed.O || FlxG.keys.justPressed.P) && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr && selectedObj != dummy) {
+            } else if((FlxG.keys.justPressed.O || FlxG.keys.justPressed.P) && selectedObj != bf && selectedObj != gf && selectedObj != dad && selectedObj != dummy) {
                 if(FlxG.keys.justPressed.P) {
                     if(FlxG.keys.pressed.CONTROL) {
                         selectedObj.scale.y += 0.1;
@@ -1619,7 +1579,7 @@ class StageEditorState extends MusicBeatState
             }
 
             // Changing Scroll Factor
-            if((FlxG.keys.justPressed.V || FlxG.keys.justPressed.B) && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr && selectedObj != dummy) {
+            if((FlxG.keys.justPressed.V || FlxG.keys.justPressed.B) && selectedObj != bf && selectedObj != gf && selectedObj != dad && selectedObj != dummy) {
                 if(FlxG.keys.justPressed.B){
                     if(FlxG.keys.pressed.CONTROL) {
                         selectedObj.scrollFactor.x += 0.1;
@@ -1643,7 +1603,7 @@ class StageEditorState extends MusicBeatState
                         updateScroll();
                     }
                 }
-            } else if((FlxG.keys.justPressed.N || FlxG.keys.justPressed.M) && selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr && selectedObj != dummy) {
+            } else if((FlxG.keys.justPressed.N || FlxG.keys.justPressed.M) && selectedObj != bf && selectedObj != gf && selectedObj != dad && selectedObj != dummy) {
                 if(FlxG.keys.justPressed.M){
                     if(FlxG.keys.pressed.CONTROL) {
                         selectedObj.scrollFactor.y += 0.1;
@@ -1683,22 +1643,6 @@ class StageEditorState extends MusicBeatState
         return charAnimOffsets;
     }
 
-    function getIdlePrefix(character:String) {
-        var tempjson = characterjson(character);
-        var arg:Array<String> = [];
-        var pref:String = '';
-        for(i in tempjson.animations) {
-            if(i.anim == "idle") {
-                pref = i.name;
-                arg.push(pref);
-            } else if(i.anim == "danceLeft" || i.anim == "danceRight") {
-                pref = i.name;
-                arg.push(pref);
-            }
-        }
-        return arg;
-    }
-
     function ClipboardAdd(prefix:String = ''):String {
 		if(prefix.toLowerCase().endsWith('v')) { //probably copy paste attempt
 			prefix = prefix.substring(0, prefix.length-1);
@@ -1710,22 +1654,25 @@ class StageEditorState extends MusicBeatState
     
     override function getEvent(id:String, sender:Dynamic, data:Dynamic, ?params:Array<Dynamic>) {
         if(id == FlxUIInputText.CHANGE_EVENT && (sender is FlxUIInputText)) {
-			if(sender == objectInputText) {
+			if(sender == objectInputText)
 				objectName = objectInputText.text;
-			}
-            if(sender == prefixInputText) {
-				prefixAnim = prefixInputText.text;
-			}
-            if (sender == tagInputText) {
+
+            if(sender == prefixInputText)
+				idleAnim = prefixInputText.text;
+
+            if (sender == tagInputText)
                 tagName = tagInputText.text;
-            }
+
+            if (sender == objectLoadText)
+                loadingObj = objectLoadText.text;
+
 		} else if(id == FlxUINumericStepper.CHANGE_EVENT && (sender is FlxUINumericStepper)) {
 			var nums:FlxUINumericStepper = cast sender;
 			var wname = nums.name;
 			FlxG.log.add(wname);
             switch(wname) {
                 case 'sprite_alpha':
-                    if(selectedObj != bfSpr && selectedObj != gfSpr && selectedObj != dadSpr && selectedObj != dummy) {
+                    if(selectedObj != bf && selectedObj != gf && selectedObj != dad && selectedObj != dummy) {
                         selectedObj.alpha = nums.value;
                         changeSpriteAlpha();
                     }
