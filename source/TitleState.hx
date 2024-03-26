@@ -165,10 +165,7 @@ class TitleState extends MusicBeatState
 
 		Highscore.load();
 
-		// IGNORE THIS!!!
-		//PRA SABER O QUE É ISSO AQUI É SIMPLES... LOCAL DO BPM DO TITULO E MAPEAMENTO DOS ITENS DO MENU INICIAL °^°
 		titleJSON = Json.parse(Paths.getTextFromFile('images/DanceTitle.json'));
-		//DAQUI EM DIANTE IGNORE '^'
 		#if TITLE_SCREEN_EASTER_EGG
 		if (FlxG.save.data.psychDevsEasterEgg == null) FlxG.save.data.psychDevsEasterEgg = ''; //Crash prevention
 		switch(FlxG.save.data.psychDevsEasterEgg.toUpperCase())
@@ -325,8 +322,6 @@ class TitleState extends MusicBeatState
 			#end
 
 			default:
-			//EDIT THIS ONE IF YOU'RE MAKING A SOURCE CODE MOD!!!!
-			//SIM, EU FIZ UMA MODIFICAÇÃO NO CODICO FONTE!!!! NÃO É NADA IGUAL AO MOD ORIGINAL '-'
 				gfDance.frames = Paths.getSparrowAtlas('crashDanceTitle');
 				gfDance.animation.addByIndices('danceLeft', 'crashDance', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], "", 24, false);				
 				gfDance.animation.addByIndices('danceRight', 'crashDance', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30], "", 24, false);
@@ -494,10 +489,8 @@ class TitleState extends MusicBeatState
 
 		// EASTER EGG
 
-		if (initialized && !transitioning && skippedIntro)
-		{
-			if (newTitle && !pressedEnter)
-			{
+		if (initialized && !transitioning && skippedIntro) {
+			if (newTitle && !pressedEnter) {
 				var timer:Float = titleTimer;
 				if (timer >= 1)
 					timer = (-timer) + 2;
@@ -508,8 +501,7 @@ class TitleState extends MusicBeatState
 				titleText.alpha = FlxMath.lerp(titleTextAlphas[0], titleTextAlphas[1], timer);
 			}
 			
-			if(pressedEnter)
-			{
+			if(pressedEnter) {
 				titleText.color = FlxColor.WHITE;
 				titleText.alpha = 1;
 				
@@ -529,8 +521,7 @@ class TitleState extends MusicBeatState
 				// FlxG.sound.play(Paths.music('titleShoot'), 0.7);
 			}
 			#if TITLE_SCREEN_EASTER_EGG
-			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE)
-			{
+			else if (FlxG.keys.firstJustPressed() != FlxKey.NONE) {
 				var keyPressed:FlxKey = FlxG.keys.firstJustPressed();
 				var keyName:String = Std.string(keyPressed);
 				if(allowedKeys.contains(keyName)) {
@@ -538,11 +529,9 @@ class TitleState extends MusicBeatState
 					if(easterEggKeysBuffer.length >= 32) easterEggKeysBuffer = easterEggKeysBuffer.substring(1);
 					//trace('Test! Allowed Key pressed!!! Buffer: ' + easterEggKeysBuffer);
 
-					for (wordRaw in easterEggKeys)
-					{
+					for (wordRaw in easterEggKeys) {
 						var word:String = wordRaw.toUpperCase(); //just for being sure you're doing it right
-						if (easterEggKeysBuffer.contains(word))
-						{
+						if (easterEggKeysBuffer.contains(word)) {
 							//trace('YOOO! ' + word);
 							if (FlxG.save.data.psychDevsEasterEgg == word)
 								FlxG.save.data.psychDevsEasterEgg = '';
@@ -581,24 +570,20 @@ class TitleState extends MusicBeatState
 		}
 
 		if (initialized && pressedEnter && !skippedIntro && okay)
-		{
 			skipIntro();
-		}
 
-		if(swagShader != null)
-		{
+		if(swagShader != null) {
 			if(controls.UI_LEFT) swagShader.hue -= elapsed * 0.1;
 			if(controls.UI_RIGHT) swagShader.hue += elapsed * 0.1;
 		}
 
-		if (soundFinished && !musicStarted) {
+		if(soundFinished && !musicStarted) {
 			FlxG.sound.playMusic(Paths.music('freakyMenu'), 0.7);
 			musicStarted = true;
 		}
 
-		if (introCrash != null && !introCrash.active) {
+		if(introCrash != null && !introCrash.active)
 			soundFinished = true;
-		}
 
 		super.update(elapsed);
 	}
@@ -607,7 +592,7 @@ class TitleState extends MusicBeatState
 		var titleEmitter:FlxEmitter = new FlxEmitter(0, -100, 100);
 		for (i in 0...100) {
 			var particle = new FlxParticle();
-			particle.loadGraphic(Paths.image('wumpaParticle'));
+			particle.loadGraphic(Paths.image('particles/ParticleWumpa'));
 			particle.exists = false;
 			titleEmitter.add(particle);
 		}
