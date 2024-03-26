@@ -6,8 +6,11 @@ import Discord.DiscordClient;
 import flash.text.TextField;
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxParticle;
+import flixel.effects.particles.FlxEmitter;
 import flixel.addons.display.FlxGridOverlay;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.system.FlxSound;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
@@ -27,6 +30,7 @@ class AchievementsMenuState extends MusicBeatState
 	private var achievementIndex:Array<Int> = [];
 	private var descText:FlxText;
 	
+	var crystalCrash:FlxSound;
 	var backEngine:FlxSprite;
 	var frontEngine:FlxSprite;
 
@@ -42,6 +46,22 @@ class AchievementsMenuState extends MusicBeatState
 		menuBG.screenCenter();
 		menuBG.antialiasing = ClientPrefs.globalAntialiasing;
 		add(menuBG);
+
+		makeCrystalEmitter();
+
+		crystalCrash = FlxG.sound.play(Paths.sound('crystals'), 0.3, true);
+
+		var menuCrystal:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menuCrystalAchiev'));
+		menuCrystal.color = 0xFFea71fd;
+		menuCrystal.setGraphicSize(Std.int(menuCrystal.width * 1.1));
+		menuCrystal.updateHitbox();
+		menuCrystal.screenCenter();
+		menuCrystal.antialiasing = ClientPrefs.globalAntialiasing;
+		add(menuCrystal);
+
+		var darkBG:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
+		darkBG.alpha = 0.2;
+		add(darkBG);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
@@ -110,6 +130,7 @@ class AchievementsMenuState extends MusicBeatState
 		}
 
 		if (controls.BACK) {
+			crystalCrash.stop();
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			MusicBeatState.switchState(new MainMenuState());
 		}		
@@ -144,6 +165,27 @@ class AchievementsMenuState extends MusicBeatState
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 	#end
+
+	function makeCrystalEmitter() {
+		var crystalEmitter:FlxEmitter = new FlxEmitter(0, -100, 100);
+		for (i in 0...100) {
+			var particle = new FlxParticle();
+			particle.loadGraphic(Paths.image('particles/ParticleCrystal'));
+			particle.exists = false;
+			crystalEmitter.add(particle);
+		}
+		crystalEmitter.setSize(1300, 0);
+		crystalEmitter.speed.set(0, 40, 0, 40);
+		crystalEmitter.launchMode = CIRCLE;
+		crystalEmitter.launchAngle.set(90, 90);
+		crystalEmitter.angularVelocity.set(100, -100, 360, -360);
+		crystalEmitter.lifespan.set(0, 0);
+		crystalEmitter.scale.set(0.3, 0.3, 0.6, 0.6);
+		crystalEmitter.acceleration.set(0, 150, 0, 200);
+		crystalEmitter.keepScaleRatio = true;
+		add(crystalEmitter);
+		crystalEmitter.start(false, 0.03);
+	}
 }
 
 /*

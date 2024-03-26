@@ -474,11 +474,12 @@ class ChartingState extends MusicBeatState
 	var noteSkinInputText:FlxUIInputText;
 	var noteSplashesInputText:FlxUIInputText;
 	var stageDropDown:FlxUIDropDownMenuCustom;
+
 	function addSongUI():Void {
 		UI_songTitle = new FlxUIInputText(10, 10, 150, _song.song, 8);
 		blockPressWhileTypingOn.push(UI_songTitle);
 
-		var check_voices = new FlxUICheckBox(10, 30, null, null, "Tem trilha\nde voz", 100);
+		var check_voices = new FlxUICheckBox(10, 30, null, null, "Tem trilha\nde voz", 60);
 		check_voices.checked = _song.needsVoices;
 		// _song.needsVoices = check_voices.checked;
 		check_voices.callback = function() {
@@ -555,7 +556,7 @@ class ChartingState extends MusicBeatState
 		check_gfTrails.callback = function() {
 			_song.gfTrails = check_gfTrails.checked;
 		};
-		var check_cameraMove = new FlxUICheckBox(90, 105, null, null, "Movimento\nna Camera", 100);
+		var check_cameraMove = new FlxUICheckBox(90, 105, null, null, "Movimento\nna Camera", 60);
 		check_cameraMove.checked = _song.cameraMoveOnNotes;
 		check_cameraMove.callback = function() {
 			_song.cameraMoveOnNotes = check_cameraMove.checked;
@@ -979,35 +980,41 @@ class ChartingState extends MusicBeatState
 		});
 
 		var clearSectionButton:FlxButton = new FlxButton(pasteButton.x + 100, pasteButton.y, "Limpar Tudo", function() {
-			clearSectionNotes();
+			openSubState(new Prompt('Esta ação vai limpar o progresso atual.\n\nContinuar?', 0, function() {
+				clearSectionNotes();
+			}, null, ignoreWarnings));
 		});
 		clearSectionButton.color = FlxColor.RED;
 		clearSectionButton.label.color = FlxColor.WHITE;
 
 		var clearP1SectionButton:FlxButton = new FlxButton(clearSectionButton.x, clearSectionButton.y + 25, "Limpar P1", function() {
-			if(check_notesSec.checked) {
-				var newSectionNotes:Array<Dynamic> = [];
-				for(note in _song.notes[curSec].sectionNotes)
-					if(note[1] > Note.ammo[_song.mania] - 1 && note[1] < Note.ammo[_song.mania] * 2)
-						newSectionNotes.push(note);
-				_song.notes[curSec].sectionNotes = newSectionNotes;
-			}
-			updateGrid();
-			updateNoteUI();
+			openSubState(new Prompt('Esta ação vai limpar o progresso atual.\n\nContinuar?', 0, function() {
+				if(check_notesSec.checked) {
+					var newSectionNotes:Array<Dynamic> = [];
+					for(note in _song.notes[curSec].sectionNotes)
+						if(note[1] > Note.ammo[_song.mania] - 1 && note[1] < Note.ammo[_song.mania] * 2)
+							newSectionNotes.push(note);
+					_song.notes[curSec].sectionNotes = newSectionNotes;
+				}
+				updateGrid();
+				updateNoteUI();
+			}, null, ignoreWarnings));
 		});
 		clearP1SectionButton.color = FlxColor.RED;
 		clearP1SectionButton.label.color = FlxColor.WHITE;
 
 		var clearP2SectionButton:FlxButton = new FlxButton(clearP1SectionButton.x, clearP1SectionButton.y + 25, "Limpar P2", function() {
-			if(check_notesSec.checked) {
-				var newSectionNotes:Array<Dynamic> = [];
-				for(note in _song.notes[curSec].sectionNotes)
-					if(note[1] > -1 && note[1] < Note.ammo[_song.mania])
-						newSectionNotes.push(note);
-				_song.notes[curSec].sectionNotes = newSectionNotes;
-			}
-			updateGrid();
-			updateNoteUI();
+			openSubState(new Prompt('Esta ação vai limpar o progresso atual.\n\nContinuar?', 0, function() {
+				if(check_notesSec.checked) {
+					var newSectionNotes:Array<Dynamic> = [];
+					for(note in _song.notes[curSec].sectionNotes)
+						if(note[1] > -1 && note[1] < Note.ammo[_song.mania])
+							newSectionNotes.push(note);
+					_song.notes[curSec].sectionNotes = newSectionNotes;
+				}
+				updateGrid();
+				updateNoteUI();
+			}, null, ignoreWarnings));
 		});
 		clearP2SectionButton.color = FlxColor.RED;
 		clearP2SectionButton.label.color = FlxColor.WHITE;
@@ -1021,10 +1028,12 @@ class ChartingState extends MusicBeatState
 		stepperCopy = new FlxUINumericStepper(copyLastButton.x + 106, copyLastButton.y + 6, 1, 1, -999, 999, 0);
 		blockPressWhileTypingOnStepper.push(stepperCopy);
 
-		var allLastButton:FlxButton = new FlxButton(210, stepperCopy.y, "Alterar Lado", function() {
+		var allLastButton:FlxButton = new FlxButton(210, copyLastButton.y, "Alterar Lado\npara Cópia", function() {
 			allLast++;
 			if(allLast > 2) allLast = 0;
 		});
+		allLastButton.setGraphicSize(80, 32);
+		allLastButton.updateHitbox();
 
 		sectionCopyTxt = new FlxText(allLastButton.x + 100, allLastButton.y, 0, 'Toda a seção', 8);
 
@@ -1195,8 +1204,9 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			updateGrid();
+			updateNoteUI();
 			noteTypeSectionP1DropDown.selectedLabel = '';
-			noteTypeDropDown.selectedLabel = noteTypeIntMap.get(currentType);
+			//noteTypeDropDown.selectedLabel = noteTypeIntMap.get(currentType);
 		});
 		blockPressWhileScrolling.push(noteTypeSectionP1DropDown);
 
@@ -1209,6 +1219,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			updateGrid();
+			updateNoteUI();
 		});
 
 		noteTypeSectionP2DropDown = new FlxUIDropDownMenuCustom(noteTypeSectionP1DropDown.x + 130, noteTypeSectionP1DropDown.y, FlxUIDropDownMenuCustom.makeStrIdLabelArray(displayNameList, true), function(character:String) {
@@ -1221,8 +1232,9 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			updateGrid();
+			updateNoteUI();
 			noteTypeSectionP2DropDown.selectedLabel = '';
-			noteTypeDropDown.selectedLabel = noteTypeIntMap.get(currentType);
+			//noteTypeDropDown.selectedLabel = noteTypeIntMap.get(currentType);
 		});
 		blockPressWhileScrolling.push(noteTypeSectionP2DropDown);
 
@@ -1235,6 +1247,7 @@ class ChartingState extends MusicBeatState
 				}
 			}
 			updateGrid();
+			updateNoteUI();
 		});
 
 		tab_group_note.add(new FlxText(10, 10, 0, 'Comprimento da nota :'));
@@ -1918,16 +1931,13 @@ class ChartingState extends MusicBeatState
 			strumLineNotes.members[i].y = strumLine.y;
 		}
 
-		FlxG.mouse.visible = true;//cause reasons. trust me
+		FlxG.mouse.visible = true; //cause reasons. trust me
 		camPos.y = strumLine.y;
 		if(!disableAutoScrolling.checked) {
-			if (Math.ceil(strumLine.y) >= gridBG.height)
-			{
-				if (_song.notes[curSec + 1] == null)
-				{
+			if (Math.ceil(strumLine.y) >= gridBG.height) {
+				if (_song.notes[curSec + 1] == null) {
 					addSection();
 				}
-
 				changeSection(curSec + 1, false);
 			} else if(strumLine.y < -10) {
 				changeSection(curSec - 1, false);
@@ -1949,7 +1959,7 @@ class ChartingState extends MusicBeatState
 		} else {
 			dummyArrow.visible = false;
 		}
-		
+
 		if(FlxG.mouse.pressedRight) {
 			var curNoteStrum = getStrumTime(dummyArrow.y, false) + sectionStartTime();
 			var curNoteData = Math.floor((FlxG.mouse.x - GRID_SIZE) / GRID_SIZE);

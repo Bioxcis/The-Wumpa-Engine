@@ -134,6 +134,11 @@ class StageEditorState extends MusicBeatState
     var camDad:Array<Float> = [0, 0];
     var camGirl:Array<Float> = [0, 0];
 
+    var objTag:String = '';
+    var check_warning:FlxUICheckBox;
+
+    public var ignoreWarning = false;
+
     override function create() {
 		FlxG.sound.playMusic(Paths.music('breakfast'), 0.5);
 
@@ -147,6 +152,8 @@ class StageEditorState extends MusicBeatState
 		FlxG.cameras.add(camHUD);
 		FlxG.cameras.add(camMenu);
 		FlxCamera.defaultCameras = [camEditor];
+
+        ignoreWarning = FlxG.save.data.ignoreWarning;
 
         var uibox_tabs = [
             {name: '1 - Sprite Objects', label: 'Adicionar'},
@@ -303,6 +310,16 @@ class StageEditorState extends MusicBeatState
 		UI_box.selected_tab_id = '1 - Sprite Objects';
 		FlxG.mouse.visible = true;
 
+        check_warning = new FlxUICheckBox(0, -30, null, null, "Ignorar Avisos de Progresso", 200);
+        check_warning.x = (FlxG.width - check_warning.width) + 350;
+		if(FlxG.save.data.ignoreWarning == null) FlxG.save.data.ignoreWarning = false;
+		check_warning.checked = FlxG.save.data.ignoreWarning;
+		check_warning.callback = function() {
+			FlxG.save.data.ignoreWarning = check_warning.checked;
+			ignoreWarning = FlxG.save.data.ignoreWarning;
+		};
+        add(check_warning);
+
         #if desktop
         // Updating Discord Rich Presence
         DiscordClient.changePresence("In Stage Editor", "Making a stage...");
@@ -320,6 +337,7 @@ class StageEditorState extends MusicBeatState
     var stepper_frame:FlxUINumericStepper;
     var objectLoadText:FlxUIInputText;
     var loadedObjectAdd:FlxButton;
+    var cleanImputs:FlxButton;
 
     function addSpritesUI() {
         var tab_group = new FlxUI(null, UI_box);
@@ -436,6 +454,10 @@ class StageEditorState extends MusicBeatState
                 makeWarningText("Objeto não encontrado!");
         });
 
+        cleanImputs = new FlxButton(loadedObjectAdd.x - 6, loadedObjectAdd.y + 40, "Limpar Campos", function() {
+            emptyFields();
+        });
+
         updateValues();
         updateCoords();
         updateSize();
@@ -456,6 +478,7 @@ class StageEditorState extends MusicBeatState
         tab_group.add(objectLoadText);
 		tab_group.add(new FlxText(objectLoadText.x, objectLoadText.y - 18, 0, 'Carregar objeto:'));
         tab_group.add(loadedObjectAdd);
+        tab_group.add(cleanImputs);
         UI_box.addGroup(tab_group);
 	}
 
@@ -600,29 +623,31 @@ class StageEditorState extends MusicBeatState
         });
 
         objectRemove = new FlxButton(objectDuplicate.x, objectDuplicate.y + 25, "Remover Img", function() {
-            if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
-                bgGroup.remove(selectedObj, true);
-                for(img in bgMapInfos.keys())
-                    if (img == selectedObj)
-                        bgMapInfos.remove(selectedObj);
-
-                selectedObj.destroy();
-                spritesTag.splice(objectIndex, 1);
-                objectIndex = -1;
-                selectedObj = dummy;
-
-                updateValues();
-                updateCoords();
-                updateSize();
-                updateScroll();
-                reloadSpritesDropdown();
-
-                bgGroup.update(1);
-                curTag.text = 'Nome: Vazio';
-                emptyFields();
-                makeWarningText("Imagem removida!");
-            } else
-                makeWarningText("Selecione ou adicione uma imagem a lista!");
+            openSubState(new Prompt("Quer apagar o\nSprite " + objTag + " ?", 0, function() {
+				if(selectedObj != null && selectedObj != dummy && selectedObj != bf && selectedObj != gf && selectedObj != dad) {
+                    bgGroup.remove(selectedObj, true);
+                    for(img in bgMapInfos.keys())
+                        if (img == selectedObj)
+                            bgMapInfos.remove(selectedObj);
+    
+                    selectedObj.destroy();
+                    spritesTag.splice(objectIndex, 1);
+                    objectIndex = -1;
+                    selectedObj = dummy;
+    
+                    updateValues();
+                    updateCoords();
+                    updateSize();
+                    updateScroll();
+                    reloadSpritesDropdown();
+    
+                    bgGroup.update(1);
+                    curTag.text = 'Nome: Vazio';
+                    emptyFields();
+                    makeWarningText("Imagem removida!");
+                } else
+                    makeWarningText("Selecione ou adicione uma imagem a lista!");
+			}, null, ignoreWarning));
         });
         objectRemove.color = 0xFFCE0000;
         objectRemove.label.color = FlxColor.WHITE;
@@ -978,6 +1003,7 @@ class StageEditorState extends MusicBeatState
         for(img in bgMapInfos.keys()) {
             if (img == selectedObj) {
                 curTag.text = 'Nome: ' + bgMapInfos[img][0];
+                objTag = bgMapInfos[img][0];
                 if(img == dummy) objTitle.text = 'Objeto Selecionado: Inválido';
                 else objTitle.text = 'Objeto Selecionado: ' + bgMapInfos[img][0];
                 // tagInputText.text = bgMapInfos[img][0];
@@ -1290,6 +1316,7 @@ class StageEditorState extends MusicBeatState
         objScroll.visible = menuVis;
         cameraZoom.visible = menuVis;
         cameraPosition.visible = menuVis;
+        check_warning.visible = menuVis;
     }
 
 	var _file:FileReference;
