@@ -1105,6 +1105,9 @@ class FunkinLua {
 			WeekData.loadTheFirstEnabledMod();
 			return true;
 		});
+		Lua_helper.add_callback(lua, "setStartTime", function(time) {
+			PlayState.instance.startOnTime = time;
+		});
 		Lua_helper.add_callback(lua, "setBotPlayText", function(value:String) {
 			PlayState.instance.botplayTxt.text = value;
 		});
