@@ -60,7 +60,7 @@ class AchievementsMenuState extends MusicBeatState
 		add(menuCrystal);
 
 		var darkBG:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
-		darkBG.alpha = 0.2;
+		darkBG.alpha = 0.2;	
 		add(darkBG);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
