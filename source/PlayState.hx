@@ -252,12 +252,15 @@ class PlayState extends MusicBeatState {
 	private var strumLine:FlxSprite;
 
 	public var laneunderlay:FlxSprite;
-    public var laneunderlayOp:FlxSprite;
+    	public var laneunderlayOp:FlxSprite;
 
 	public var strumLineNotes:FlxTypedGroup<StrumNote>;
 	public var opponentStrums:FlxTypedGroup<StrumNote>;
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
+
+	public var lastNoteHitted:String = "";
+	public var lastNoteMissed:String = "";
 
 	// Camera
 	private var isCameraOnForcedPos:Bool = false;
@@ -4413,6 +4416,7 @@ class PlayState extends MusicBeatState {
 				note.destroy();
 			}
 		});
+		lastNoteMissed = daNote.noteType;
 		noteMissFine(daNote.noteData, daNote, playerType);
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime, playerType]);
 	}
