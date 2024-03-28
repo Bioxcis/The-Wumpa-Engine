@@ -4504,10 +4504,6 @@ class FunkinLua {
 			return str.trim();
 		});
 
-		Lua_helper.add_callback(lua, "luaTableContains", function(table:Array<Dynamic> = null, value:Any = null) {
-			return luaTableContains(table, value);
-		});
-
 		Lua_helper.add_callback(lua, "getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
 			var excludeArray:Array<String> = exclude.split(',');
 			var toExclude:Array<Int> = [];
@@ -4582,6 +4578,20 @@ class FunkinLua {
 			if(index < lastIndex + 1 && index > -1) targetRating = ratingArray[index];
 			if(ratingText != null && ratingText != '') targetRating[0] = ratingText;
 			if(ratingFC != null && ratingFC != '') targetRating[2] = ratingText;
+		});
+
+		// Bruh, I did this just for fun, for meme, forget it :P
+		Lua_helper.add_callback(lua, "tableContainsString", function(table:Array<String> = null, value:String) {
+			return table.contains(value);
+		});
+		Lua_helper.add_callback(lua, "tableContainsInt", function(table:Array<Int> = null, value:Int) {
+			return table.contains(value);
+		});
+		Lua_helper.add_callback(lua, "tableContainsFloat", function(table:Array<Float> = null, value:Float) {
+			return table.contains(value);
+		});
+		Lua_helper.add_callback(lua, "tableContainsBoolean", function(table:Array<Bool> = null, value:Bool = false) {
+			return table.contains(value);
 		});
 
 /*		Lua_helper.add_callback(lua, "luaAchievement", function(name:String, description:String, achievTag:String) {
@@ -5452,13 +5462,6 @@ class FunkinLua {
 			leColor = return FlxColor.fromString('#$str');
 		return leColor;
 	}
-
-	static function luaTableContains<T>(array:Array<T>, value:T):Bool {
-        for(item in array)
-            if(item == value)
-                return true;
-        return false;
-    }
 
 	function runTweenFunction(tag:String, vars:String, tweenValue:Any, duration:Float, delay:Float, ease:String, funcName:String) {
 		#if LUA_ALLOWED
