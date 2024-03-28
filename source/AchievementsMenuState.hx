@@ -59,8 +59,10 @@ class AchievementsMenuState extends MusicBeatState
 		menuCrystal.antialiasing = ClientPrefs.globalAntialiasing;
 		add(menuCrystal);
 
+		makeGlowEmitter();
+
 		var darkBG:FlxSprite = new FlxSprite(0, 0).makeGraphic(FlxG.width, FlxG.height, 0xFF000000);
-		darkBG.alpha = 0.2;	
+		darkBG.alpha = 0.2;
 		add(darkBG);
 
 		grpOptions = new FlxTypedGroup<Alphabet>();
@@ -185,6 +187,26 @@ class AchievementsMenuState extends MusicBeatState
 		crystalEmitter.keepScaleRatio = true;
 		add(crystalEmitter);
 		crystalEmitter.start(false, 0.03);
+	}
+
+	function makeGlowEmitter() {
+		var glowEmitter:FlxEmitter = new FlxEmitter(0, 0, 100);
+		for (i in 0...100) {
+			var particle = new FlxParticle();
+			particle.loadGraphic(Paths.image('particles/ParticleSparkle'));
+			particle.exists = false;
+			glowEmitter.add(particle);
+		}
+		glowEmitter.setSize(FlxG.width, FlxG.height);
+		glowEmitter.speed.set(0, 40, 0, 40);
+		glowEmitter.launchMode = SQUARE;
+		glowEmitter.alpha.set(0.6, 1, 0, 0);
+		glowEmitter.color.set(0xFFD6BDFF, 0xFFFFBDFD);
+		glowEmitter.lifespan.set(3, 4);
+		glowEmitter.scale.set(0.5, 0.5, 0.8, 0.8);
+		glowEmitter.keepScaleRatio = true;
+		add(glowEmitter);
+		glowEmitter.start(false, 0.2);
 	}
 }
 
