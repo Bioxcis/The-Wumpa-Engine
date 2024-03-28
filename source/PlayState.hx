@@ -198,6 +198,8 @@ class PlayState extends MusicBeatState {
 	public var opponentCameraOffset:Array<Float> = null;
 	public var girlfriendCameraOffset:Array<Float> = null;
 
+	public var lostComboMakeGfSad:Bool = true;
+
 	var trailunderdad:FlxTrail;
 	var trailunderbf:FlxTrail;
 	var trailundergf:FlxTrail;
@@ -259,8 +261,13 @@ class PlayState extends MusicBeatState {
 	public var playerStrums:FlxTypedGroup<StrumNote>;
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash>;
 
-	public var lastNoteHitted:String = "";
-	public var lastNoteMissed:String = "";
+	public var lastNoteHittedP1:String = "";
+	public var lastNoteMissedP1:String = "";
+	public var lastNoteMissPressedP1:String = "";
+
+	public var lastNoteHittedP2:String = "";
+	public var lastNoteMissedP2:String = "";
+	public var lastNoteMissPressedP2:String = "";
 
 	// Camera
 	private var isCameraOnForcedPos:Bool = false;
@@ -3207,6 +3214,14 @@ class PlayState extends MusicBeatState {
 		setOnLuas("showComboNumber", showComboNum);
 		setOnLuas("showRating", showRating);
 
+		setOnLuas('lastNoteHittedP1', lastNoteHittedP1);
+		setOnLuas('lastNoteMissedP1', lastNoteMissedP1);
+		setOnLuas('lastMissPressedP1', lastNoteMissPressedP1);
+
+		setOnLuas('lastNoteHittedP2', lastNoteHittedP2);
+		setOnLuas('lastNoteMissedP2', lastNoteMissedP2);
+		setOnLuas('lastMissPressedP2', lastNoteMissPressedP2);
+
 		// Characters
 		setOnLuas('curBfX', boyfriend.x);
 		setOnLuas('curBfY', boyfriend.y);
@@ -3481,9 +3496,8 @@ class PlayState extends MusicBeatState {
 	public function checkEventNote() {
 		while(eventNotes.length > 0) {
 			var leStrumTime:Float = eventNotes[0].strumTime;
-			if(Conductor.songPosition < leStrumTime) {
+			if(Conductor.songPosition < leStrumTime)
 				break;
-			}
 
 			var value1:String = '';
 			if(eventNotes[0].value1 != null)
@@ -4403,7 +4417,7 @@ class PlayState extends MusicBeatState {
 	var gfColorMiss:FlxTween;
 	var dadColorMiss:FlxTween;
 
-	function noteMiss(daNote:Note, playerType:Bool):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
+	function noteMiss(daNote:Note, playerType:Bool, ?noCountLastNote:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		callOnHScripts('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime, playerType]);
 		notes.forEachAlive(function(note:Note) {
 			if(daNote != note && !daNote.mustPress && daNote.noteData == note.noteData && daNote.isSustainNote == note.isSustainNote && Math.abs(daNote.strumTime - note.strumTime) < 1 && playerType) {
@@ -4416,7 +4430,13 @@ class PlayState extends MusicBeatState {
 				note.destroy();
 			}
 		});
-		lastNoteMissed = daNote.noteType;
+		if(!noCountLastNote) {
+			switch(playerType) {
+				case true: lastNoteMissedP2 = daNote.noteType;
+				default: lastNoteMissedP1 = daNote.noteType;
+			}
+		}
+
 		noteMissFine(daNote.noteData, daNote, playerType);
 		callOnLuas('noteMiss', [notes.members.indexOf(daNote), daNote.noteData, daNote.noteType, daNote.isSustainNote, daNote.strumTime, playerType]);
 	}
@@ -4452,7 +4472,7 @@ class PlayState extends MusicBeatState {
 			}
 		}
 
-		// Instant Kill (in Normal Mode)
+		// Instant Kill (no Multiplayer Mode)
 		if(instakillOnMiss && gameMode == 0 && !playerType) {
 			vocals.volume = 0;
 			doDeathCheck(false, false, true);
@@ -4479,6 +4499,7 @@ class PlayState extends MusicBeatState {
 		if(note != null) altAnim = note.animSuffix;
 
 		// Play Character Anims
+			// GIRLFRIEND
 		if((note != null && note.gfNote) || (SONG.notes[curSection] != null && SONG.notes[curSection].gfSection)) {
 			if(gf != null) {
 				if(gf.animOffsets.exists('sing' + mainAnim + 'miss'))
@@ -4493,8 +4514,14 @@ class PlayState extends MusicBeatState {
 				}
 			}
 
+			// OPONNENT
 		} else if(playerType) {
-			if((note != null && note.noteType != 'Lua Note' && !note.noMissAnimation) || (note == null)) {
+			var isOpponentDamage:Bool = true;
+			for(luaChar in luaCharsMap)
+				if(note != null && luaChar.testNote(note.noteType))
+					isOpponentDamage = false;
+
+			if((note != null && note.noteType != 'Lua Note' && isOpponentDamage && !note.noMissAnimation) || (note == null)) {
 				if(dad.animOffsets.exists('sing' + mainAnim + 'miss'))
 					dad.playAnim('sing' + mainAnim + 'miss' + altAnim, true);
 				else {
@@ -4507,7 +4534,13 @@ class PlayState extends MusicBeatState {
 				}
 			}
 
+			// BOYFRIEND
 		} else if(!playerType) {
+			var isPlayerDamage:Bool = true;
+			for(luaChar in luaCharsMap)
+				if(note != null && luaChar.testNote(note.noteType))
+					isPlayerDamage = false;
+
 			if((note != null && note.noteType != 'Lua Note' && !note.noMissAnimation) || (note == null)) {
 				if(boyfriend.animOffsets.exists('sing' + mainAnim + 'miss'))
 					boyfriend.playAnim('sing' + mainAnim + 'miss' + altAnim, true);
@@ -4521,7 +4554,8 @@ class PlayState extends MusicBeatState {
 				}
 			}
 
-			if(combo > 9 && gf != null && gf.animOffsets.exists('sad') && gameMode == 0) {
+			// Lost Great Combo
+			if(combo > 9 && gf != null && gf.animOffsets.exists('sad') && gameMode == 0 && lostComboMakeGfSad) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
 			}
@@ -4572,7 +4606,8 @@ class PlayState extends MusicBeatState {
 
 		// Miss Notes (in Duet or Vs Mode)
 		if(note.hitCausesMiss && isP2) {
-			noteMiss(note, true);
+			lastNoteMissPressedP2 = note.noteType;
+			noteMiss(note, true, true);
 			if(!note.noteSplashDisabled && !note.isSustainNote)
 				spawnNoteSplashOnNote(note, true);
 
@@ -4621,6 +4656,8 @@ class PlayState extends MusicBeatState {
 		var mainAnim:String = Note.keysAssets.get(mania).get('anims')[note.noteData];
 		var altAnim:String = note.animSuffix;
 		var char:Character = dad;
+
+		lastNoteHittedP2 = note.noteType;
 
 		if(note.gfNote) char = gf;
 
@@ -4746,7 +4783,8 @@ class PlayState extends MusicBeatState {
 
 			// Miss Notes
 			if(note.hitCausesMiss) {
-				noteMiss(note, false);
+				lastNoteMissPressedP1 = note.noteType;
+				noteMiss(note, false, true);
 				if(!note.noteSplashDisabled && !note.isSustainNote)
 					spawnNoteSplashOnNote(note, false);
 
@@ -4798,6 +4836,8 @@ class PlayState extends MusicBeatState {
 			//var animToPlay:String = singAnimations[Std.int(Math.abs(note.noteData))];
 			var mainAnim:String = Note.keysAssets.get(mania).get('anims')[note.noteData];
 			var altAnim:String = note.animSuffix;
+
+			lastNoteHittedP1 = note.noteType;
 
 			if(SONG.notes[curSection] != null)
 				if((SONG.notes[curSection].altAnim && !SONG.notes[curSection].gfSection) || boyfriend.isAltAnim)
