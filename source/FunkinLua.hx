@@ -1105,9 +1105,6 @@ class FunkinLua {
 			WeekData.loadTheFirstEnabledMod();
 			return true;
 		});
-		Lua_helper.add_callback(lua, "setStartTime", function(time) {
-			PlayState.instance.startOnTime = time;
-		});
 		Lua_helper.add_callback(lua, "setBotPlayText", function(value:String) {
 			PlayState.instance.botplayTxt.text = value;
 		});
@@ -4508,7 +4505,7 @@ class FunkinLua {
 		});
 
 		Lua_helper.add_callback(lua, "luaTableContains", function(table:Array<Dynamic> = null, value:Any = null) {
-			return table.contains(value);
+			return luaTableContains(table, value);
 		});
 
 		Lua_helper.add_callback(lua, "getRandomInt", function(min:Int, max:Int = FlxMath.MAX_VALUE_INT, exclude:String = '') {
@@ -5455,6 +5452,13 @@ class FunkinLua {
 			leColor = return FlxColor.fromString('#$str');
 		return leColor;
 	}
+
+	static function luaTableContains<T>(array:Array<T>, value:T):Bool {
+        for(item in array)
+            if(item == value)
+                return true;
+        return false;
+    }
 
 	function runTweenFunction(tag:String, vars:String, tweenValue:Any, duration:Float, delay:Float, ease:String, funcName:String) {
 		#if LUA_ALLOWED
